@@ -36,7 +36,7 @@ typedef enum {
 } CreationMode;
 
 @interface BrickScene() {
-    UITouch *lastTouch;
+    UITouch *latestFirstTouch;
     
     CreationMode creationMode;
     
@@ -49,8 +49,9 @@ typedef enum {
 -(void)beginBrickMode;
 -(void)stopCreationModeTimer;
 -(void)startCreationModeTimer;
--(void)drawBallAtLocationOfTouch:(UITouch *)touch;
--(void)drawBrickAtLocationOfTouch:(UITouch *)touch;
+-(void)drawBallAtLocation:(CGPoint)location;
+-(void)drawBrickAtLocation:(CGPoint)location;
+-(BOOL)checkWhetherThereIsAlreadyABrickAtLocation:(CGPoint)location;
 @end
 
 @implementation BrickScene
@@ -79,7 +80,7 @@ typedef enum {
     if(creationMode != kCreationModeBrick) {
         creationMode = kCreationModeBrick;
         self.backgroundColor = [SKColor colorWithRed:BRICKDRAW_BACKGROUND_RED green:BRICKDRAW_BACKGROUND_GREEN blue:BRICKDRAW_BACKGROUND_BLUE alpha:BRICKDRAW_BACKGROUND_ALPHA];
-        [self drawBrickAtLocationOfTouch:lastTouch];
+        [self drawBrickAtLocation:[latestFirstTouch locationInNode:self]];
     }
 }
 
@@ -89,26 +90,42 @@ typedef enum {
 }
 
 -(void)startCreationModeTimer {
-    creationModeTimer = [NSTimer scheduledTimerWithTimeInterval:MIN_TIME_TO_START_BRICK_DRAWING_IN_SECONDS target:self selector:@selector(startCreationModeBrick) userInfo:NULL repeats:NO];
+    creationModeTimer = [NSTimer scheduledTimerWithTimeInterval:MIN_TIME_TO_START_BRICK_DRAWING_IN_SECONDS target:self selector:@selector(beginBrickMode) userInfo:NULL repeats:NO];
 }
 
 #pragma mark draw bricks and balls
 
--(void)drawBallAtLocationOfTouch:(UITouch *)touch {
+-(void)drawBallAtLocation:(CGPoint)location {
     SKShapeNode *ball = [self createBallShapeNodeWithRadius:BALL_RADIUS];
-    ball.position = [touch locationInNode:self];
+    ball.position = location;
     [self addChild:ball];
 }
 
--(void)drawBrickAtLocationOfTouch:(UITouch *)touch {
+-(void)drawBrickAtLocation:(CGPoint)location {
     SKShapeNode *brick = [self createBrickShapeNodeWithWidth:BRICK_WIDTH andHeight:BRICK_HEIGHT];
-    brick.position = [touch locationInNode:self];
+    brick.position = location;
     [self addChild:brick];
+}
+
+-(BOOL)checkWhetherThereIsAlreadyABrickAtLocation:(CGPoint)location {
+    __block BOOL foundBrickAtLocation = NO;
+    
+    [self enumerateChildNodesWithName:BRICK_NAME usingBlock:^(SKNode *node, BOOL *stop) {
+        CGPoint locationOfBrick = node.position;
+        if(ABS(locationOfBrick.x - location.x) <= BRICK_WIDTH ||
+           ABS(locationOfBrick.y - location.y) <= BRICK_HEIGHT) {
+            foundBrickAtLocation = YES;
+            *stop = YES;
+        }
+    }];
+    
+    return foundBrickAtLocation;
 }
 
 -(SKShapeNode *)createBallShapeNodeWithRadius:(CGFloat)radius
 {
     SKShapeNode *ball = [[SKShapeNode alloc] init];
+    ball.name = BALL_NAME;
     
     CGMutablePathRef ballPath = CGPathCreateMutable();
     CGPathAddArc(ballPath, NULL, 0,0, radius, 0, M_PI*2, YES);
@@ -126,6 +143,7 @@ typedef enum {
 
 -(SKShapeNode *)createBrickShapeNodeWithWidth:(CGFloat)width andHeight:(CGFloat)height {
     SKShapeNode *brick = [[SKShapeNode alloc] init];
+    brick.name = BRICK_NAME;
     
     CGMutablePathRef brickPath = CGPathCreateMutable();
     CGPathAddRect(brickPath, NULL, CGRectMake(0, 0, width, height));
@@ -143,6 +161,8 @@ typedef enum {
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+    latestFirstTouch = firstTouch;
     [self startCreationModeTimer];
 }
 
@@ -150,7 +170,7 @@ typedef enum {
     [self stopCreationModeTimer];
     if(creationMode == kCreationModeBall) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        [self drawBallAtLocationOfTouch:firstTouch];
+        [self drawBallAtLocation:[firstTouch locationInNode:self]];
     }
     else {
         [self beginBallMode];
@@ -158,12 +178,11 @@ typedef enum {
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-    if([self durationOfTouch:firstTouch] > MIN_TIME_TO_START_BRICK_DRAWING_IN_SECONDS) {
-        CGPoint location = [firstTouch locationInNode:self];
-        if(ABS(location.x - lastBrickLocation.x) > BRICK_WIDTH ||
-           ABS(location.y - lastBrickLocation.y) > BRICK_HEIGHT) {
-            
+    if(creationMode == kCreationModeBrick) {
+        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+        CGPoint locationOfFirstTouch = [firstTouch locationInNode:self];
+        if(![self checkWhetherThereIsAlreadyABrickAtLocation:locationOfFirstTouch]) {
+            [self drawBrickAtLocation:locationOfFirstTouch];
         }
     }
 }
