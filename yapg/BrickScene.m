@@ -8,12 +8,17 @@
 
 #import "BrickScene.h"
 
-#define BRICK_WIDTH 3
-#define BRICK_HEIGHT 3
+#define DEBUG_LAYER_Z_POSITION 1000
+#define GAME_LAYER_Z_POSITION 0
+
+#define DEBUG_TEXT_NODE_NAME @"debugText"
+
+#define BRICK_WIDTH 30
+#define BRICK_HEIGHT 30
 #define BRICK_NAME @"brick"
 
 #define BALL_RADIUS 3
-#define BALL_LINE_WIDTH 0.1
+#define BALL_LINE_WIDTH 0.0
 #define BALL_RESTITUTION 0.8
 #define BALL_NAME @"ball"
 
@@ -30,6 +35,7 @@
 #define BRICKDRAW_BACKGROUND_ALPHA 1.0
 
 typedef enum {
+    kCreationModeUndefined,
     kCreationModeBall,
     kCreationModeBrick
     
@@ -41,17 +47,28 @@ typedef enum {
     CreationMode creationMode;
     
     NSTimer *creationModeTimer;
+    
+    SKNode *gameLayer;
+    
+    SKNode *debugLayer;
 }
 
 -(SKShapeNode *)createBallShapeNodeWithRadius:(CGFloat)radius;
 -(SKShapeNode *)createBrickShapeNodeWithWidth:(CGFloat)width andHeight:(CGFloat)height;
 -(void)beginBallMode;
 -(void)beginBrickMode;
--(void)stopCreationModeTimer;
--(void)startCreationModeTimer;
+-(void)stopBrickModeCountDown;
+-(void)startBrickModeCountDown;
 -(void)drawBallAtLocation:(CGPoint)location;
 -(void)drawBrickAtLocation:(CGPoint)location;
 -(BOOL)checkWhetherThereIsAlreadyABrickAtLocation:(CGPoint)location;
+
+-(void)addNodeToGameLayer:(SKNode *)node;
+-(void)addNodeToDebugLayer:(SKNode *)node;
+-(void)initAndAddDebugLayer;
+-(void)initAndAddGameLayer;
+
+-(void)printDebugMessage:(NSString *)message;
 @end
 
 @implementation BrickScene
@@ -60,11 +77,51 @@ typedef enum {
     if (self = [super initWithSize:size]) {
         /* Setup your scene here */
         
+        [self initAndAddGameLayer];
+        [self initAndAddDebugLayer];
+        
         self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
         
+        creationMode = kCreationModeUndefined;
         [self beginBallMode];
     }
     return self;
+}
+
+#pragma mark debugging
+
+-(void)printDebugMessage:(NSString *)message {
+    SKLabelNode *debugTextNode = (SKLabelNode *) [debugLayer childNodeWithName:DEBUG_TEXT_NODE_NAME];
+    debugTextNode.text = message;
+}
+
+#pragma mark layer handling
+
+-(void)initAndAddDebugLayer {
+    debugLayer = [[SKNode alloc] init];
+    debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
+    
+    SKLabelNode *debugTextNode = [[SKLabelNode alloc] init];
+    debugTextNode.fontSize = 5;
+    debugTextNode.fontColor = [SKColor blackColor];
+    debugTextNode.position = CGPointMake(100, 10);
+    debugTextNode.name = DEBUG_TEXT_NODE_NAME;
+    [debugLayer addChild:debugTextNode];
+
+    [self addChild:debugLayer];
+}
+
+-(void)initAndAddGameLayer {
+    gameLayer = [[SKNode alloc] init];
+    [self addChild:gameLayer];
+}
+
+-(void)addNodeToGameLayer:(SKNode *)node {
+    [gameLayer addChild:node];
+}
+
+-(void)addNodeToDebugLayer:(SKNode *)node {
+    [debugLayer addChild:node];
 }
 
 #pragma mark mode handling
@@ -84,12 +141,12 @@ typedef enum {
     }
 }
 
--(void)stopCreationModeTimer {
+-(void)stopBrickModeCountDown {
     [creationModeTimer invalidate];
     creationModeTimer = nil;
 }
 
--(void)startCreationModeTimer {
+-(void)startBrickModeCountDown {
     creationModeTimer = [NSTimer scheduledTimerWithTimeInterval:MIN_TIME_TO_START_BRICK_DRAWING_IN_SECONDS target:self selector:@selector(beginBrickMode) userInfo:NULL repeats:NO];
 }
 
@@ -98,19 +155,19 @@ typedef enum {
 -(void)drawBallAtLocation:(CGPoint)location {
     SKShapeNode *ball = [self createBallShapeNodeWithRadius:BALL_RADIUS];
     ball.position = location;
-    [self addChild:ball];
+    [self addNodeToGameLayer:ball];
 }
 
 -(void)drawBrickAtLocation:(CGPoint)location {
     SKShapeNode *brick = [self createBrickShapeNodeWithWidth:BRICK_WIDTH andHeight:BRICK_HEIGHT];
     brick.position = location;
-    [self addChild:brick];
+    [self addNodeToGameLayer:brick];
 }
 
 -(BOOL)checkWhetherThereIsAlreadyABrickAtLocation:(CGPoint)location {
     __block BOOL foundBrickAtLocation = NO;
     
-    [self enumerateChildNodesWithName:BRICK_NAME usingBlock:^(SKNode *node, BOOL *stop) {
+    [gameLayer enumerateChildNodesWithName:BRICK_NAME usingBlock:^(SKNode *node, BOOL *stop) {
         CGPoint locationOfBrick = node.position;
         if(ABS(locationOfBrick.x - location.x) <= BRICK_WIDTH ||
            ABS(locationOfBrick.y - location.y) <= BRICK_HEIGHT) {
@@ -132,7 +189,7 @@ typedef enum {
     ball.path = ballPath;
     
     ball.lineWidth = BALL_LINE_WIDTH;
-    ball.strokeColor = [SKColor blackColor];
+    ball.fillColor = [SKColor blackColor];
     
     ball.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:radius];
     ball.physicsBody.restitution = BALL_RESTITUTION;
@@ -146,11 +203,11 @@ typedef enum {
     brick.name = BRICK_NAME;
     
     CGMutablePathRef brickPath = CGPathCreateMutable();
-    CGPathAddRect(brickPath, NULL, CGRectMake(0, 0, width, height));
+    CGPathAddRect(brickPath, NULL, CGRectMake(-width/2, -height/2, width, height));
     brick.path = brickPath;
     
     brick.lineWidth = 0.0;
-    brick.fillColor = [SKColor redColor];
+    brick.fillColor = [SKColor grayColor];
     
     brick.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(width, height)];
     brick.physicsBody.dynamic = NO;
@@ -163,11 +220,11 @@ typedef enum {
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
     latestFirstTouch = firstTouch;
-    [self startCreationModeTimer];
+    [self startBrickModeCountDown];
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self stopCreationModeTimer];
+    [self stopBrickModeCountDown];
     if(creationMode == kCreationModeBall) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
         [self drawBallAtLocation:[firstTouch locationInNode:self]];
