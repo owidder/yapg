@@ -29,9 +29,9 @@
 #define NORMAL_BACKGROUND_GREEN 1.0
 #define NORMAL_BACKGROUND_ALPHA 1.0
 
-#define BRICKDRAW_BACKGROUND_RED 0.5
-#define BRICKDRAW_BACKGROUND_BLUE 0.5
-#define BRICKDRAW_BACKGROUND_GREEN 0.5
+#define BRICKDRAW_BACKGROUND_RED 0.9
+#define BRICKDRAW_BACKGROUND_BLUE 0.9
+#define BRICKDRAW_BACKGROUND_GREEN 0.9
 #define BRICKDRAW_BACKGROUND_ALPHA 1.0
 
 typedef enum {
@@ -51,6 +51,10 @@ typedef enum {
     SKNode *gameLayer;
     
     SKNode *debugLayer;
+    
+    CGMutablePathRef brickPathRef;
+    
+    SKShapeNode *currentBrickNode;
 }
 
 -(SKShapeNode *)createBallShapeNodeWithRadius:(CGFloat)radius;
@@ -61,7 +65,6 @@ typedef enum {
 -(void)startBrickModeCountDown;
 -(void)drawBallAtLocation:(CGPoint)location;
 -(void)drawBrickAtLocation:(CGPoint)location;
--(BOOL)checkWhetherThereIsAlreadyABrickAtLocation:(CGPoint)location;
 
 -(void)addNodeToGameLayer:(SKNode *)node;
 -(void)addNodeToDebugLayer:(SKNode *)node;
@@ -137,7 +140,14 @@ typedef enum {
     if(creationMode != kCreationModeBrick) {
         creationMode = kCreationModeBrick;
         self.backgroundColor = [SKColor colorWithRed:BRICKDRAW_BACKGROUND_RED green:BRICKDRAW_BACKGROUND_GREEN blue:BRICKDRAW_BACKGROUND_BLUE alpha:BRICKDRAW_BACKGROUND_ALPHA];
-        [self drawBrickAtLocation:[latestFirstTouch locationInNode:self]];
+        
+        brickPathRef = CGPathCreateMutable();
+        CGPoint locationOfLatestFirstTouch = [latestFirstTouch locationInNode:self];
+        CGPathMoveToPoint(brickPathRef, NULL, locationOfLatestFirstTouch.x, locationOfLatestFirstTouch.y);
+        currentBrickNode = [[SKShapeNode alloc] init];
+        currentBrickNode.lineWidth = 1.0;
+        currentBrickNode.strokeColor = [SKColor grayColor];
+        [gameLayer addChild:currentBrickNode];
     }
 }
 
@@ -162,21 +172,6 @@ typedef enum {
     SKShapeNode *brick = [self createBrickShapeNodeWithWidth:BRICK_WIDTH andHeight:BRICK_HEIGHT];
     brick.position = location;
     [self addNodeToGameLayer:brick];
-}
-
--(BOOL)checkWhetherThereIsAlreadyABrickAtLocation:(CGPoint)location {
-    __block BOOL foundBrickAtLocation = NO;
-    
-    [gameLayer enumerateChildNodesWithName:BRICK_NAME usingBlock:^(SKNode *node, BOOL *stop) {
-        CGPoint locationOfBrick = node.position;
-        if(ABS(locationOfBrick.x - location.x) <= BRICK_WIDTH ||
-           ABS(locationOfBrick.y - location.y) <= BRICK_HEIGHT) {
-            foundBrickAtLocation = YES;
-            *stop = YES;
-        }
-    }];
-    
-    return foundBrickAtLocation;
 }
 
 -(SKShapeNode *)createBallShapeNodeWithRadius:(CGFloat)radius
@@ -238,9 +233,8 @@ typedef enum {
     if(creationMode == kCreationModeBrick) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
         CGPoint locationOfFirstTouch = [firstTouch locationInNode:self];
-        if(![self checkWhetherThereIsAlreadyABrickAtLocation:locationOfFirstTouch]) {
-            [self drawBrickAtLocation:locationOfFirstTouch];
-        }
+        CGPathAddLineToPoint(brickPathRef, NULL, locationOfFirstTouch.x, locationOfFirstTouch.y);
+        currentBrickNode.path = brickPathRef;
     }
 }
 
