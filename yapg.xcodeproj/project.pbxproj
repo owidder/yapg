@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99332CAF17DB034E00B7EC57 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* math.m */; };
 		99D3B61317C0DB040064FA09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D3B61217C0DB040064FA09 /* Foundation.framework */; };
 		99D3B61517C0DB040064FA09 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D3B61417C0DB040064FA09 /* CoreGraphics.framework */; };
 		99D3B61717C0DB040064FA09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D3B61617C0DB040064FA09 /* UIKit.framework */; };
@@ -39,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		99332CAD17DB02A100B7EC57 /* math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
+		99332CAE17DB034E00B7EC57 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
 		99D3B60F17C0DB040064FA09 /* yapg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yapg.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D3B61217C0DB040064FA09 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		99D3B61417C0DB040064FA09 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -92,6 +95,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99332CAC17DB028800B7EC57 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				99332CAD17DB02A100B7EC57 /* math.h */,
+				99332CAE17DB034E00B7EC57 /* math.m */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
 		99D3B60617C0DB040064FA09 = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +138,7 @@
 		99D3B61A17C0DB040064FA09 /* yapg */ = {
 			isa = PBXGroup;
 			children = (
+				99332CAC17DB028800B7EC57 /* util */,
 				99D3B62317C0DB040064FA09 /* AppDelegate.h */,
 				99D3B62417C0DB040064FA09 /* AppDelegate.m */,
 				99D3B62617C0DB040064FA09 /* Main_iPhone.storyboard */,
@@ -220,7 +233,7 @@
 				ORGANIZATIONNAME = GeekAndPoke;
 				TargetAttributes = {
 					99D3B63917C0DB050064FA09 = {
-						TestTargetID = 99D3B60E17C0DB040064FA09 /* yapg */;
+						TestTargetID = 99D3B60E17C0DB040064FA09;
 					};
 				};
 			};
@@ -272,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99D3B63117C0DB040064FA09 /* MyScene.m in Sources */,
+				99332CAF17DB034E00B7EC57 /* math.m in Sources */,
 				99D3B65317C0DBF70064FA09 /* BrickScene.m in Sources */,
 				99D3B62E17C0DB040064FA09 /* ViewController.m in Sources */,
 				99D3B62517C0DB040064FA09 /* AppDelegate.m in Sources */,
@@ -492,6 +506,7 @@
 				99D3B64D17C0DB050064FA09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		99D3B64E17C0DB050064FA09 /* Build configuration list for PBXNativeTarget "yapgTests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +515,7 @@
 				99D3B65017C0DB050064FA09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

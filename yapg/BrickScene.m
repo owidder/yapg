@@ -7,6 +7,7 @@
 //
 
 #import "BrickScene.h"
+#import "util/math.h"
 
 #define DEBUG_LAYER_Z_POSITION 1000
 #define GAME_LAYER_Z_POSITION 0
@@ -57,14 +58,15 @@ typedef enum {
 }
 
 -(SKShapeNode *)createBallShapeNodeWithRadius:(CGFloat)radius;
--(SKShapeNode *)createBrickShapeNodeWithWidth:(CGFloat)width andHeight:(CGFloat)height;
+-(SKShapeNode *)createBrickAlongLineWithStart:(CGPoint)start andEnd:(CGPoint)end;
+-(SKShapeNode *)createBrickWithMiddleOfLeftSideAtPoint:(CGPoint)middleOfLeft andLength:(CGFloat)length;
+
 -(void)beginBallMode;
 -(void)beginBrickMode;
 -(void)stopBrickModeCountDown;
 -(void)startBrickModeCountDown;
 -(CGPoint)relativeLocationSinceBrickModeBegan:(CGPoint)currentLocation;
 -(void)drawBallAtLocation:(CGPoint)location;
--(void)drawBrickAtLocation:(CGPoint)location;
 
 -(void)addNodeToGameLayer:(SKNode *)node;
 -(void)addNodeToDebugLayer:(SKNode *)node;
@@ -171,12 +173,6 @@ typedef enum {
     [self addNodeToGameLayer:ball];
 }
 
--(void)drawBrickAtLocation:(CGPoint)location {
-    SKShapeNode *brick = [self createBrickShapeNodeWithWidth:BRICK_WIDTH andHeight:BRICK_HEIGHT];
-    brick.position = location;
-    [self addNodeToGameLayer:brick];
-}
-
 -(SKShapeNode *)createBallShapeNodeWithRadius:(CGFloat)radius
 {
     SKShapeNode *ball = [[SKShapeNode alloc] init];
@@ -196,20 +192,8 @@ typedef enum {
     return ball;
 }
 
--(SKShapeNode *)createBrickShapeNodeWithWidth:(CGFloat)width andHeight:(CGFloat)height {
+-(SKShapeNode *)createBrickAlongLineWithStart:(CGPoint)start andEnd:(CGPoint)end {
     SKShapeNode *brick = [[SKShapeNode alloc] init];
-    brick.name = BRICK_NAME;
-    
-    CGMutablePathRef brickPath = CGPathCreateMutable();
-    CGPathAddRect(brickPath, NULL, CGRectMake(-width/2, -height/2, width, height));
-    brick.path = brickPath;
-    
-    brick.lineWidth = 0.0;
-    brick.fillColor = [SKColor grayColor];
-    
-    brick.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(width, height)];
-    brick.physicsBody.dynamic = NO;
-    
     return brick;
 }
 
