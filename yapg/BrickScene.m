@@ -61,8 +61,6 @@ typedef enum {
 }
 
 -(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius;
--(SKShapeNode *)makeRectangleAlongLineWithStart:(CGPoint)start andEnd:(CGPoint)end;
--(SKShapeNode *)makeRectangleWithMiddleOfLeftSideAtPoint:(CGPoint)middleOfLeft andLength:(CGFloat)length;
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point;
 
 -(void)createBrickNode;
