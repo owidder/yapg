@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		99332CAF17DB034E00B7EC57 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* math.m */; };
+		99563E5217DCFC56006C0E61 /* ActionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99563E5117DCFC56006C0E61 /* ActionFactory.m */; };
 		99C4AD6E17DC762100CBCFB6 /* icon-src.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6917DC762100CBCFB6 /* icon-src.png */; };
 		99C4AD6F17DC762100CBCFB6 /* icon29.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6A17DC762100CBCFB6 /* icon29.png */; };
 		99C4AD7017DC762100CBCFB6 /* icon40.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6B17DC762100CBCFB6 /* icon40.png */; };
@@ -51,6 +52,8 @@
 /* Begin PBXFileReference section */
 		99332CAD17DB02A100B7EC57 /* math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
 		99332CAE17DB034E00B7EC57 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
+		99563E5017DCFC56006C0E61 /* ActionFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionFactory.h; sourceTree = "<group>"; };
+		99563E5117DCFC56006C0E61 /* ActionFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionFactory.m; sourceTree = "<group>"; };
 		99C4AD6917DC762100CBCFB6 /* icon-src.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-src.png"; sourceTree = "<group>"; };
 		99C4AD6A17DC762100CBCFB6 /* icon29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon29.png; sourceTree = "<group>"; };
 		99C4AD6B17DC762100CBCFB6 /* icon40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon40.png; sourceTree = "<group>"; };
@@ -195,6 +198,8 @@
 				99D3B61B17C0DB040064FA09 /* Supporting Files */,
 				99D3B65117C0DBF70064FA09 /* BrickScene.h */,
 				99D3B65217C0DBF70064FA09 /* BrickScene.m */,
+				99563E5017DCFC56006C0E61 /* ActionFactory.h */,
+				99563E5117DCFC56006C0E61 /* ActionFactory.m */,
 			);
 			path = yapg;
 			sourceTree = "<group>";
@@ -339,6 +344,7 @@
 				99D3B63117C0DB040064FA09 /* MyScene.m in Sources */,
 				99332CAF17DB034E00B7EC57 /* math.m in Sources */,
 				99D3B65317C0DBF70064FA09 /* BrickScene.m in Sources */,
+				99563E5217DCFC56006C0E61 /* ActionFactory.m in Sources */,
 				99D3B62E17C0DB040064FA09 /* ViewController.m in Sources */,
 				99D3B62517C0DB040064FA09 /* AppDelegate.m in Sources */,
 				99D3B62117C0DB040064FA09 /* main.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import "BrickScene.h"
 #import "util/math.h"
+#import "ActionFactory.h"
 
 #define DEBUG_LAYER_Z_POSITION 1000
 #define GAME_LAYER_Z_POSITION 0
@@ -208,12 +209,13 @@ typedef enum {
 -(void)createBrickNode {
     currentBrickSketchNode.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:currentBrickSketchPath];
     currentBrickSketchNode.physicsBody.dynamic = NO;
+//    [ActionFactory applyDestroyActionOnLineNode:currentBrickSketchNode];
 }
 
 -(void)initCurrentBrickSketchNode {
     currentBrickSketchNode = [[SKShapeNode alloc] init];
     currentBrickSketchNode.lineWidth = BRICK_SKETCH_LINE_WIDTH;
-    currentBrickSketchNode.strokeColor = [SKColor grayColor];
+    currentBrickSketchNode.strokeColor = [SKColor lightGrayColor];
     currentBrickSketchNode.position = latestLocation;
     [self addNodeToGameLayer:currentBrickSketchNode];
 }
