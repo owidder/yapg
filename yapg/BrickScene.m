@@ -23,7 +23,7 @@
 
 #define BALL_RADIUS 3
 #define BALL_LINE_WIDTH 0.0
-#define BALL_RESTITUTION 0.8
+#define BALL_RESTITUTION 0.1
 #define BALL_NAME @"ball"
 
 #define MIN_TIME_TO_START_BRICK_DRAWING_IN_SECONDS 0.5
@@ -67,6 +67,7 @@ typedef enum {
 -(void)createBrickNode;
 -(void)initCurrentBrickSketchNode;
 -(void)initCurrentBrickSketchPathWithTouch:(UITouch *)touch;
+-(void)updateCurrentBrickSketchPathWithTouch:(UITouch *)touch;
 -(void)createBallNodeAtLocation:(CGPoint)location;
 
 -(void)beginBallMode;
@@ -74,6 +75,7 @@ typedef enum {
 -(void)stopBrickModeCountDown;
 -(void)startBrickModeCountDown;
 -(CGPoint)relativeLocationSinceBrickModeBegan:(CGPoint)currentLocation;
+-(CGPoint)relativeLocationSinceLastLocation:(CGPoint)currentLocation;
 
 -(void)addNodeToGameLayer:(SKNode *)node;
 -(void)addNodeToDebugLayer:(SKNode *)node;
@@ -151,6 +153,7 @@ typedef enum {
         self.backgroundColor = [SKColor colorWithRed:BRICKDRAW_BACKGROUND_RED green:BRICKDRAW_BACKGROUND_GREEN blue:BRICKDRAW_BACKGROUND_BLUE alpha:BRICKDRAW_BACKGROUND_ALPHA];
         [self initCurrentBrickSketchNode];
         locationWhenBrickModeBegan = latestLocation;
+        CGPathMoveToPoint(currentBrickSketchPath, NULL, 0.0, 0.0);
     }
 }
 
@@ -161,6 +164,10 @@ typedef enum {
 
 -(CGPoint)relativeLocationSinceBrickModeBegan:(CGPoint)currentLocation {
     return CGPointMake(currentLocation.x-locationWhenBrickModeBegan.x, currentLocation.y-locationWhenBrickModeBegan.y);
+}
+
+-(CGPoint)relativeLocationSinceLastLocation:(CGPoint)currentLocation {
+    return CGPointMake(currentLocation.x-latestLocation.x, currentLocation.y-latestLocation.y);
 }
 
 -(void)startBrickModeCountDown {
@@ -217,6 +224,10 @@ typedef enum {
     currentBrickSketchNode.lineWidth = BRICK_SKETCH_LINE_WIDTH;
     currentBrickSketchNode.strokeColor = [SKColor lightGrayColor];
     currentBrickSketchNode.position = latestLocation;
+    
+    currentBrickSketchPath = CGPathCreateMutable();
+    currentBrickSketchNode.path = currentBrickSketchPath;
+    
     [self addNodeToGameLayer:currentBrickSketchNode];
 }
 
@@ -225,6 +236,16 @@ typedef enum {
     CGPoint relativeLocationSinceBrickModeBegan = [self relativeLocationSinceBrickModeBegan:locationOfTouch];
     currentBrickSketchPath = [self makePathFromZeroToPoint:relativeLocationSinceBrickModeBegan];
     currentBrickSketchNode.path = currentBrickSketchPath;
+}
+
+-(void)updateCurrentBrickSketchPathWithTouch:(UITouch *)touch {
+    CGPoint locationOfTouch = [touch locationInNode:self];
+    if(distance(latestLocation, locationOfTouch) > 10) {
+        CGPoint relativeLocationSinceBrickModeBegan = [self relativeLocationSinceBrickModeBegan:locationOfTouch];
+        CGPathAddLineToPoint(currentBrickSketchPath, NULL, relativeLocationSinceBrickModeBegan.x, relativeLocationSinceBrickModeBegan.y);
+        currentBrickSketchNode.path = currentBrickSketchPath;
+        latestLocation = locationOfTouch;
+    }
 }
 
 #pragma mark touch handling
@@ -250,7 +271,7 @@ typedef enum {
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     if(creationMode == kCreationModeBrick) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        [self initCurrentBrickSketchPathWithTouch:firstTouch];
+        [self updateCurrentBrickSketchPathWithTouch:firstTouch];
     }
 }
 
