@@ -16,6 +16,7 @@
 #define DEBUG_TEXT_NODE_NAME @"debugText"
 
 #define BRICK_SKETCH_LINE_WIDTH 1.0
+#define BRICK_MINIMUM_BEZIER_NODE_DISTANCE 50
 
 #define BRICK_WIDTH 30
 #define BRICK_HEIGHT 30
@@ -48,6 +49,9 @@ typedef enum {
 @interface BrickScene() {
     CGPoint latestLocation;
     CGPoint locationWhenBrickModeBegan;
+    
+    // control points for quad curve path
+    CGPoint controlPoint;
     
     CreationMode creationMode;
     
@@ -97,6 +101,7 @@ typedef enum {
         self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
         
         creationMode = kCreationModeUndefined;
+        
         [self beginBallMode];
     }
     return self;
@@ -153,7 +158,8 @@ typedef enum {
         self.backgroundColor = [SKColor colorWithRed:BRICKDRAW_BACKGROUND_RED green:BRICKDRAW_BACKGROUND_GREEN blue:BRICKDRAW_BACKGROUND_BLUE alpha:BRICKDRAW_BACKGROUND_ALPHA];
         [self initCurrentBrickSketchNode];
         locationWhenBrickModeBegan = latestLocation;
-        CGPathMoveToPoint(currentBrickSketchPath, NULL, 0.0, 0.0);
+        controlPoint = CGPointZero;
+        CGPathMoveToPoint(currentBrickSketchPath, NULL, controlPoint.x, controlPoint.y);
     }
 }
 
@@ -240,11 +246,12 @@ typedef enum {
 
 -(void)updateCurrentBrickSketchPathWithTouch:(UITouch *)touch {
     CGPoint locationOfTouch = [touch locationInNode:self];
-    if(distance(latestLocation, locationOfTouch) > 10) {
-        CGPoint relativeLocationSinceBrickModeBegan = [self relativeLocationSinceBrickModeBegan:locationOfTouch];
-        CGPathAddLineToPoint(currentBrickSketchPath, NULL, relativeLocationSinceBrickModeBegan.x, relativeLocationSinceBrickModeBegan.y);
-        currentBrickSketchNode.path = currentBrickSketchPath;
+    if(distance(latestLocation, locationOfTouch) > BRICK_MINIMUM_BEZIER_NODE_DISTANCE) {
         latestLocation = locationOfTouch;
+        CGPoint relativeLocationSinceBrickModeBegan = [self relativeLocationSinceBrickModeBegan:locationOfTouch];
+        CGPathAddQuadCurveToPoint(currentBrickSketchPath, NULL, controlPoint.x, controlPoint.y, relativeLocationSinceBrickModeBegan.x, relativeLocationSinceBrickModeBegan.y);
+        controlPoint = relativeLocationSinceBrickModeBegan;
+        currentBrickSketchNode.path = currentBrickSketchPath;
     }
 }
 
