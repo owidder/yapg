@@ -202,11 +202,6 @@ typedef enum {
     return ball;
 }
 
--(SKShapeNode *)makeRectangleAlongLineWithStart:(CGPoint)start andEnd:(CGPoint)end {
-    SKShapeNode *brick = [[SKShapeNode alloc] init];
-    return brick;
-}
-
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point {
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathMoveToPoint(path, NULL, 0.0, 0.0);
@@ -241,9 +236,8 @@ typedef enum {
 
 -(void)updateCurrentBrickSketchPathWithTouch:(UITouch *)touch {
     CGPoint positionOfTouch = [touch locationInNode:self];
-    if(distance(currentTouchPosition, positionOfTouch) > BRICK_MINIMUM_BEZIER_NODE_DISTANCE) {
-        currentTouchPosition = positionOfTouch;
-        CGPoint relativePositionSinceBrickModeBegan = [self relativePositionSinceBrickModeBegan:positionOfTouch];
+    CGPoint relativePositionSinceBrickModeBegan = [self relativePositionSinceBrickModeBegan:positionOfTouch];
+    if(distance(positionOfLastBrickNode, relativePositionSinceBrickModeBegan) > BRICK_MINIMUM_BEZIER_NODE_DISTANCE) {
         CGPathAddQuadCurveToPoint(currentBrickSketchPath, NULL, positionOfLastBrickNode.x, positionOfLastBrickNode.y, relativePositionSinceBrickModeBegan.x, relativePositionSinceBrickModeBegan.y);
         positionOfLastBrickNode = relativePositionSinceBrickModeBegan;
         currentBrickSketchNode.path = currentBrickSketchPath;
