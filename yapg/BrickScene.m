@@ -15,8 +15,8 @@
 
 #define DEBUG_TEXT_NODE_NAME @"debugText"
 
-#define BRICK_SKETCH_LINE_WIDTH 1.0
-#define BRICK_MINIMUM_BEZIER_NODE_DISTANCE 50
+#define BRICK_SKETCH_LINE_WIDTH 0.3
+#define BRICK_MINIMUM_BEZIER_NODE_DISTANCE 20
 
 #define BRICK_WIDTH 30
 #define BRICK_HEIGHT 30
@@ -47,11 +47,11 @@ typedef enum {
 } CreationMode;
 
 @interface BrickScene() {
-    CGPoint latestLocation;
-    CGPoint locationWhenBrickModeBegan;
+    CGPoint currentTouchPosition;
+    CGPoint touchPositionWhenBrickModeBegan;
+    CGPoint positionOfLastBrickNode;
     
     // control points for quad curve path
-    CGPoint controlPoint;
     
     CreationMode creationMode;
     
@@ -72,14 +72,13 @@ typedef enum {
 -(void)initCurrentBrickSketchNode;
 -(void)initCurrentBrickSketchPathWithTouch:(UITouch *)touch;
 -(void)updateCurrentBrickSketchPathWithTouch:(UITouch *)touch;
--(void)createBallNodeAtLocation:(CGPoint)location;
+-(void)createBallNodeAtPosition:(CGPoint)position;
 
 -(void)beginBallMode;
 -(void)beginBrickMode;
 -(void)stopBrickModeCountDown;
 -(void)startBrickModeCountDown;
--(CGPoint)relativeLocationSinceBrickModeBegan:(CGPoint)currentLocation;
--(CGPoint)relativeLocationSinceLastLocation:(CGPoint)currentLocation;
+-(CGPoint)relativePositionSinceBrickModeBegan:(CGPoint)currentPosition;
 
 -(void)addNodeToGameLayer:(SKNode *)node;
 -(void)addNodeToDebugLayer:(SKNode *)node;
@@ -157,9 +156,9 @@ typedef enum {
         creationMode = kCreationModeBrick;
         self.backgroundColor = [SKColor colorWithRed:BRICKDRAW_BACKGROUND_RED green:BRICKDRAW_BACKGROUND_GREEN blue:BRICKDRAW_BACKGROUND_BLUE alpha:BRICKDRAW_BACKGROUND_ALPHA];
         [self initCurrentBrickSketchNode];
-        locationWhenBrickModeBegan = latestLocation;
-        controlPoint = CGPointZero;
-        CGPathMoveToPoint(currentBrickSketchPath, NULL, controlPoint.x, controlPoint.y);
+        touchPositionWhenBrickModeBegan = currentTouchPosition;
+        positionOfLastBrickNode = CGPointZero;
+        CGPathMoveToPoint(currentBrickSketchPath, NULL, positionOfLastBrickNode.x, positionOfLastBrickNode.y);
     }
 }
 
@@ -168,12 +167,8 @@ typedef enum {
     creationModeTimer = nil;
 }
 
--(CGPoint)relativeLocationSinceBrickModeBegan:(CGPoint)currentLocation {
-    return CGPointMake(currentLocation.x-locationWhenBrickModeBegan.x, currentLocation.y-locationWhenBrickModeBegan.y);
-}
-
--(CGPoint)relativeLocationSinceLastLocation:(CGPoint)currentLocation {
-    return CGPointMake(currentLocation.x-latestLocation.x, currentLocation.y-latestLocation.y);
+-(CGPoint)relativePositionSinceBrickModeBegan:(CGPoint)currentPosition {
+    return CGPointMake(currentPosition.x-touchPositionWhenBrickModeBegan.x, currentPosition.y-touchPositionWhenBrickModeBegan.y);
 }
 
 -(void)startBrickModeCountDown {
@@ -182,9 +177,9 @@ typedef enum {
 
 #pragma mark draw bricks and balls
 
--(void)createBallNodeAtLocation:(CGPoint)location {
+-(void)createBallNodeAtPosition:(CGPoint)position {
     SKShapeNode *ball = [self makeCircleWithRadius:BALL_RADIUS];
-    ball.position = location;
+    ball.position = position;
     [self addNodeToGameLayer:ball];
 }
 
@@ -229,7 +224,7 @@ typedef enum {
     currentBrickSketchNode = [[SKShapeNode alloc] init];
     currentBrickSketchNode.lineWidth = BRICK_SKETCH_LINE_WIDTH;
     currentBrickSketchNode.strokeColor = [SKColor lightGrayColor];
-    currentBrickSketchNode.position = latestLocation;
+    currentBrickSketchNode.position = currentTouchPosition;
     
     currentBrickSketchPath = CGPathCreateMutable();
     currentBrickSketchNode.path = currentBrickSketchPath;
@@ -238,19 +233,19 @@ typedef enum {
 }
 
 -(void)initCurrentBrickSketchPathWithTouch:(UITouch *)touch {
-    CGPoint locationOfTouch = [touch locationInNode:self];
-    CGPoint relativeLocationSinceBrickModeBegan = [self relativeLocationSinceBrickModeBegan:locationOfTouch];
-    currentBrickSketchPath = [self makePathFromZeroToPoint:relativeLocationSinceBrickModeBegan];
+    CGPoint positionOfTouch = [touch locationInNode:self];
+    CGPoint relativePositionSinceBrickModeBegan = [self relativePositionSinceBrickModeBegan:positionOfTouch];
+    currentBrickSketchPath = [self makePathFromZeroToPoint:relativePositionSinceBrickModeBegan];
     currentBrickSketchNode.path = currentBrickSketchPath;
 }
 
 -(void)updateCurrentBrickSketchPathWithTouch:(UITouch *)touch {
-    CGPoint locationOfTouch = [touch locationInNode:self];
-    if(distance(latestLocation, locationOfTouch) > BRICK_MINIMUM_BEZIER_NODE_DISTANCE) {
-        latestLocation = locationOfTouch;
-        CGPoint relativeLocationSinceBrickModeBegan = [self relativeLocationSinceBrickModeBegan:locationOfTouch];
-        CGPathAddQuadCurveToPoint(currentBrickSketchPath, NULL, controlPoint.x, controlPoint.y, relativeLocationSinceBrickModeBegan.x, relativeLocationSinceBrickModeBegan.y);
-        controlPoint = relativeLocationSinceBrickModeBegan;
+    CGPoint positionOfTouch = [touch locationInNode:self];
+    if(distance(currentTouchPosition, positionOfTouch) > BRICK_MINIMUM_BEZIER_NODE_DISTANCE) {
+        currentTouchPosition = positionOfTouch;
+        CGPoint relativePositionSinceBrickModeBegan = [self relativePositionSinceBrickModeBegan:positionOfTouch];
+        CGPathAddQuadCurveToPoint(currentBrickSketchPath, NULL, positionOfLastBrickNode.x, positionOfLastBrickNode.y, relativePositionSinceBrickModeBegan.x, relativePositionSinceBrickModeBegan.y);
+        positionOfLastBrickNode = relativePositionSinceBrickModeBegan;
         currentBrickSketchNode.path = currentBrickSketchPath;
     }
 }
@@ -259,7 +254,7 @@ typedef enum {
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-    latestLocation = [firstTouch locationInNode:self];
+    currentTouchPosition = [firstTouch locationInNode:self];
     [self startBrickModeCountDown];
 }
 
@@ -267,7 +262,7 @@ typedef enum {
     [self stopBrickModeCountDown];
     if(creationMode == kCreationModeBall) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        [self createBallNodeAtLocation:[firstTouch locationInNode:self]];
+        [self createBallNodeAtPosition:[firstTouch locationInNode:self]];
     }
     else {
         [self createBrickNode];
