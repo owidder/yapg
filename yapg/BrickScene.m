@@ -225,6 +225,7 @@ typedef enum {
     currentBrickSketchNode.path = currentBrickSketchPath;
     
     [self addNodeToGameLayer:currentBrickSketchNode];
+    [ActionFactory applyDestroyActionOnLineNode:currentBrickSketchNode];
 }
 
 -(void)initCurrentBrickSketchPathWithTouch:(UITouch *)touch {
