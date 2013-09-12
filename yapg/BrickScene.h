@@ -8,6 +8,6 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface BrickScene : SKScene
+@interface BrickScene : SKScene<SKPhysicsContactDelegate>
 
 @end

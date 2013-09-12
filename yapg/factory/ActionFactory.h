@@ -11,6 +11,7 @@
 
 @interface ActionFactory : NSObject
 
-+(void)applyDestroyActionOnLineNode:(SKShapeNode *)lineNode;
++(void)runFadeOutDestroyActionOnNode:(SKNode *)node;
++(void)runSmokeDestroyActionOnNode:(SKNode *)node;
 
 @end

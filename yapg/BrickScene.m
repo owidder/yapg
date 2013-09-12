@@ -15,6 +15,8 @@
 
 #define DEBUG_TEXT_NODE_NAME @"debugText"
 
+#define SCENE_NAME @"scene"
+
 #define BRICK_SKETCH_LINE_WIDTH 0.3
 #define BRICK_MINIMUM_BEZIER_NODE_DISTANCE 20
 
@@ -38,6 +40,9 @@
 #define BRICKDRAW_BACKGROUND_BLUE 0.9
 #define BRICKDRAW_BACKGROUND_GREEN 0.9
 #define BRICKDRAW_BACKGROUND_ALPHA 1.0
+
+static const uint32_t sceneCategory = 0x1 << 0;
+static const uint32_t ballCategory = 0x1 << 1;
 
 typedef enum {
     kCreationModeUndefined,
@@ -92,12 +97,16 @@ typedef enum {
 
 -(id)initWithSize:(CGSize)size {
     if (self = [super initWithSize:size]) {
-        /* Setup your scene here */
+
+        self.name = SCENE_NAME;
+        
+        self.physicsWorld.contactDelegate = self;
         
         [self initAndAddGameLayer];
         [self initAndAddDebugLayer];
         
         self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
+        self.physicsBody.categoryBitMask = sceneCategory;
         
         creationMode = kCreationModeUndefined;
         
@@ -111,6 +120,24 @@ typedef enum {
 -(void)printDebugMessage:(NSString *)message {
     SKLabelNode *debugTextNode = (SKLabelNode *) [debugLayer childNodeWithName:DEBUG_TEXT_NODE_NAME];
     debugTextNode.text = message;
+}
+
+#pragma mark contact handling
+
+-(void)didBeginContact:(SKPhysicsContact *)contact {
+    if([contact.bodyA.node.name isEqualToString:SCENE_NAME] || [contact.bodyA.node.name isEqualToString:SCENE_NAME]) {
+        SKNode *ball;
+        
+        if([contact.bodyA.node.name isEqualToString:BALL_NAME]) {
+            ball = contact.bodyA.node;
+        }
+        else if([contact.bodyB.node.name isEqualToString:BALL_NAME]) {
+            ball = contact.bodyB.node;
+        }
+        
+        [ActionFactory runSmokeDestroyActionOnNode:ball];
+    }
+    
 }
 
 #pragma mark layer handling
@@ -180,6 +207,8 @@ typedef enum {
 -(void)createBallNodeAtPosition:(CGPoint)position {
     SKShapeNode *ball = [self makeCircleWithRadius:BALL_RADIUS];
     ball.position = position;
+    ball.physicsBody.categoryBitMask = ballCategory;
+    ball.physicsBody.contactTestBitMask = sceneCategory;
     [self addNodeToGameLayer:ball];
 }
 
@@ -225,7 +254,7 @@ typedef enum {
     currentBrickSketchNode.path = currentBrickSketchPath;
     
     [self addNodeToGameLayer:currentBrickSketchNode];
-    [ActionFactory applyDestroyActionOnLineNode:currentBrickSketchNode];
+    [ActionFactory runFadeOutDestroyActionOnNode:currentBrickSketchNode];
 }
 
 -(void)initCurrentBrickSketchPathWithTouch:(UITouch *)touch {

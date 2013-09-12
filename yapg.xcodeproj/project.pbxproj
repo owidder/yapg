@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		99332CAF17DB034E00B7EC57 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* math.m */; };
-		99563E5217DCFC56006C0E61 /* ActionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99563E5117DCFC56006C0E61 /* ActionFactory.m */; };
+		99463F7117E24FC700DC690A /* smoke.sks in Resources */ = {isa = PBXBuildFile; fileRef = 99463F6F17E24FC700DC690A /* smoke.sks */; };
+		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
+		99463F7617E2526200DC690A /* ActionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99463F7517E2526200DC690A /* ActionFactory.m */; };
+		99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99463F7817E2529000DC690A /* EmitterNodeFactory.m */; };
 		99C4AD6E17DC762100CBCFB6 /* icon-src.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6917DC762100CBCFB6 /* icon-src.png */; };
 		99C4AD6F17DC762100CBCFB6 /* icon29.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6A17DC762100CBCFB6 /* icon29.png */; };
 		99C4AD7017DC762100CBCFB6 /* icon40.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6B17DC762100CBCFB6 /* icon40.png */; };
@@ -52,8 +55,12 @@
 /* Begin PBXFileReference section */
 		99332CAD17DB02A100B7EC57 /* math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
 		99332CAE17DB034E00B7EC57 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
-		99563E5017DCFC56006C0E61 /* ActionFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionFactory.h; sourceTree = "<group>"; };
-		99563E5117DCFC56006C0E61 /* ActionFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionFactory.m; sourceTree = "<group>"; };
+		99463F6F17E24FC700DC690A /* smoke.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smoke.sks; sourceTree = "<group>"; };
+		99463F7017E24FC700DC690A /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		99463F7417E2526200DC690A /* ActionFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionFactory.h; sourceTree = "<group>"; };
+		99463F7517E2526200DC690A /* ActionFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionFactory.m; sourceTree = "<group>"; };
+		99463F7717E2529000DC690A /* EmitterNodeFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmitterNodeFactory.h; sourceTree = "<group>"; };
+		99463F7817E2529000DC690A /* EmitterNodeFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmitterNodeFactory.m; sourceTree = "<group>"; };
 		99C4AD6917DC762100CBCFB6 /* icon-src.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-src.png"; sourceTree = "<group>"; };
 		99C4AD6A17DC762100CBCFB6 /* icon29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon29.png; sourceTree = "<group>"; };
 		99C4AD6B17DC762100CBCFB6 /* icon40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon40.png; sourceTree = "<group>"; };
@@ -125,6 +132,26 @@
 			path = util;
 			sourceTree = "<group>";
 		};
+		99463F6E17E24F5A00DC690A /* particle */ = {
+			isa = PBXGroup;
+			children = (
+				99463F6F17E24FC700DC690A /* smoke.sks */,
+				99463F7017E24FC700DC690A /* spark.png */,
+			);
+			path = particle;
+			sourceTree = "<group>";
+		};
+		99463F7317E2526200DC690A /* factory */ = {
+			isa = PBXGroup;
+			children = (
+				99463F7417E2526200DC690A /* ActionFactory.h */,
+				99463F7517E2526200DC690A /* ActionFactory.m */,
+				99463F7717E2529000DC690A /* EmitterNodeFactory.h */,
+				99463F7817E2529000DC690A /* EmitterNodeFactory.m */,
+			);
+			path = factory;
+			sourceTree = "<group>";
+		};
 		99C4AD6717DC762100CBCFB6 /* resource */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +211,8 @@
 		99D3B61A17C0DB040064FA09 /* yapg */ = {
 			isa = PBXGroup;
 			children = (
+				99463F7317E2526200DC690A /* factory */,
+				99463F6E17E24F5A00DC690A /* particle */,
 				99332CAC17DB028800B7EC57 /* util */,
 				99D3B62317C0DB040064FA09 /* AppDelegate.h */,
 				99D3B62417C0DB040064FA09 /* AppDelegate.m */,
@@ -198,8 +227,6 @@
 				99D3B61B17C0DB040064FA09 /* Supporting Files */,
 				99D3B65117C0DBF70064FA09 /* BrickScene.h */,
 				99D3B65217C0DBF70064FA09 /* BrickScene.m */,
-				99563E5017DCFC56006C0E61 /* ActionFactory.h */,
-				99563E5117DCFC56006C0E61 /* ActionFactory.m */,
 			);
 			path = yapg;
 			sourceTree = "<group>";
@@ -311,6 +338,7 @@
 			files = (
 				99C4AD7817DC77C600CBCFB6 /* icon120.png in Resources */,
 				99C4AD7117DC762100CBCFB6 /* icon60.png in Resources */,
+				99463F7117E24FC700DC690A /* smoke.sks in Resources */,
 				99C4AD6F17DC762100CBCFB6 /* icon29.png in Resources */,
 				99C4AD7617DC775700CBCFB6 /* icon80.png in Resources */,
 				99D3B63317C0DB040064FA09 /* Spaceship.png in Resources */,
@@ -321,6 +349,7 @@
 				99D3B62817C0DB040064FA09 /* Main_iPhone.storyboard in Resources */,
 				99D3B61F17C0DB040064FA09 /* InfoPlist.strings in Resources */,
 				99C4AD6E17DC762100CBCFB6 /* icon-src.png in Resources */,
+				99463F7217E24FC700DC690A /* spark.png in Resources */,
 				99C4AD7417DC76A700CBCFB6 /* icon58.png in Resources */,
 				99C4AD7217DC762100CBCFB6 /* icon76.png in Resources */,
 			);
@@ -344,10 +373,11 @@
 				99D3B63117C0DB040064FA09 /* MyScene.m in Sources */,
 				99332CAF17DB034E00B7EC57 /* math.m in Sources */,
 				99D3B65317C0DBF70064FA09 /* BrickScene.m in Sources */,
-				99563E5217DCFC56006C0E61 /* ActionFactory.m in Sources */,
+				99463F7617E2526200DC690A /* ActionFactory.m in Sources */,
 				99D3B62E17C0DB040064FA09 /* ViewController.m in Sources */,
 				99D3B62517C0DB040064FA09 /* AppDelegate.m in Sources */,
 				99D3B62117C0DB040064FA09 /* main.m in Sources */,
+				99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
