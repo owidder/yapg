@@ -74,7 +74,6 @@ typedef enum {
 -(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius;
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point;
 
--(void)createBrickNode;
 -(void)initCurrentBrickSketchNode;
 -(void)initCurrentBrickSketchPathWithTouch:(UITouch *)touch;
 -(void)updateCurrentBrickSketchPathWithTouch:(UITouch *)touch;
@@ -92,8 +91,6 @@ typedef enum {
 -(void)initAndAddGameLayer;
 -(void)initField;
 -(void)initEdges;
--(void)initFrame;
--(void)initBottom;
 
 -(void)printDebugMessage:(NSString *)message;
 @end
@@ -206,23 +203,6 @@ typedef enum {
     [self addNodeToGameLayer:bottom];
 }
 
--(void)initFrame {
-    SKNode *frameNode = [[SKNode alloc] init];
-    frameNode.name = @"frame";
-    frameNode.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
-    [self addNodeToGameLayer:frameNode];
-}
-
--(void)initBottom {
-    SKNode *bottomNode = [[SKNode alloc] init];
-    bottomNode.name = BOTTOM_NAME;
-    bottomNode.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:self.frame.origin
-                                                          toPoint:CGPointMake(self.frame.size.width, self.frame.origin.y)];
-    bottomNode.physicsBody.categoryBitMask = bottomCategory;
-    [self addNodeToGameLayer:bottomNode];
-}
-
-
 #pragma mark mode handling
 
 -(void)beginBallMode {
@@ -292,12 +272,6 @@ typedef enum {
     return path;
 }
 
--(void)createBrickNode {
-    currentBrickSketchNode.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:currentBrickSketchPath];
-    currentBrickSketchNode.physicsBody.dynamic = NO;
-//    [ActionFactory applyDestroyActionOnLineNode:currentBrickSketchNode];
-}
-
 -(void)initCurrentBrickSketchNode {
     currentBrickSketchNode = [[SKShapeNode alloc] init];
     currentBrickSketchNode.lineWidth = BRICK_SKETCH_LINE_WIDTH;
@@ -325,6 +299,7 @@ typedef enum {
         CGPathAddQuadCurveToPoint(currentBrickSketchPath, NULL, positionOfLastBrickNode.x, positionOfLastBrickNode.y, relativePositionSinceBrickModeBegan.x, relativePositionSinceBrickModeBegan.y);
         positionOfLastBrickNode = relativePositionSinceBrickModeBegan;
         currentBrickSketchNode.path = currentBrickSketchPath;
+        currentBrickSketchNode.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:currentBrickSketchPath];
     }
 }
 
@@ -343,7 +318,6 @@ typedef enum {
         [self createBallNodeAtPosition:[firstTouch locationInNode:self]];
     }
     else {
-        [self createBrickNode];
         [self beginBallMode];
     }
 }
@@ -353,6 +327,10 @@ typedef enum {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
         [self updateCurrentBrickSketchPathWithTouch:firstTouch];
     }
+}
+
+-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self beginBallMode];
 }
 
 #pragma mark SKScene
