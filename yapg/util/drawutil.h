@@ -17,4 +17,7 @@ CGFloat distance(CGPoint a, CGPoint b);
 // angle of the line between a and b in radian
 CGFloat phi(CGPoint a, CGPoint b);
 
+BOOL isPositionValid(CGPoint position);
+void invalidatePosition(CGPoint *position);
+
 #endif

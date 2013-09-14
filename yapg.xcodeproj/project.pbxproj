@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		99332CAF17DB034E00B7EC57 /* math.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* math.m */; };
+		99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* drawutil.m */; };
 		99463F7117E24FC700DC690A /* smoke.sks in Resources */ = {isa = PBXBuildFile; fileRef = 99463F6F17E24FC700DC690A /* smoke.sks */; };
 		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
 		99463F7617E2526200DC690A /* ActionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99463F7517E2526200DC690A /* ActionFactory.m */; };
@@ -55,8 +55,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		99332CAD17DB02A100B7EC57 /* math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
-		99332CAE17DB034E00B7EC57 /* math.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = math.m; sourceTree = "<group>"; };
+		99332CAD17DB02A100B7EC57 /* drawutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = drawutil.h; sourceTree = "<group>"; };
+		99332CAE17DB034E00B7EC57 /* drawutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawutil.m; sourceTree = "<group>"; };
 		99463F6F17E24FC700DC690A /* smoke.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smoke.sks; sourceTree = "<group>"; };
 		99463F7017E24FC700DC690A /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		99463F7417E2526200DC690A /* ActionFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionFactory.h; sourceTree = "<group>"; };
@@ -130,8 +130,8 @@
 		99332CAC17DB028800B7EC57 /* util */ = {
 			isa = PBXGroup;
 			children = (
-				99332CAD17DB02A100B7EC57 /* math.h */,
-				99332CAE17DB034E00B7EC57 /* math.m */,
+				99332CAD17DB02A100B7EC57 /* drawutil.h */,
+				99332CAE17DB034E00B7EC57 /* drawutil.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -379,7 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99D3B63117C0DB040064FA09 /* MyScene.m in Sources */,
-				99332CAF17DB034E00B7EC57 /* math.m in Sources */,
+				99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */,
 				99D3B65317C0DBF70064FA09 /* BrickScene.m in Sources */,
 				99463F7617E2526200DC690A /* ActionFactory.m in Sources */,
 				99D3B62E17C0DB040064FA09 /* ViewController.m in Sources */,

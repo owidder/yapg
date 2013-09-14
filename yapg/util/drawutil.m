@@ -7,7 +7,8 @@
 //
 
 #include <stdio.h>
-#include "math.h"
+#include <float.h>
+#include "drawutil.h"
 
 CGFloat distance(CGPoint a, CGPoint b) {
     CGFloat xdist = a.x - b.x;
@@ -23,4 +24,16 @@ CGFloat phi(CGPoint a, CGPoint b) {
     CGFloat phi = atan2f(ydist, xdist);
     
     return phi;
+}
+
+BOOL isPositionValid(CGPoint position) {
+    if(position.x == FLT_MAX && position.y == FLT_MAX) {
+        return NO;
+    }
+    return YES;
+}
+
+void invalidatePosition(CGPoint *position) {
+    position->x = FLT_MAX;
+    position->y = FLT_MAX;
 }
