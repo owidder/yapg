@@ -45,23 +45,10 @@
 static const uint32_t bottomCategory = 0x1 << 0;
 static const uint32_t ballCategory = 0x1 << 1;
 
-typedef enum {
-    kCreationModeUndefined,
-    kCreationModeBall,
-    kCreationModeBrick
-    
-} CreationMode;
-
 @interface BrickScene() {
     CGPoint currentTouchPosition;
-    CGPoint touchPositionWhenBrickModeBegan;
+    CGPoint positionAtTouchBegan;
     CGPoint positionOfLastBrickNode;
-    
-    // control points for quad curve path
-    
-    CreationMode creationMode;
-    
-    NSTimer *creationModeTimer;
     
     SKNode *gameLayer;
     
@@ -105,10 +92,6 @@ typedef enum {
         self.physicsWorld.contactDelegate = self;
         
         [self initField];
-        
-        creationMode = kCreationModeUndefined;
-        
-        [self beginBallMode];
     }
     return self;
 }
@@ -205,35 +188,8 @@ typedef enum {
 
 #pragma mark mode handling
 
--(void)beginBallMode {
-    if(creationMode != kCreationModeBall) {
-        self.backgroundColor = [SKColor colorWithRed:NORMAL_BACKGROUND_RED green:NORMAL_BACKGROUND_GREEN blue:NORMAL_BACKGROUND_BLUE alpha:NORMAL_BACKGROUND_ALPHA];
-        creationMode = kCreationModeBall;
-    }
-}
-
--(void)beginBrickMode {
-    if(creationMode != kCreationModeBrick) {
-        creationMode = kCreationModeBrick;
-        self.backgroundColor = [SKColor colorWithRed:BRICKDRAW_BACKGROUND_RED green:BRICKDRAW_BACKGROUND_GREEN blue:BRICKDRAW_BACKGROUND_BLUE alpha:BRICKDRAW_BACKGROUND_ALPHA];
-        [self initCurrentBrickSketchNode];
-        touchPositionWhenBrickModeBegan = currentTouchPosition;
-        positionOfLastBrickNode = CGPointZero;
-        CGPathMoveToPoint(currentBrickSketchPath, NULL, positionOfLastBrickNode.x, positionOfLastBrickNode.y);
-    }
-}
-
--(void)stopBrickModeCountDown {
-    [creationModeTimer invalidate];
-    creationModeTimer = nil;
-}
-
 -(CGPoint)relativePositionSinceBrickModeBegan:(CGPoint)currentPosition {
     return CGPointMake(currentPosition.x-touchPositionWhenBrickModeBegan.x, currentPosition.y-touchPositionWhenBrickModeBegan.y);
-}
-
--(void)startBrickModeCountDown {
-    creationModeTimer = [NSTimer scheduledTimerWithTimeInterval:MIN_TIME_TO_START_BRICK_DRAWING_IN_SECONDS target:self selector:@selector(beginBrickMode) userInfo:NULL repeats:NO];
 }
 
 #pragma mark draw bricks and balls
@@ -308,29 +264,18 @@ typedef enum {
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
     currentTouchPosition = [firstTouch locationInNode:self];
-    [self startBrickModeCountDown];
+    positionAtTouchBegan = currentTouchPosition;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self stopBrickModeCountDown];
-    if(creationMode == kCreationModeBall) {
-        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        [self createBallNodeAtPosition:[firstTouch locationInNode:self]];
-    }
-    else {
-        [self beginBallMode];
-    }
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if(creationMode == kCreationModeBrick) {
-        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        [self updateCurrentBrickSketchPathWithTouch:firstTouch];
-    }
+    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+    [self updateCurrentBrickSketchPathWithTouch:firstTouch];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self beginBallMode];
 }
 
 #pragma mark SKScene
