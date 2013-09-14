@@ -9,13 +9,14 @@
 #import "BrickScene.h"
 #import "util/math.h"
 #import "ActionFactory.h"
+#import "EmitterNodeFactory.h"
 
 #define DEBUG_LAYER_Z_POSITION 1000
 #define GAME_LAYER_Z_POSITION 0
 
 #define DEBUG_TEXT_NODE_NAME @"debugText"
 
-#define SCENE_NAME @"scene"
+#define BOTTOM_NAME @"bottom"
 
 #define BRICK_SKETCH_LINE_WIDTH 0.3
 #define BRICK_MINIMUM_BEZIER_NODE_DISTANCE 20
@@ -41,7 +42,7 @@
 #define BRICKDRAW_BACKGROUND_GREEN 0.9
 #define BRICKDRAW_BACKGROUND_ALPHA 1.0
 
-static const uint32_t sceneCategory = 0x1 << 0;
+static const uint32_t bottomCategory = 0x1 << 0;
 static const uint32_t ballCategory = 0x1 << 1;
 
 typedef enum {
@@ -89,24 +90,24 @@ typedef enum {
 -(void)addNodeToDebugLayer:(SKNode *)node;
 -(void)initAndAddDebugLayer;
 -(void)initAndAddGameLayer;
+-(void)initField;
+-(void)initEdges;
+-(void)initFrame;
+-(void)initBottom;
 
 -(void)printDebugMessage:(NSString *)message;
 @end
 
 @implementation BrickScene
 
+#pragma mark initialization
+
 -(id)initWithSize:(CGSize)size {
     if (self = [super initWithSize:size]) {
 
-        self.name = SCENE_NAME;
-        
         self.physicsWorld.contactDelegate = self;
         
-        [self initAndAddGameLayer];
-        [self initAndAddDebugLayer];
-        
-        self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
-        self.physicsBody.categoryBitMask = sceneCategory;
+        [self initField];
         
         creationMode = kCreationModeUndefined;
         
@@ -125,8 +126,8 @@ typedef enum {
 #pragma mark contact handling
 
 -(void)didBeginContact:(SKPhysicsContact *)contact {
-    if([contact.bodyA.node.name isEqualToString:SCENE_NAME] || [contact.bodyA.node.name isEqualToString:SCENE_NAME]) {
-        SKNode *ball;
+    if([contact.bodyA.node.name isEqualToString:BOTTOM_NAME] || [contact.bodyA.node.name isEqualToString:BOTTOM_NAME]) {
+        SKNode *ball = nil;
         
         if([contact.bodyA.node.name isEqualToString:BALL_NAME]) {
             ball = contact.bodyA.node;
@@ -135,12 +136,20 @@ typedef enum {
             ball = contact.bodyB.node;
         }
         
-        [ActionFactory runSmokeDestroyActionOnNode:ball];
+        if(ball != nil) {
+            [ActionFactory destroyNode:ball withEmitter:[EmitterNodeFactory newSmokeEmitter]];
+        }
     }
     
 }
 
 #pragma mark layer handling
+
+-(void)initField {
+    [self initAndAddGameLayer];
+    [self initAndAddDebugLayer];
+    [self initEdges];
+}
 
 -(void)initAndAddDebugLayer {
     debugLayer = [[SKNode alloc] init];
@@ -168,6 +177,51 @@ typedef enum {
 -(void)addNodeToDebugLayer:(SKNode *)node {
     [debugLayer addChild:node];
 }
+
+-(void)initEdges {
+    CGPoint bottomLeft = self.frame.origin;
+    CGPoint topLeft = CGPointMake(bottomLeft.x, bottomLeft.x+self.frame.size.height);
+    CGPoint topRight = CGPointMake(topLeft.x+self.frame.size.width, topLeft.y);
+    CGPoint bottomRight = CGPointMake(topRight.x, bottomLeft.y);
+    
+    SKNode *right = [[SKNode alloc] init];
+    right.name = @"right";
+    right.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topRight toPoint:bottomRight];
+    [self addNodeToGameLayer:right];
+    
+    SKNode *top = [[SKNode alloc] init];
+    top.name = @"top";
+    top.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topLeft toPoint:topRight];
+    [self addNodeToGameLayer:top];
+    
+    SKNode *left = [[SKNode alloc] init];
+    left.name = @"left";
+    left.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:topLeft];
+    [self addNodeToGameLayer:left];
+    
+    SKNode *bottom = [[SKNode alloc] init];
+    bottom.name = BOTTOM_NAME;
+    bottom.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:bottomRight];
+    bottom.physicsBody.categoryBitMask = bottomCategory;
+    [self addNodeToGameLayer:bottom];
+}
+
+-(void)initFrame {
+    SKNode *frameNode = [[SKNode alloc] init];
+    frameNode.name = @"frame";
+    frameNode.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
+    [self addNodeToGameLayer:frameNode];
+}
+
+-(void)initBottom {
+    SKNode *bottomNode = [[SKNode alloc] init];
+    bottomNode.name = BOTTOM_NAME;
+    bottomNode.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:self.frame.origin
+                                                          toPoint:CGPointMake(self.frame.size.width, self.frame.origin.y)];
+    bottomNode.physicsBody.categoryBitMask = bottomCategory;
+    [self addNodeToGameLayer:bottomNode];
+}
+
 
 #pragma mark mode handling
 
@@ -208,7 +262,7 @@ typedef enum {
     SKShapeNode *ball = [self makeCircleWithRadius:BALL_RADIUS];
     ball.position = position;
     ball.physicsBody.categoryBitMask = ballCategory;
-    ball.physicsBody.contactTestBitMask = sceneCategory;
+    ball.physicsBody.contactTestBitMask = bottomCategory;
     [self addNodeToGameLayer:ball];
 }
 
@@ -254,7 +308,7 @@ typedef enum {
     currentBrickSketchNode.path = currentBrickSketchPath;
     
     [self addNodeToGameLayer:currentBrickSketchNode];
-    [ActionFactory runFadeOutDestroyActionOnNode:currentBrickSketchNode];
+    [ActionFactory destroyNodeWithFadeOut:currentBrickSketchNode];
 }
 
 -(void)initCurrentBrickSketchPathWithTouch:(UITouch *)touch {

@@ -12,5 +12,6 @@
 @interface EmitterNodeFactory : NSObject
 
 +(SKEmitterNode *)newSmokeEmitter;
++(SKEmitterNode *)newSparkEmitter;
 
 @end

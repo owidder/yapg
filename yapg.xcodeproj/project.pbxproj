@@ -12,6 +12,8 @@
 		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
 		99463F7617E2526200DC690A /* ActionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99463F7517E2526200DC690A /* ActionFactory.m */; };
 		99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99463F7817E2529000DC690A /* EmitterNodeFactory.m */; };
+		9994AF9417E399EA009627B7 /* magic.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9994AF9317E399EA009627B7 /* magic.sks */; };
+		9994AF9617E39A08009627B7 /* spark.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9994AF9517E39A08009627B7 /* spark.sks */; };
 		99C4AD6E17DC762100CBCFB6 /* icon-src.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6917DC762100CBCFB6 /* icon-src.png */; };
 		99C4AD6F17DC762100CBCFB6 /* icon29.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6A17DC762100CBCFB6 /* icon29.png */; };
 		99C4AD7017DC762100CBCFB6 /* icon40.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6B17DC762100CBCFB6 /* icon40.png */; };
@@ -61,6 +63,8 @@
 		99463F7517E2526200DC690A /* ActionFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionFactory.m; sourceTree = "<group>"; };
 		99463F7717E2529000DC690A /* EmitterNodeFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmitterNodeFactory.h; sourceTree = "<group>"; };
 		99463F7817E2529000DC690A /* EmitterNodeFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmitterNodeFactory.m; sourceTree = "<group>"; };
+		9994AF9317E399EA009627B7 /* magic.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = magic.sks; sourceTree = "<group>"; };
+		9994AF9517E39A08009627B7 /* spark.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = spark.sks; sourceTree = "<group>"; };
 		99C4AD6917DC762100CBCFB6 /* icon-src.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-src.png"; sourceTree = "<group>"; };
 		99C4AD6A17DC762100CBCFB6 /* icon29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon29.png; sourceTree = "<group>"; };
 		99C4AD6B17DC762100CBCFB6 /* icon40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon40.png; sourceTree = "<group>"; };
@@ -137,6 +141,8 @@
 			children = (
 				99463F6F17E24FC700DC690A /* smoke.sks */,
 				99463F7017E24FC700DC690A /* spark.png */,
+				9994AF9317E399EA009627B7 /* magic.sks */,
+				9994AF9517E39A08009627B7 /* spark.sks */,
 			);
 			path = particle;
 			sourceTree = "<group>";
@@ -337,6 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99C4AD7817DC77C600CBCFB6 /* icon120.png in Resources */,
+				9994AF9617E39A08009627B7 /* spark.sks in Resources */,
 				99C4AD7117DC762100CBCFB6 /* icon60.png in Resources */,
 				99463F7117E24FC700DC690A /* smoke.sks in Resources */,
 				99C4AD6F17DC762100CBCFB6 /* icon29.png in Resources */,
@@ -346,6 +353,7 @@
 				99C4AD7017DC762100CBCFB6 /* icon40.png in Resources */,
 				99D3B63517C0DB040064FA09 /* Images.xcassets in Resources */,
 				99D3B62B17C0DB040064FA09 /* Main_iPad.storyboard in Resources */,
+				9994AF9417E399EA009627B7 /* magic.sks in Resources */,
 				99D3B62817C0DB040064FA09 /* Main_iPhone.storyboard in Resources */,
 				99D3B61F17C0DB040064FA09 /* InfoPlist.strings in Resources */,
 				99C4AD6E17DC762100CBCFB6 /* icon-src.png in Resources */,

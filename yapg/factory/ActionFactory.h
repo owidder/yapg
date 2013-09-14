@@ -11,7 +11,7 @@
 
 @interface ActionFactory : NSObject
 
-+(void)runFadeOutDestroyActionOnNode:(SKNode *)node;
-+(void)runSmokeDestroyActionOnNode:(SKNode *)node;
++(void)destroyNodeWithFadeOut:(SKNode *)node;
++(void)destroyNode:(SKNode *)node withEmitter:(SKEmitterNode *)emitter;
 
 @end
