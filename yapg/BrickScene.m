@@ -21,10 +21,6 @@
 
 #define BOTTOM_NAME @"bottom"
 
-#define BRICK_SKETCH_LINE_WIDTH 0.3
-
-#define BRICK_WIDTH 30
-#define BRICK_HEIGHT 30
 #define BRICK_NAME @"brick"
 
 #define BALL_RADIUS 3
@@ -36,6 +32,7 @@ static const uint32_t bottomCategory = 0x1 << 0;
 static const uint32_t ballCategory = 0x1 << 1;
 
 static const int MIN_BRICK_DISTANCE = 20;
+static const float BRICK_LINE_WIDTH = 0.1;
 
 static const float NORMAL_BACKGROUND_RED = 1.0;
 static const float NORMAL_BACKGROUND_BLUE = 1.0;
@@ -230,7 +227,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(void)initCurrentBrickSketchNodeWithPosition:(CGPoint)position {
     currentBrickSketchNode = [[SKShapeNode alloc] init];
-    currentBrickSketchNode.lineWidth = BRICK_SKETCH_LINE_WIDTH;
+    currentBrickSketchNode.lineWidth = BRICK_LINE_WIDTH;
     currentBrickSketchNode.strokeColor = [SKColor lightGrayColor];
     currentBrickSketchNode.position = position;
     
