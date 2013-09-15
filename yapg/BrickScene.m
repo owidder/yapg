@@ -47,6 +47,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     CGPoint relBrickPosMinus1;
     CGPoint relBrickPosMinus2;
     
+    NSMutableArray *brickPositions;
+    
     NSTimeInterval timeOfLastTouchBegan;
     
     SKNode *gameLayer;
@@ -63,6 +65,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(void)initCurrentBrickSketchNodeWithLineStart:(CGPoint)start andEnd:(CGPoint)end;
 -(void)updateCurrentBrickSketchPathWithPosition:(CGPoint)position;
 -(void)createBallNodeAtPosition:(CGPoint)position;
+-(CGPathRef)createBezierPathFromArrayOfPositions:(NSMutableArray *)positions;
+-(CGPoint)lastBrickPosition;
 
 -(void)addNodeToGameLayer:(SKNode *)node;
 -(void)addNodeToDebugLayer:(SKNode *)node;
@@ -122,6 +126,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     timeOfLastTouchBegan = 0;
     invalidatePosition(&relBrickPosMinus1);
     invalidatePosition(&relBrickPosMinus2);
+    
+    brickPositions = [[NSMutableArray alloc] init];
     
     [self initAndAddGameLayer];
     [self initAndAddDebugLayer];
@@ -237,25 +243,59 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     relBrickPosMinus2 = CGPointZero;
     relBrickPosMinus1 = endRelativeToStart;
+    [brickPositions addObject:[NSValue valueWithPointer:&CGPointZero]];
+    [brickPositions addObject:[NSValue valueWithPointer:&endRelativeToStart]];
+}
+
+-(CGPathRef)createBezierPathFromArrayOfPositions:(NSMutableArray *)positions {
+    CGMutablePathRef path = CGPathCreateMutable();
+    
+    NSUInteger numberOfPositions = [positions count];
+    if(numberOfPositions > 1) {
+        CGPoint *start = [[positions objectAtIndex:0] pointerValue];
+        CGPathMoveToPoint(path, NULL, start->x, start->y);
+        
+        if(numberOfPositions == 2) {
+            CGPoint *end = [[positions objectAtIndex:1] pointerValue];
+            CGPathAddLineToPoint(path, NULL, end->x, end->y);
+        }
+        else {
+            int i;
+            for (i = 1; i < [positions count] - 1; i+=2) {
+                CGPoint *controlPoint = [[positions objectAtIndex:i] pointerValue];
+                CGPoint *endPoint = [[positions objectAtIndex:i+1] pointerValue];
+                CGPathAddQuadCurveToPoint(path, NULL, controlPoint->x, controlPoint->y, endPoint->x, endPoint->y);
+            }
+            
+            if(i < [positions count] - 1) {
+                CGPoint *finalPoint = [[positions objectAtIndex:i+1] pointerValue];
+                CGPathAddLineToPoint(path, NULL, finalPoint->x, finalPoint->y);
+            }
+        }
+    }
+    
+    return path;
+}
+
+-(CGPoint)lastBrickPosition {
+    CGPoint lastBrickPosition = CGPointZero;
+    
+    int count = [brickPositions count];
+    if(count > 0) {
+        lastBrickPosition = *(CGPoint *)[[brickPositions objectAtIndex:count-1] pointerValue];
+    }
+    
+    return lastBrickPosition;
 }
 
 -(void)updateCurrentBrickSketchPathWithPosition:(CGPoint)position {
     CGPoint relativePositionSinceTouchBegan = positionRelativeToBase(positionAtTouchBegan, position);
-    CGFloat distanceToRelBrickMinus1 = distance(relBrickPosMinus1, relativePositionSinceTouchBegan);
-    if(distanceToRelBrickMinus1 > MIN_BRICK_DISTANCE) {
-        if(relBrickPosMinus2.x == 0 && relBrickPosMinus2.y == 0) {
-            CGMutablePathRef path = CGPathCreateMutable();
-            currentBrickSketchPath = path;
-        }
-        
-        CGPathMoveToPoint(currentBrickSketchPath, NULL, relBrickPosMinus2.x, relBrickPosMinus2.y);
-        CGPathAddQuadCurveToPoint(currentBrickSketchPath, NULL, relBrickPosMinus1.x, relBrickPosMinus1.y, relativePositionSinceTouchBegan.x, relativePositionSinceTouchBegan.y);
-        currentBrickSketchNode.path = currentBrickSketchPath;
-        currentBrickSketchNode.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:currentBrickSketchPath];
-        relBrickPosMinus2 = relBrickPosMinus1;
-        relBrickPosMinus1 = relativePositionSinceTouchBegan;
+    CGPoint lastBrickPosition = [self lastBrickPosition];
+    CGFloat distanceToLastBrickPosition = distance(lastBrickPosition, relativePositionSinceTouchBegan);
+    if(distanceToLastBrickPosition > MIN_BRICK_DISTANCE) {
+        [brickPositions addObject:[NSValue valueWithPointer:&position]];
+        CGPathRef path = [self createBezierPathFromArrayOfPositions:brickPositions];
     }
-    
 }
 
 #pragma mark touch handling
