@@ -17,6 +17,10 @@ CGFloat distance(CGPoint a, CGPoint b) {
     return sqrtf((xdist*xdist) + (ydist*ydist));
 }
 
+CGFloat length(CGPoint p) {
+    return sqrtf((p.x * p.x) + (p.y * p.y));
+}
+
 CGFloat phi(CGPoint a, CGPoint b) {
     CGFloat xdist = a.x - b.x;
     CGFloat ydist = a.y - b.y;
@@ -36,4 +40,19 @@ BOOL isPositionValid(CGPoint position) {
 void invalidatePosition(CGPoint *position) {
     position->x = FLT_MAX;
     position->y = FLT_MAX;
+}
+
+CGPoint middlePositionBetweenTwoPositions(CGPoint a, CGPoint b) {
+    CGFloat newX = (a.x + b.x)/2;
+    CGFloat newY = (a.y + b.y)/2;
+    
+    CGPoint middle = CGPointMake(newX, newY);
+    
+    return middle;
+}
+
+CGPoint positionRelativeToBase(CGPoint base, CGPoint p) {
+    CGPoint relativePosition = CGPointMake(p.x - base.x, p.y - base.y);
+    
+    return relativePosition;
 }

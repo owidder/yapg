@@ -14,10 +14,17 @@
 // length between the points a and b
 CGFloat distance(CGPoint a, CGPoint b);
 
+// length of the line from (0,0) to p
+CGFloat length(CGPoint p);
+
 // angle of the line between a and b in radian
 CGFloat phi(CGPoint a, CGPoint b);
 
 BOOL isPositionValid(CGPoint position);
 void invalidatePosition(CGPoint *position);
+
+CGPoint middlePositionBetweenTwoPositions(CGPoint a, CGPoint b);
+
+CGPoint positionRelativeToBase(CGPoint base, CGPoint p);
 
 #endif
