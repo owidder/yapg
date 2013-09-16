@@ -43,13 +43,11 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 @interface BrickScene() {
     CGPoint currentTouchPosition;
-    CGPoint positionAtTouchBegan;
-    CGPoint relBrickPosMinus1;
-    CGPoint relBrickPosMinus2;
     
     NSMutableArray *brickPositions;
     
-    NSTimeInterval timeOfLastTouchBegan;
+    CGPoint positionWhenTouchBegan;
+    NSTimeInterval timeWhenTouchBegan;
     
     SKNode *gameLayer;
     
@@ -62,10 +60,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius;
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point;
 
--(void)initCurrentBrickSketchNodeWithLineStart:(CGPoint)start andEnd:(CGPoint)end;
+-(void)initCurrentBrickSketchNodeWithPosition:(CGPoint)position;
 -(void)updateCurrentBrickSketchPathWithPosition:(CGPoint)position;
 -(void)createBallNodeAtPosition:(CGPoint)position;
--(CGPathRef)createBezierPathFromArrayOfPositions:(NSMutableArray *)positions;
+-(CGMutablePathRef)createBezierPathFromArrayOfPositions:(NSMutableArray *)positions;
 -(CGPoint)lastBrickPosition;
 
 -(void)addNodeToGameLayer:(SKNode *)node;
@@ -123,11 +121,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 #pragma mark layer handling
 
 -(void)initField {
-    timeOfLastTouchBegan = 0;
-    invalidatePosition(&relBrickPosMinus1);
-    invalidatePosition(&relBrickPosMinus2);
-    
-    brickPositions = [[NSMutableArray alloc] init];
+    timeWhenTouchBegan = 0;
     
     [self initAndAddGameLayer];
     [self initAndAddDebugLayer];
@@ -225,29 +219,18 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     return path;
 }
 
--(void)initCurrentBrickSketchNodeWithLineStart:(CGPoint)start andEnd:(CGPoint)end {
+-(void)initCurrentBrickSketchNodeWithPosition:(CGPoint)position {
     currentBrickSketchNode = [[SKShapeNode alloc] init];
     currentBrickSketchNode.lineWidth = BRICK_LINE_WIDTH;
     currentBrickSketchNode.glowWidth = 1.0;
     currentBrickSketchNode.strokeColor = [SKColor lightGrayColor];
-    currentBrickSketchNode.position = start;
-    
-    currentBrickSketchPath = CGPathCreateMutable();
-    CGPathMoveToPoint(currentBrickSketchPath, NULL, 0, 0);
-    CGPoint endRelativeToStart = positionRelativeToBase(start, end);
-    CGPathAddLineToPoint(currentBrickSketchPath, NULL, endRelativeToStart.x, endRelativeToStart.y);
-    currentBrickSketchNode.path = currentBrickSketchPath;
+    currentBrickSketchNode.position = position;
     
     [self addNodeToGameLayer:currentBrickSketchNode];
     [ActionFactory destroyNodeWithFadeOut:currentBrickSketchNode];
-    
-    relBrickPosMinus2 = CGPointZero;
-    relBrickPosMinus1 = endRelativeToStart;
-    [brickPositions addObject:[NSValue valueWithPointer:&CGPointZero]];
-    [brickPositions addObject:[NSValue valueWithPointer:&endRelativeToStart]];
 }
 
--(CGPathRef)createBezierPathFromArrayOfPositions:(NSMutableArray *)positions {
+-(CGMutablePathRef)createBezierPathFromArrayOfPositions:(NSMutableArray *)positions {
     CGMutablePathRef path = CGPathCreateMutable();
     
     NSUInteger numberOfPositions = [positions count];
@@ -289,52 +272,55 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)updateCurrentBrickSketchPathWithPosition:(CGPoint)position {
-    CGPoint relativePositionSinceTouchBegan = positionRelativeToBase(positionAtTouchBegan, position);
+    CGPoint relativePositionSinceTouchBegan = positionRelativeToBase(positionWhenTouchBegan, position);
     CGPoint lastBrickPosition = [self lastBrickPosition];
     CGFloat distanceToLastBrickPosition = distance(lastBrickPosition, relativePositionSinceTouchBegan);
     if(distanceToLastBrickPosition > MIN_BRICK_DISTANCE) {
-        [brickPositions addObject:[NSValue valueWithPointer:&position]];
-        CGPathRef path = [self createBezierPathFromArrayOfPositions:brickPositions];
+        [brickPositions addObject:[NSValue valueWithPointer:&relativePositionSinceTouchBegan]];
+        currentBrickSketchPath = [self createBezierPathFromArrayOfPositions:brickPositions];
+        
+        if(currentBrickSketchNode == NULL) {
+            [self initCurrentBrickSketchNodeWithPosition:position];
+        }
+        
+        currentBrickSketchNode.path = currentBrickSketchPath;
+        currentBrickSketchNode.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:currentBrickSketchPath];
     }
 }
 
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    invalidatePosition(&relBrickPosMinus1);
-    
     UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
     CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
     
-    if(timeOfLastTouchBegan > 0) {
+    if(timeWhenTouchBegan > 0) {
         NSTimeInterval now = [event timestamp];
-        NSTimeInterval timeSinceLastTouchBegan = now - timeOfLastTouchBegan;
+        NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
         if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
             [self createBallNodeAtPosition:positionOfFirstTouch];
         }
     }
     
-    timeOfLastTouchBegan = [event timestamp];
-    positionAtTouchBegan = positionOfFirstTouch;
+    timeWhenTouchBegan = [event timestamp];
+    positionWhenTouchBegan = positionOfFirstTouch;
+    
+    brickPositions = [[NSMutableArray alloc] init];
+    [brickPositions addObject:[NSValue valueWithPointer:&CGPointZero]];
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    currentBrickSketchNode = NULL;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
     CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
-    if(!isPositionValid(relBrickPosMinus1)) {
-        CGFloat distanceSinceTouchBegan = distance(positionAtTouchBegan, positionOfFirstTouch);
-        if(distanceSinceTouchBegan > MIN_BRICK_DISTANCE) {
-            [self initCurrentBrickSketchNodeWithLineStart:positionAtTouchBegan andEnd:positionOfFirstTouch];
-        }
-    } else {
-        [self updateCurrentBrickSketchPathWithPosition:positionOfFirstTouch];
-    }
+    [self updateCurrentBrickSketchPathWithPosition:positionOfFirstTouch];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    currentBrickSketchNode = NULL;
 }
 
 #pragma mark SKScene
