@@ -31,7 +31,7 @@
 static const uint32_t bottomCategory = 0x1 << 0;
 static const uint32_t ballCategory = 0x1 << 1;
 
-static const int MIN_BRICK_DISTANCE = 20;
+static const int MIN_BRICK_DISTANCE = 5;
 static const float BRICK_LINE_WIDTH = 0.1;
 
 static const float NORMAL_BACKGROUND_RED = 1.0;
@@ -135,7 +135,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     SKLabelNode *debugTextNode = [[SKLabelNode alloc] init];
     debugTextNode.fontSize = 5;
     debugTextNode.fontColor = [SKColor blackColor];
-    debugTextNode.position = CGPointMake(100, 10);
+    debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
     debugTextNode.name = DEBUG_TEXT_NODE_NAME;
     [debugLayer addChild:debugTextNode];
 
@@ -239,15 +239,15 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         CGPathMoveToPoint(path, NULL, start->x, start->y);
         
         if(numberOfPositions == 2) {
-            CGPoint *end = [[positions objectAtIndex:1] pointerValue];
-            CGPathAddLineToPoint(path, NULL, end->x, end->y);
+            CGPoint end = [[positions objectAtIndex:1] CGPointValue];
+            CGPathAddLineToPoint(path, NULL, end.x, end.y);
         }
         else {
             int i;
             for (i = 1; i < [positions count] - 1; i+=2) {
-                CGPoint *controlPoint = [[positions objectAtIndex:i] pointerValue];
-                CGPoint *endPoint = [[positions objectAtIndex:i+1] pointerValue];
-                CGPathAddQuadCurveToPoint(path, NULL, controlPoint->x, controlPoint->y, endPoint->x, endPoint->y);
+                CGPoint controlPoint = [[positions objectAtIndex:i] CGPointValue];
+                CGPoint endPoint = [[positions objectAtIndex:i+1] CGPointValue];
+                CGPathAddQuadCurveToPoint(path, NULL, controlPoint.x, controlPoint.y, endPoint.x, endPoint.y);
             }
             
             if(i < [positions count] - 1) {
@@ -265,7 +265,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     int count = [brickPositions count];
     if(count > 0) {
-        lastBrickPosition = *(CGPoint *)[[brickPositions objectAtIndex:count-1] pointerValue];
+        lastBrickPosition = [[brickPositions objectAtIndex:count-1] CGPointValue];
     }
     
     return lastBrickPosition;
@@ -275,8 +275,12 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     CGPoint relativePositionSinceTouchBegan = positionRelativeToBase(positionWhenTouchBegan, position);
     CGPoint lastBrickPosition = [self lastBrickPosition];
     CGFloat distanceToLastBrickPosition = distance(lastBrickPosition, relativePositionSinceTouchBegan);
+    [self printDebugMessage:[NSString stringWithFormat:@"(%f, %f)/(%f,%f) - %d",
+                             lastBrickPosition.x, lastBrickPosition.y,
+                             relativePositionSinceTouchBegan.x, relativePositionSinceTouchBegan.y,
+                             [brickPositions count]]];
     if(distanceToLastBrickPosition > MIN_BRICK_DISTANCE) {
-        [brickPositions addObject:[NSValue valueWithPointer:&relativePositionSinceTouchBegan]];
+        [brickPositions addObject:[NSValue valueWithCGPoint:relativePositionSinceTouchBegan]];
         currentBrickSketchPath = [self createBezierPathFromArrayOfPositions:brickPositions];
         
         if(currentBrickSketchNode == NULL) {
