@@ -28,8 +28,11 @@
 #define BALL_RESTITUTION 0.1
 #define BALL_NAME @"ball"
 
+#define STUFF_NAME @"stuff"
+
 static const uint32_t bottomCategory = 0x1 << 0;
 static const uint32_t ballCategory = 0x1 << 1;
+static const uint32_t stuffCategory = 0x1 << 2;
 
 static const int MIN_BRICK_DISTANCE = 5;
 static const float BRICK_LINE_WIDTH = 0.1;
@@ -59,6 +62,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius;
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point;
+
+-(SKShapeNode *)makeStuff;
 
 -(void)initCurrentBrickSketchNodeWithPosition:(CGPoint)position;
 -(void)updateCurrentBrickSketchPathWithPosition:(CGPoint)position;
@@ -116,6 +121,21 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         }
     }
     
+    if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
+        SKNode *stuff = nil;
+        
+        if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
+            stuff = contact.bodyA.node;
+        }
+        else if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
+            stuff = contact.bodyB.node;
+        }
+        
+        if(stuff != nil) {
+            stuff.physicsBody.dynamic = YES;
+        }
+    }
+    
 }
 
 #pragma mark layer handling
@@ -126,6 +146,9 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [self initAndAddGameLayer];
     [self initAndAddDebugLayer];
     [self initEdges];
+    
+    SKShapeNode *stuff = [self makeStuff];
+    [self addNodeToGameLayer:stuff];
 }
 
 -(void)initAndAddDebugLayer {
@@ -183,13 +206,37 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [self addNodeToGameLayer:bottom];
 }
 
+#pragma mark stuff
+
+-(SKShapeNode *)makeStuff {
+    SKShapeNode *stuff = [[SKShapeNode alloc] init];
+    stuff.position = CGPointMake(200, 500);
+    stuff.name = STUFF_NAME;
+    
+    CGMutablePathRef ballPath = CGPathCreateMutable();
+    CGPathAddArc(ballPath, NULL, 0,0, 10, 0, M_PI*2, YES);
+    stuff.path = ballPath;
+    
+    stuff.lineWidth = 0;
+    stuff.fillColor = [SKColor redColor];
+    stuff.alpha = 0.5;
+    
+    stuff.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:10];
+    stuff.physicsBody.restitution = 0.8;
+    stuff.physicsBody.mass = 0.01;
+    stuff.physicsBody.dynamic = NO;
+    stuff.physicsBody.categoryBitMask = stuffCategory;
+    
+    return stuff;
+}
+
 #pragma mark draw bricks and balls
 
 -(void)createBallNodeAtPosition:(CGPoint)position {
     SKShapeNode *ball = [self makeCircleWithRadius:BALL_RADIUS];
     ball.position = position;
     ball.physicsBody.categoryBitMask = ballCategory;
-    ball.physicsBody.contactTestBitMask = bottomCategory;
+    ball.physicsBody.contactTestBitMask = bottomCategory | stuffCategory;
     [self addNodeToGameLayer:ball];
 }
 
