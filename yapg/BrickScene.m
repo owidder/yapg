@@ -63,7 +63,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius;
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point;
 
--(SKShapeNode *)makeStuff;
+-(SKShapeNode *)makeStuffAtPosition:(CGPoint)position;
 
 -(void)initCurrentBrickSketchNodeWithPosition:(CGPoint)position;
 -(void)updateCurrentBrickSketchPathWithPosition:(CGPoint)position;
@@ -125,14 +125,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         SKNode *stuff = nil;
         
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
-            stuff = contact.bodyA.node;
+            contact.bodyA.dynamic = YES;
         }
-        else if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
-            stuff = contact.bodyB.node;
-        }
-        
-        if(stuff != nil) {
-            stuff.physicsBody.dynamic = YES;
+        if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
+            contact.bodyB.dynamic = YES;
         }
     }
     
@@ -147,8 +143,13 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [self initAndAddDebugLayer];
     [self initEdges];
     
-    SKShapeNode *stuff = [self makeStuff];
-    [self addNodeToGameLayer:stuff];
+    for(int x = 20; x < 300; x+= 100) {
+        for(int y = 20; y < 500; y+= 100) {
+            SKShapeNode *stuff = [self makeStuffAtPosition:CGPointMake(x, y)];
+            [self addNodeToGameLayer:stuff];
+        }
+    }
+    
 }
 
 -(void)initAndAddDebugLayer {
@@ -208,16 +209,16 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 #pragma mark stuff
 
--(SKShapeNode *)makeStuff {
+-(SKShapeNode *)makeStuffAtPosition:(CGPoint)position {
     SKShapeNode *stuff = [[SKShapeNode alloc] init];
-    stuff.position = CGPointMake(200, 500);
+    stuff.position = position;
     stuff.name = STUFF_NAME;
     
     CGMutablePathRef ballPath = CGPathCreateMutable();
     CGPathAddArc(ballPath, NULL, 0,0, 10, 0, M_PI*2, YES);
     stuff.path = ballPath;
     
-    stuff.lineWidth = 0;
+    stuff.lineWidth = 1.0;
     stuff.fillColor = [SKColor redColor];
     stuff.alpha = 0.5;
     
@@ -226,6 +227,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     stuff.physicsBody.mass = 0.01;
     stuff.physicsBody.dynamic = NO;
     stuff.physicsBody.categoryBitMask = stuffCategory;
+    stuff.physicsBody.contactTestBitMask = stuffCategory;
     
     return stuff;
 }
