@@ -13,26 +13,14 @@
 #import "util/drawutil.h"
 #import "ActionFactory.h"
 #import "EmitterNodeFactory.h"
+#import "Categories.h"
+#import "Ball.h"
+#import "Field.h"
 
-#define DEBUG_LAYER_Z_POSITION 1000
-#define GAME_LAYER_Z_POSITION 0
-
-#define DEBUG_TEXT_NODE_NAME @"debugText"
-
-#define BOTTOM_NAME @"bottom"
 
 #define BRICK_NAME @"brick"
 
-#define BALL_RADIUS 3
-#define BALL_LINE_WIDTH 0.0
-#define BALL_RESTITUTION 0.1
-#define BALL_NAME @"ball"
-
 #define STUFF_NAME @"stuff"
-
-static const uint32_t bottomCategory = 0x1 << 0;
-static const uint32_t ballCategory = 0x1 << 1;
-static const uint32_t stuffCategory = 0x1 << 2;
 
 static const int MIN_BRICK_DISTANCE = 5;
 static const float BRICK_LINE_WIDTH = 0.1;
@@ -52,33 +40,22 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     CGPoint positionWhenTouchBegan;
     NSTimeInterval timeWhenTouchBegan;
     
-    SKNode *gameLayer;
-    
-    SKNode *debugLayer;
-    
     SKShapeNode *currentBrickSketchNode;
     CGMutablePathRef currentBrickSketchPath;
+    
+    Field *field;
 }
 
--(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius;
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point;
 
 -(SKShapeNode *)makeStuffAtPosition:(CGPoint)position;
 
 -(void)initCurrentBrickSketchNodeWithPosition:(CGPoint)position;
 -(void)updateCurrentBrickSketchPathWithPosition:(CGPoint)position;
--(void)createBallNodeAtPosition:(CGPoint)position;
 -(CGMutablePathRef)createBezierPathFromArrayOfPositions:(NSMutableArray *)positions;
 -(CGPoint)lastBrickPosition;
 
--(void)addNodeToGameLayer:(SKNode *)node;
--(void)addNodeToDebugLayer:(SKNode *)node;
--(void)initAndAddDebugLayer;
--(void)initAndAddGameLayer;
 -(void)initField;
--(void)initEdges;
-
--(void)printDebugMessage:(NSString *)message;
 @end
 
 @implementation BrickScene
@@ -92,38 +69,26 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         self.backgroundColor = [SKColor colorWithRed:NORMAL_BACKGROUND_RED green:NORMAL_BACKGROUND_GREEN blue:NORMAL_BACKGROUND_BLUE alpha:NORMAL_BACKGROUND_ALPHA];
         
         [self initField];
+        [self addChild:field];
     }
     return self;
-}
-
-#pragma mark debugging
-
--(void)printDebugMessage:(NSString *)message {
-    SKLabelNode *debugTextNode = (SKLabelNode *) [debugLayer childNodeWithName:DEBUG_TEXT_NODE_NAME];
-    debugTextNode.text = message;
 }
 
 #pragma mark contact handling
 
 -(void)didBeginContact:(SKPhysicsContact *)contact {
-    if([contact.bodyA.node.name isEqualToString:BOTTOM_NAME] || [contact.bodyA.node.name isEqualToString:BOTTOM_NAME]) {
-        SKNode *ball = nil;
-        
-        if([contact.bodyA.node.name isEqualToString:BALL_NAME]) {
-            ball = contact.bodyA.node;
+    if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyA.node.name isEqualToString:[Field bottomName]]) {
+        if([contact.bodyA.node.name isEqualToString:[Ball name]]) {
+            [field printDebugMessage:@"Die A!!!"];
+            [((Ball *)contact.bodyA.node) die];
         }
-        else if([contact.bodyB.node.name isEqualToString:BALL_NAME]) {
-            ball = contact.bodyB.node;
-        }
-        
-        if(ball != nil) {
-            [ActionFactory destroyNode:ball withEmitter:[EmitterNodeFactory newSmokeEmitter]];
+        else if([contact.bodyB.node.name isEqualToString:[Ball name]]) {
+            [field printDebugMessage:@"Die B!!!"];
+            [((Ball *)contact.bodyB.node) die];
         }
     }
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
-        SKNode *stuff = nil;
-        
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
             contact.bodyA.dynamic = YES;
         }
@@ -139,72 +104,15 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(void)initField {
     timeWhenTouchBegan = 0;
     
-    [self initAndAddGameLayer];
-    [self initAndAddDebugLayer];
-    [self initEdges];
+    field = [[Field alloc] initWithFrame:self.frame];
     
-    for(int x = 20; x < 300; x+= 100) {
-        for(int y = 20; y < 500; y+= 100) {
-            SKShapeNode *stuff = [self makeStuffAtPosition:CGPointMake(x, y)];
-            [self addNodeToGameLayer:stuff];
-        }
-    }
+//    for(int x = 20; x < 300; x+= 100) {
+//        for(int y = 20; y < 500; y+= 100) {
+//            SKShapeNode *stuff = [self makeStuffAtPosition:CGPointMake(x, y)];
+//            [Field addToGameLayer:stuff];
+//        }
+//    }
     
-}
-
--(void)initAndAddDebugLayer {
-    debugLayer = [[SKNode alloc] init];
-    debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
-    
-    SKLabelNode *debugTextNode = [[SKLabelNode alloc] init];
-    debugTextNode.fontSize = 5;
-    debugTextNode.fontColor = [SKColor blackColor];
-    debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
-    debugTextNode.name = DEBUG_TEXT_NODE_NAME;
-    [debugLayer addChild:debugTextNode];
-
-    [self addChild:debugLayer];
-}
-
--(void)initAndAddGameLayer {
-    gameLayer = [[SKNode alloc] init];
-    [self addChild:gameLayer];
-}
-
--(void)addNodeToGameLayer:(SKNode *)node {
-    [gameLayer addChild:node];
-}
-
--(void)addNodeToDebugLayer:(SKNode *)node {
-    [debugLayer addChild:node];
-}
-
--(void)initEdges {
-    CGPoint bottomLeft = self.frame.origin;
-    CGPoint topLeft = CGPointMake(bottomLeft.x, bottomLeft.x+self.frame.size.height);
-    CGPoint topRight = CGPointMake(topLeft.x+self.frame.size.width, topLeft.y);
-    CGPoint bottomRight = CGPointMake(topRight.x, bottomLeft.y);
-    
-    SKNode *right = [[SKNode alloc] init];
-    right.name = @"right";
-    right.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topRight toPoint:bottomRight];
-    [self addNodeToGameLayer:right];
-    
-    SKNode *top = [[SKNode alloc] init];
-    top.name = @"top";
-    top.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topLeft toPoint:topRight];
-    [self addNodeToGameLayer:top];
-    
-    SKNode *left = [[SKNode alloc] init];
-    left.name = @"left";
-    left.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:topLeft];
-    [self addNodeToGameLayer:left];
-    
-    SKNode *bottom = [[SKNode alloc] init];
-    bottom.name = BOTTOM_NAME;
-    bottom.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:bottomRight];
-    bottom.physicsBody.categoryBitMask = bottomCategory;
-    [self addNodeToGameLayer:bottom];
 }
 
 #pragma mark stuff
@@ -226,40 +134,13 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     stuff.physicsBody.restitution = 0.8;
     stuff.physicsBody.mass = 0.01;
     stuff.physicsBody.dynamic = NO;
-    stuff.physicsBody.categoryBitMask = stuffCategory;
-    stuff.physicsBody.contactTestBitMask = stuffCategory;
+    stuff.physicsBody.categoryBitMask = [Categories stuffCategory];
+    stuff.physicsBody.contactTestBitMask = [Categories stuffCategory];
     
     return stuff;
 }
 
 #pragma mark draw bricks and balls
-
--(void)createBallNodeAtPosition:(CGPoint)position {
-    SKShapeNode *ball = [self makeCircleWithRadius:BALL_RADIUS];
-    ball.position = position;
-    ball.physicsBody.categoryBitMask = ballCategory;
-    ball.physicsBody.contactTestBitMask = bottomCategory | stuffCategory;
-    [self addNodeToGameLayer:ball];
-}
-
--(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius
-{
-    SKShapeNode *ball = [[SKShapeNode alloc] init];
-    ball.name = BALL_NAME;
-    
-    CGMutablePathRef ballPath = CGPathCreateMutable();
-    CGPathAddArc(ballPath, NULL, 0,0, radius, 0, M_PI*2, YES);
-    ball.path = ballPath;
-    
-    ball.lineWidth = BALL_LINE_WIDTH;
-    ball.fillColor = [SKColor blackColor];
-    
-    ball.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:radius];
-    ball.physicsBody.restitution = BALL_RESTITUTION;
-    ball.physicsBody.dynamic = YES;
-    
-    return ball;
-}
 
 -(CGMutablePathRef)makePathFromZeroToPoint:(CGPoint)point {
     CGMutablePathRef path = CGPathCreateMutable();
@@ -275,7 +156,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     currentBrickSketchNode.strokeColor = [SKColor lightGrayColor];
     currentBrickSketchNode.position = position;
     
-    [self addNodeToGameLayer:currentBrickSketchNode];
+    [Field addToGameLayer:currentBrickSketchNode];
     [ActionFactory destroyNodeWithFadeOut:currentBrickSketchNode];
 }
 
@@ -324,7 +205,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     CGPoint relativePositionSinceTouchBegan = positionRelativeToBase(positionWhenTouchBegan, position);
     CGPoint lastBrickPosition = [self lastBrickPosition];
     CGFloat distanceToLastBrickPosition = distance(lastBrickPosition, relativePositionSinceTouchBegan);
-    [self printDebugMessage:[NSString stringWithFormat:@"(%f, %f)/(%f,%f) - %d",
+    [field printDebugMessage:[NSString stringWithFormat:@"(%f, %f)/(%f,%f) - %d",
                              lastBrickPosition.x, lastBrickPosition.y,
                              relativePositionSinceTouchBegan.x, relativePositionSinceTouchBegan.y,
                              [brickPositions count]]];
@@ -351,7 +232,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         NSTimeInterval now = [event timestamp];
         NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
         if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
-            [self createBallNodeAtPosition:positionOfFirstTouch];
+            [Ball addBallAtPosition:positionOfFirstTouch];
         }
     }
     

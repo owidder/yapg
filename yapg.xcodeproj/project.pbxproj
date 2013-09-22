@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		990E5ECD17ED8F4800201793 /* Ball.m in Sources */ = {isa = PBXBuildFile; fileRef = 990E5ECC17ED8F4800201793 /* Ball.m */; };
+		990E5ED017ED947600201793 /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 990E5ECF17ED947600201793 /* Field.m */; };
+		990E5ED417ED958C00201793 /* Categories.m in Sources */ = {isa = PBXBuildFile; fileRef = 990E5ED317ED958C00201793 /* Categories.m */; };
 		99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* drawutil.m */; };
 		99463F7117E24FC700DC690A /* smoke.sks in Resources */ = {isa = PBXBuildFile; fileRef = 99463F6F17E24FC700DC690A /* smoke.sks */; };
 		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
@@ -55,6 +58,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		990E5ECB17ED8F4800201793 /* Ball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ball.h; sourceTree = "<group>"; };
+		990E5ECC17ED8F4800201793 /* Ball.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ball.m; sourceTree = "<group>"; };
+		990E5ECE17ED947600201793 /* Field.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Field.h; sourceTree = "<group>"; };
+		990E5ECF17ED947600201793 /* Field.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Field.m; sourceTree = "<group>"; };
+		990E5ED217ED958C00201793 /* Categories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Categories.h; sourceTree = "<group>"; };
+		990E5ED317ED958C00201793 /* Categories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Categories.m; sourceTree = "<group>"; };
 		99332CAD17DB02A100B7EC57 /* drawutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = drawutil.h; sourceTree = "<group>"; };
 		99332CAE17DB034E00B7EC57 /* drawutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawutil.m; sourceTree = "<group>"; };
 		99463F6F17E24FC700DC690A /* smoke.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smoke.sks; sourceTree = "<group>"; };
@@ -127,6 +136,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		990E5ECA17ED8F2400201793 /* player */ = {
+			isa = PBXGroup;
+			children = (
+				990E5ECB17ED8F4800201793 /* Ball.h */,
+				990E5ECC17ED8F4800201793 /* Ball.m */,
+				990E5ECE17ED947600201793 /* Field.h */,
+				990E5ECF17ED947600201793 /* Field.m */,
+				990E5ED217ED958C00201793 /* Categories.h */,
+				990E5ED317ED958C00201793 /* Categories.m */,
+			);
+			path = player;
+			sourceTree = "<group>";
+		};
 		99332CAC17DB028800B7EC57 /* util */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,6 +239,7 @@
 		99D3B61A17C0DB040064FA09 /* yapg */ = {
 			isa = PBXGroup;
 			children = (
+				990E5ECA17ED8F2400201793 /* player */,
 				99463F7317E2526200DC690A /* factory */,
 				99463F6E17E24F5A00DC690A /* particle */,
 				99332CAC17DB028800B7EC57 /* util */,
@@ -378,14 +401,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				990E5ED417ED958C00201793 /* Categories.m in Sources */,
 				99D3B63117C0DB040064FA09 /* MyScene.m in Sources */,
 				99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */,
 				99D3B65317C0DBF70064FA09 /* BrickScene.m in Sources */,
 				99463F7617E2526200DC690A /* ActionFactory.m in Sources */,
+				990E5ED017ED947600201793 /* Field.m in Sources */,
 				99D3B62E17C0DB040064FA09 /* ViewController.m in Sources */,
 				99D3B62517C0DB040064FA09 /* AppDelegate.m in Sources */,
 				99D3B62117C0DB040064FA09 /* main.m in Sources */,
 				99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */,
+				990E5ECD17ED8F4800201793 /* Ball.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
