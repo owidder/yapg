@@ -10,4 +10,12 @@
 
 @interface Stuff : SKShapeNode
 
+-(id)initWithPosition:(CGPoint)position;
+
+-(void)collidedWith:(SKNode *)collisionPartner;
+
++(NSString *)name;
+
++(void)addStuffAtPosition:(CGPoint)position;
+
 @end

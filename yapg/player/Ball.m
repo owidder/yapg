@@ -6,14 +6,16 @@
 //  Copyright (c) 2013 GeekAndPoke. All rights reserved.
 //
 
+#import "drawutil.h"
+
 #import "Ball.h"
 #import "Categories.h"
 #import "EmitterNodeFactory.h"
 #import "Field.h"
 
-static const float RADIUS = 3.0;
-static const float LINE_WIDTH = 0.0;
-static const float RESTITUTION = 0.1;
+#define RADIUS 3.0
+#define LINE_WIDTH 0.0
+#define RESTITUTION 0.1
 
 NSString *NAME = @"ball";
 
@@ -48,8 +50,7 @@ NSString *NAME = @"ball";
 }
 
 -(void)createBallNode {
-    CGMutablePathRef ballPath = CGPathCreateMutable();
-    CGPathAddArc(ballPath, NULL, 0,0, RADIUS, 0, M_PI*2, YES);
+    CGMutablePathRef ballPath = CreateCirclePath(RADIUS);
     self.path = ballPath;
     
     self.lineWidth = LINE_WIDTH;

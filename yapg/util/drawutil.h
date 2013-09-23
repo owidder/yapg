@@ -29,4 +29,6 @@ CGPoint PositionRelativeToBase(CGPoint base, CGPoint p);
 
 CGMutablePathRef CreateBezierPathFromArrayOfPositions(NSMutableArray *positions);
 
+CGMutablePathRef CreateCirclePath(float radius);
+
 #endif

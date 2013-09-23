@@ -86,3 +86,10 @@ CGMutablePathRef CreateBezierPathFromArrayOfPositions(NSMutableArray *positions)
     
     return path;
 }
+
+CGMutablePathRef CreateCirclePath(float radius) {
+    CGMutablePathRef circlePath = CGPathCreateMutable();
+    CGPathAddArc(circlePath, NULL, 0,0, 10, 0, M_PI*2, YES);
+    
+    return circlePath;
+}

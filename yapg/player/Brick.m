@@ -12,10 +12,11 @@
 #import "Brick.h"
 #import "Field.h"
 
-static NSString *NAME = @"brick";
-static const int MIN_SEGMENT_LENGTH = 10;
-static const float LINE_WIDTH = 0.1;
-static const float GLOW_WIDTH = 1.0;
+#define NAME @"brick"
+
+#define MIN_SEGMENT_LENGTH 10
+#define LINE_WIDTH 0.1
+#define GLOW_WIDTH 1.0
 
 @interface Brick () {
     Field *field;

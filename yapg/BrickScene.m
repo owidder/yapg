@@ -17,6 +17,7 @@
 #import "Ball.h"
 #import "Field.h"
 #import "Brick.h"
+#import "Stuff.h"
 
 
 #define STUFF_NAME @"stuff"
@@ -37,9 +38,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     Field *field;
 }
 
--(SKShapeNode *)makeStuffAtPosition:(CGPoint)position;
-
 -(void)initField;
+
 @end
 
 @implementation BrickScene
@@ -94,36 +94,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     for(int x = 20; x < 300; x+= 100) {
         for(int y = 20; y < 500; y+= 100) {
-            SKShapeNode *stuff = [self makeStuffAtPosition:CGPointMake(x, y)];
-            [Field addToGameLayer:stuff];
+            [Stuff addStuffAtPosition:CGPointMake(x, y)];
         }
     }
     
-}
-
-#pragma mark stuff
-
--(SKShapeNode *)makeStuffAtPosition:(CGPoint)position {
-    SKShapeNode *stuff = [[SKShapeNode alloc] init];
-    stuff.position = position;
-    stuff.name = STUFF_NAME;
-    
-    CGMutablePathRef ballPath = CGPathCreateMutable();
-    CGPathAddArc(ballPath, NULL, 0,0, 10, 0, M_PI*2, YES);
-    stuff.path = ballPath;
-    
-    stuff.lineWidth = 1.0;
-    stuff.fillColor = [SKColor redColor];
-    stuff.alpha = 0.5;
-    
-    stuff.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:10];
-    stuff.physicsBody.restitution = 0.8;
-    stuff.physicsBody.mass = 0.01;
-    stuff.physicsBody.dynamic = NO;
-    stuff.physicsBody.categoryBitMask = [Categories stuffCategory];
-    stuff.physicsBody.contactTestBitMask = [Categories stuffCategory];
-    
-    return stuff;
 }
 
 #pragma mark touch handling

@@ -8,22 +8,18 @@
 
 #import "Categories.h"
 
-static const uint32_t bottomCategory = 0x1 << 0;
-static const uint32_t ballCategory = 0x1 << 1;
-static const uint32_t stuffCategory = 0x1 << 2;
-
 @implementation Categories
 
 +(uint32_t)bottomCategory {
-    return bottomCategory;
+    return 0x1 << 0;
 }
 
 +(uint32_t)ballCategory {
-    return ballCategory;
+    return 0x1 << 1;
 }
 
 +(uint32_t)stuffCategory {
-    return stuffCategory;
+    return 0x1 << 2;
 }
 
 @end

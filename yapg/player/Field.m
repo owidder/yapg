@@ -9,13 +9,11 @@
 #import "Field.h"
 #import "Categories.h"
 
-static NSString *BOTTOM_NAME = @"bottom";
-static NSString *DEBUG_TEXT_NODE_NAME = @"debugText";
+#define BOTTOM_NAME @"bottom"
+#define DEBUG_TEXT_NODE_NAME @"debugText"
 
-static const int DEBUG_LAYER_Z_POSITION = 1000;
-static const int GAME_LAYER_Z_POSITION = 0;
-
-Field *instance = NULL;
+#define DEBUG_LAYER_Z_POSITION 1000
+#define GAME_LAYER_Z_POSITION 0
 
 @interface Field()
 
@@ -34,8 +32,6 @@ Field *instance = NULL;
 
 -(id)initWithFrame:(CGRect)frame {
     if(self = [super init]) {
-        instance = self;
-        
         [self createGameLayer];
         [self createDebugLayer];
         
@@ -67,8 +63,12 @@ Field *instance = NULL;
 }
 
 +(Field*)instance {
-    if(instance == NULL) {
-        instance = [[Field alloc] init];
+    static Field *instance = NULL;
+ 
+    @synchronized(self) {
+        if(instance == NULL) {
+            instance = [[Field alloc] init];
+        }
     }
     
     return instance;
