@@ -10,18 +10,18 @@
 #include <float.h>
 #include "drawutil.h"
 
-CGFloat distance(CGPoint a, CGPoint b) {
+CGFloat Distance(CGPoint a, CGPoint b) {
     CGFloat xdist = a.x - b.x;
     CGFloat ydist = a.y - b.y;
     
     return sqrtf((xdist*xdist) + (ydist*ydist));
 }
 
-CGFloat length(CGPoint p) {
+CGFloat Length(CGPoint p) {
     return sqrtf((p.x * p.x) + (p.y * p.y));
 }
 
-CGFloat phi(CGPoint a, CGPoint b) {
+CGFloat Phi(CGPoint a, CGPoint b) {
     CGFloat xdist = a.x - b.x;
     CGFloat ydist = a.y - b.y;
     
@@ -30,19 +30,19 @@ CGFloat phi(CGPoint a, CGPoint b) {
     return phi;
 }
 
-BOOL isPositionValid(CGPoint position) {
+BOOL IsPositionValid(CGPoint position) {
     if(position.x == FLT_MAX && position.y == FLT_MAX) {
         return NO;
     }
     return YES;
 }
 
-void invalidatePosition(CGPoint *position) {
+void InvalidatePosition(CGPoint *position) {
     position->x = FLT_MAX;
     position->y = FLT_MAX;
 }
 
-CGPoint middlePositionBetweenTwoPositions(CGPoint a, CGPoint b) {
+CGPoint MiddlePositionBetweenTwoPositions(CGPoint a, CGPoint b) {
     CGFloat newX = (a.x + b.x)/2;
     CGFloat newY = (a.y + b.y)/2;
     
@@ -51,13 +51,13 @@ CGPoint middlePositionBetweenTwoPositions(CGPoint a, CGPoint b) {
     return middle;
 }
 
-CGPoint positionRelativeToBase(CGPoint base, CGPoint p) {
+CGPoint PositionRelativeToBase(CGPoint base, CGPoint p) {
     CGPoint relativePosition = CGPointMake(p.x - base.x, p.y - base.y);
     
     return relativePosition;
 }
 
-CGMutablePathRef createBezierPathFromArrayOfPositions(NSMutableArray *positions) {
+CGMutablePathRef CreateBezierPathFromArrayOfPositions(NSMutableArray *positions) {
     CGMutablePathRef path = CGPathCreateMutable();
     
     NSUInteger numberOfPositions = [positions count];

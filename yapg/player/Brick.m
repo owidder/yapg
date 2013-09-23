@@ -52,12 +52,12 @@ static const float GLOW_WIDTH = 1.0;
 }
 
 -(void)updateWithAbsolutePositionOfBrickSegment:(CGPoint)position {
-    CGPoint relativePosition = positionRelativeToBase(self.position, position);
+    CGPoint relativePosition = PositionRelativeToBase(self.position, position);
     
     NSUInteger indexOfLastElement = [positions count] - 1;
     NSValue *lastElement = [positions objectAtIndex:indexOfLastElement];
     CGPoint lastBrickPosition = [lastElement CGPointValue];
-    CGFloat distanceToLastBrickPosition = distance(lastBrickPosition, relativePosition);
+    CGFloat distanceToLastBrickPosition = Distance(lastBrickPosition, relativePosition);
     
     [field printDebugMessage:[NSString stringWithFormat:@"(%f, %f)/(%f,%f) - %d",
                               lastBrickPosition.x, lastBrickPosition.y,
@@ -66,7 +66,7 @@ static const float GLOW_WIDTH = 1.0;
     
     if(distanceToLastBrickPosition > MIN_SEGMENT_LENGTH) {
         [positions addObject:[NSValue valueWithCGPoint:relativePosition]];
-        path = createBezierPathFromArrayOfPositions(positions);
+        path = CreateBezierPathFromArrayOfPositions(positions);
         
         self.path = path;
         self.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:path];

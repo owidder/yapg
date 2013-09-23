@@ -12,21 +12,21 @@
 #include <CoreGraphics/CGBase.h>
 
 // length between the points a and b
-CGFloat distance(CGPoint a, CGPoint b);
+CGFloat Distance(CGPoint a, CGPoint b);
 
 // length of the line from (0,0) to p
-CGFloat length(CGPoint p);
+CGFloat Length(CGPoint p);
 
 // angle of the line between a and b in radian
-CGFloat phi(CGPoint a, CGPoint b);
+CGFloat Phi(CGPoint a, CGPoint b);
 
-BOOL isPositionValid(CGPoint position);
-void invalidatePosition(CGPoint *position);
+BOOL IsPositionValid(CGPoint position);
+void InvalidatePosition(CGPoint *position);
 
-CGPoint middlePositionBetweenTwoPositions(CGPoint a, CGPoint b);
+CGPoint MiddlePositionBetweenTwoPositions(CGPoint a, CGPoint b);
 
-CGPoint positionRelativeToBase(CGPoint base, CGPoint p);
+CGPoint PositionRelativeToBase(CGPoint base, CGPoint p);
 
-CGMutablePathRef createBezierPathFromArrayOfPositions(NSMutableArray *positions);
+CGMutablePathRef CreateBezierPathFromArrayOfPositions(NSMutableArray *positions);
 
 #endif
