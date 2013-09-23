@@ -22,7 +22,6 @@ NSString *NAME = @"ball";
 }
 
 -(void)createBallNode;
--(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius;
 
 @end
 
@@ -49,6 +48,13 @@ NSString *NAME = @"ball";
 }
 
 -(void)createBallNode {
+    CGMutablePathRef ballPath = CGPathCreateMutable();
+    CGPathAddArc(ballPath, NULL, 0,0, RADIUS, 0, M_PI*2, YES);
+    self.path = ballPath;
+    
+    self.lineWidth = LINE_WIDTH;
+    self.fillColor = [SKColor blackColor];
+
     SKPhysicsBody *physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:RADIUS];
     physicsBody.restitution = RESTITUTION;
     physicsBody.dynamic = YES;
@@ -57,45 +63,25 @@ NSString *NAME = @"ball";
     
     self.physicsBody = physicsBody;
 
-    circle = [self makeCircleWithRadius:RADIUS];
-    
-    [self addChild:circle];
-    
     [Field addToGameLayer:self];
-}
-
--(SKShapeNode *)makeCircleWithRadius:(CGFloat)radius
-{
-    SKShapeNode *ball = [[SKShapeNode alloc] init];
-    
-    CGMutablePathRef ballPath = CGPathCreateMutable();
-    CGPathAddArc(ballPath, NULL, 0,0, radius, 0, M_PI*2, YES);
-    ball.path = ballPath;
-    
-    ball.lineWidth = LINE_WIDTH;
-    ball.fillColor = [SKColor blackColor];
-    
-    return ball;
 }
 
 #pragma mark behaviour
 
 -(void)die {
-    // self.physicsBody.dynamic = NO;
+    CGPoint currentPosition = [self position];
+    
+    [self removeFromParent];
     
     SKEmitterNode *smoke = [EmitterNodeFactory newSmokeEmitter];
-    [self addChild:smoke];
-    
-    SKAction *fadeOutNode = [SKAction fadeOutWithDuration:0.1];
-    SKAction *removeNode = [SKAction removeFromParent];
-    SKAction *removeNodeSeq = [SKAction sequence:@[fadeOutNode, removeNode]];
-    [circle runAction:removeNodeSeq];
+    smoke.position = currentPosition;
+    [Field addToGameLayer:smoke];
     
     SKAction *waitBeforeRemoveEmitter = [SKAction waitForDuration:1.0];
     SKAction *scaleOutEmitter = [SKAction scaleTo:0 duration:1.0];
     SKAction *removeEmitter = [SKAction removeFromParent];
     SKAction *removeEmitterSeq = [SKAction sequence:@[waitBeforeRemoveEmitter, scaleOutEmitter, removeEmitter]];
-    [smoke runAction:removeEmitterSeq];
+    [smoke runAction:removeEmitterSeq completion:^(void){[self removeFromParent];}];
 }
 
 @end

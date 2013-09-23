@@ -27,4 +27,6 @@ CGPoint middlePositionBetweenTwoPositions(CGPoint a, CGPoint b);
 
 CGPoint positionRelativeToBase(CGPoint base, CGPoint p);
 
+CGMutablePathRef createBezierPathFromArrayOfPositions(NSMutableArray *positions);
+
 #endif

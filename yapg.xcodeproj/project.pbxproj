@@ -10,6 +10,7 @@
 		990E5ECD17ED8F4800201793 /* Ball.m in Sources */ = {isa = PBXBuildFile; fileRef = 990E5ECC17ED8F4800201793 /* Ball.m */; };
 		990E5ED017ED947600201793 /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 990E5ECF17ED947600201793 /* Field.m */; };
 		990E5ED417ED958C00201793 /* Categories.m in Sources */ = {isa = PBXBuildFile; fileRef = 990E5ED317ED958C00201793 /* Categories.m */; };
+		990E5ED717F054EB00201793 /* Brick.m in Sources */ = {isa = PBXBuildFile; fileRef = 990E5ED617F054EB00201793 /* Brick.m */; };
 		99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* drawutil.m */; };
 		99463F7117E24FC700DC690A /* smoke.sks in Resources */ = {isa = PBXBuildFile; fileRef = 99463F6F17E24FC700DC690A /* smoke.sks */; };
 		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
@@ -64,6 +65,8 @@
 		990E5ECF17ED947600201793 /* Field.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Field.m; sourceTree = "<group>"; };
 		990E5ED217ED958C00201793 /* Categories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Categories.h; sourceTree = "<group>"; };
 		990E5ED317ED958C00201793 /* Categories.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Categories.m; sourceTree = "<group>"; };
+		990E5ED517F054EB00201793 /* Brick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Brick.h; sourceTree = "<group>"; };
+		990E5ED617F054EB00201793 /* Brick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Brick.m; sourceTree = "<group>"; };
 		99332CAD17DB02A100B7EC57 /* drawutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = drawutil.h; sourceTree = "<group>"; };
 		99332CAE17DB034E00B7EC57 /* drawutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawutil.m; sourceTree = "<group>"; };
 		99463F6F17E24FC700DC690A /* smoke.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smoke.sks; sourceTree = "<group>"; };
@@ -145,6 +148,8 @@
 				990E5ECF17ED947600201793 /* Field.m */,
 				990E5ED217ED958C00201793 /* Categories.h */,
 				990E5ED317ED958C00201793 /* Categories.m */,
+				990E5ED517F054EB00201793 /* Brick.h */,
+				990E5ED617F054EB00201793 /* Brick.m */,
 			);
 			path = player;
 			sourceTree = "<group>";
@@ -410,6 +415,7 @@
 				99D3B62E17C0DB040064FA09 /* ViewController.m in Sources */,
 				99D3B62517C0DB040064FA09 /* AppDelegate.m in Sources */,
 				99D3B62117C0DB040064FA09 /* main.m in Sources */,
+				990E5ED717F054EB00201793 /* Brick.m in Sources */,
 				99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */,
 				990E5ECD17ED8F4800201793 /* Ball.m in Sources */,
 			);

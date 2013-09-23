@@ -8,7 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface Ball : SKNode
+@interface Ball : SKShapeNode
 
 -(id)initWithPosition:(CGPoint)position;
 

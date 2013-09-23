@@ -46,17 +46,17 @@ Field *instance = NULL;
 }
 
 -(void)createGameLayer {
-    _gameLayer = [[SKNode alloc] init];
+    _gameLayer = [SKNode node];
     _gameLayer.zPosition = GAME_LAYER_Z_POSITION;
     
     [self addChild:_gameLayer];
 }
 
 -(void)createDebugLayer {
-    _debugLayer = [[SKNode alloc] init];
+    _debugLayer = [SKNode node];
     _debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
     
-    SKLabelNode *debugTextNode = [[SKLabelNode alloc] init];
+    SKLabelNode *debugTextNode = [SKLabelNode node];
     debugTextNode.fontSize = 5;
     debugTextNode.fontColor = [SKColor blackColor];
     debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
@@ -80,22 +80,22 @@ Field *instance = NULL;
     CGPoint topRight = CGPointMake(topLeft.x+frame.size.width, topLeft.y);
     CGPoint bottomRight = CGPointMake(topRight.x, bottomLeft.y);
     
-    SKNode *right = [[SKNode alloc] init];
+    SKNode *right = [SKNode node];
     right.name = @"right";
     right.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topRight toPoint:bottomRight];
     [_gameLayer addChild:right];
     
-    SKNode *top = [[SKNode alloc] init];
+    SKNode *top = [SKNode node];
     top.name = @"top";
     top.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topLeft toPoint:topRight];
     [_gameLayer addChild:top];
     
-    SKNode *left = [[SKNode alloc] init];
+    SKNode *left = [SKNode node];
     left.name = @"left";
     left.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:topLeft];
     [_gameLayer addChild:left];
     
-    SKNode *bottom = [[SKNode alloc] init];
+    SKNode *bottom = [SKNode node];
     bottom.name = BOTTOM_NAME;
     bottom.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:bottomRight];
     bottom.physicsBody.categoryBitMask = [Categories bottomCategory];
