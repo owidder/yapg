@@ -16,8 +16,7 @@
 #define RADIUS 3.0
 #define LINE_WIDTH 0.0
 #define RESTITUTION 0.1
-
-NSString *NAME = @"ball";
+#define NAME @"ball"
 
 @interface Ball() {
     SKNode *circle;
@@ -46,6 +45,7 @@ NSString *NAME = @"ball";
 
 +(void)addBallAtPosition:(CGPoint)position {
     Ball *ball = [[Ball alloc] initWithPosition:position];
+    [Field addToGameLayer:ball];
     NSLog(@"Ball created: (%@)", ball.description);
 }
 
@@ -63,8 +63,6 @@ NSString *NAME = @"ball";
     physicsBody.contactTestBitMask = [Categories bottomCategory] | [Categories stuffCategory];
     
     self.physicsBody = physicsBody;
-
-    [Field addToGameLayer:self];
 }
 
 #pragma mark behaviour

@@ -38,8 +38,6 @@
         self.physicsBody.dynamic = NO;
         self.physicsBody.categoryBitMask = [Categories stuffCategory];
         self.physicsBody.contactTestBitMask = [Categories stuffCategory];
-
-        [Field addToGameLayer:self];
     }
     
     return self;
@@ -47,6 +45,7 @@
 
 +(void)addStuffAtPosition:(CGPoint)position {
     Stuff *stuff = [[Stuff alloc] initWithPosition:position];
+    [Field addToGameLayer:stuff];
     NSLog(@"Stuff created: %@", stuff.description);
 }
 

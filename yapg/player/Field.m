@@ -118,7 +118,8 @@
 }
 
 +(void)addToGameLayer:(SKNode *)node {
-    [[Field instance].gameLayer addChild:node];
+    Field *field = [Field instance];
+    [field.gameLayer addChild:node];
 }
 
 +(void)addToDebugLayer:(SKNode *)node {

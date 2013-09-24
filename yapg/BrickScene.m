@@ -90,11 +90,12 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(void)initField {
     timeWhenTouchBegan = 0;
     
-    field = [[Field alloc] initWithFrame:self.frame];
+    field = [[Field instance] initWithFrame:self.frame];
     
     for(int x = 20; x < 300; x+= 100) {
         for(int y = 20; y < 500; y+= 100) {
-            [Stuff addStuffAtPosition:CGPointMake(x, y)];
+            CGPoint position = CGPointMake(x, y);
+            [Stuff addStuffAtPosition:position];
         }
     }
     
