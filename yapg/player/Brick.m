@@ -24,6 +24,8 @@
     CGMutablePathRef path;
 }
 
+-(void)runFadeOutAction:(SKNode *)node;
+
 @end
 
 @implementation Brick
@@ -44,7 +46,7 @@
         [positions addObject:[NSValue valueWithPointer:&CGPointZero]];
         
         [Field addToGameLayer:self];
-        [ActionFactory destroyNodeWithFadeOut:self];
+        [self runFadeOutAction:self];
         
         field = [Field instance];
     }
@@ -74,7 +76,11 @@
     }
 }
 
-
-
+-(void)runFadeOutAction:(SKNode *)node {
+    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:10.0];
+    SKAction *removeAction = [SKAction removeFromParent];
+    SKAction *seqAction = [SKAction sequence:@[fadeOutAction, removeAction]];
+    [node runAction:seqAction];
+}
 
 @end
