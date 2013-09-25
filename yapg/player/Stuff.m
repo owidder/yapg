@@ -11,6 +11,7 @@
 #import "Stuff.h"
 #import "Categories.h"
 #import "Field.h"
+#import "EmitterNodeFactory.h"
 
 #define NAME @"stuff"
 
@@ -19,6 +20,12 @@
 #define ALPHA 0.5
 #define RESTITUTION 0.8
 #define MASS 0.01
+
+@interface Stuff()
+
+-(void)addSparks;
+
+@end
 
 @implementation Stuff
 
@@ -49,9 +56,18 @@
     NSLog(@"Stuff created: %@", stuff.description);
 }
 
--(void)collidedWith:(SKNode *)collisionPartner {
+-(void)addSparks {
+    SKEmitterNode *spark1 = [EmitterNodeFactory newSparkEmitter];
+    [self addChild:spark1];
+}
+
+-(void)collided {
     SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
-    [self runAction:switchDynamicOnAction];
+    SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
+    SKAction *scaleAction = [SKAction scaleTo:0.0 duration:30.0];
+    SKAction *removeAction = [SKAction removeFromParent];
+    SKAction *sequence = [SKAction sequence:@[switchDynamicOnAction, addSparkAction, scaleAction, removeAction]];
+    [self runAction:sequence];
 }
 
 +(NSString *)name {

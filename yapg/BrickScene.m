@@ -11,7 +11,6 @@
 
 #import "BrickScene.h"
 #import "util/drawutil.h"
-#import "ActionFactory.h"
 #import "EmitterNodeFactory.h"
 #import "Categories.h"
 #import "Ball.h"
@@ -76,10 +75,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
-            contact.bodyA.dynamic = YES;
+            [((Stuff *)contact.bodyA.node) collided];
         }
         if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
-            contact.bodyB.dynamic = YES;
+            [((Stuff *)contact.bodyB.node) collided];
         }
     }
     

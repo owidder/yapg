@@ -12,7 +12,7 @@
 
 -(id)initWithPosition:(CGPoint)position;
 
--(void)collidedWith:(SKNode *)collisionPartner;
+-(void)collided;
 
 +(NSString *)name;
 
