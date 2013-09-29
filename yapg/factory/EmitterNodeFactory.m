@@ -17,9 +17,9 @@
 }
 
 +(SKEmitterNode *)newSparkEmitter {
-    NSString *smokePath = [[NSBundle mainBundle] pathForResource:@"spark" ofType:@"sks"];
-    SKEmitterNode *smoke = [NSKeyedUnarchiver unarchiveObjectWithFile:smokePath];
-    return smoke;
+    NSString *sparkPath = [[NSBundle mainBundle] pathForResource:@"fire" ofType:@"sks"];
+    SKEmitterNode *spark = [NSKeyedUnarchiver unarchiveObjectWithFile:sparkPath];
+    return spark;
 }
 
 @end

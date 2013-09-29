@@ -93,3 +93,23 @@ CGMutablePathRef CreateCirclePath(float radius) {
     
     return circlePath;
 }
+
+CGMutablePathRef CreateTrianglePath(float sideLength) {
+    // In a triangle with equal side length
+    // the height is sidelength * sqrt(3)/2
+    // sqrt(3)/2 is about .87
+    float height = 0.87 * sideLength;
+    
+    CGMutablePathRef trianglePath = CGPathCreateMutable();
+    CGPathMoveToPoint(trianglePath, NULL, 0, 0);
+    CGPathAddLineToPoint(trianglePath, NULL, sideLength, 0);
+    CGPathAddLineToPoint(trianglePath, NULL, sideLength/2, height);
+    CGPathAddLineToPoint(trianglePath, NULL, 0, 0);
+    
+    return trianglePath;
+}
+
+float RandomFloatBetween(float smallNumber, float bigNumber) {
+    float diff = bigNumber - smallNumber;
+    return (((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * diff) + smallNumber;
+}

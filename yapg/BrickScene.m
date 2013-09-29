@@ -64,20 +64,20 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(void)didBeginContact:(SKPhysicsContact *)contact {
     if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyA.node.name isEqualToString:[Field bottomName]]) {
         if([contact.bodyA.node.name isEqualToString:[Ball name]]) {
-            [field printDebugMessage:@"Die A!!!"];
             [((Ball *)contact.bodyA.node) die];
         }
         else if([contact.bodyB.node.name isEqualToString:[Ball name]]) {
-            [field printDebugMessage:@"Die B!!!"];
             [((Ball *)contact.bodyB.node) die];
         }
     }
     
-    if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
+    if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
+            [field printDebugMessage:[NSString stringWithFormat:@"A(%f)", [NSDate timeIntervalSinceReferenceDate]]];
             [((Stuff *)contact.bodyA.node) collided];
         }
         if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
+            [field printDebugMessage:[NSString stringWithFormat:@"B(%f)", [NSDate timeIntervalSinceReferenceDate]]];
             [((Stuff *)contact.bodyB.node) collided];
         }
     }
@@ -91,11 +91,11 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     field = [[Field instance] initWithFrame:self.frame];
     
-    for(int x = 20; x < 300; x+= 100) {
-        for(int y = 20; y < 500; y+= 100) {
-            CGPoint position = CGPointMake(x, y);
-            [Stuff addStuffAtPosition:position];
-        }
+    for(int i = 0; i < 20; i++) {
+        float x = RandomFloatBetween(0, 320);
+        float y = RandomFloatBetween(0, 480);
+        CGPoint position = CGPointMake(x, y);
+        [Stuff addStuffAtPosition:position];
     }
     
 }

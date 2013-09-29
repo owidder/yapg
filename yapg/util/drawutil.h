@@ -23,6 +23,8 @@ CGFloat Phi(CGPoint a, CGPoint b);
 BOOL IsPositionValid(CGPoint position);
 void InvalidatePosition(CGPoint *position);
 
+float RandomFloatBetween(float smallNumber, float bigNumber);
+
 CGPoint MiddlePositionBetweenTwoPositions(CGPoint a, CGPoint b);
 
 CGPoint PositionRelativeToBase(CGPoint base, CGPoint p);
@@ -30,5 +32,7 @@ CGPoint PositionRelativeToBase(CGPoint base, CGPoint p);
 CGMutablePathRef CreateBezierPathFromArrayOfPositions(NSMutableArray *positions);
 
 CGMutablePathRef CreateCirclePath(float radius);
+
+CGMutablePathRef CreateTrianglePath(float sideLength);
 
 #endif

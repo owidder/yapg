@@ -76,7 +76,7 @@
 }
 
 -(void)runFadeOutAction:(SKNode *)node {
-    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:10.0];
+    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:30.0];
     SKAction *removeAction = [SKAction removeFromParent];
     SKAction *seqAction = [SKAction sequence:@[fadeOutAction, removeAction]];
     [node runAction:seqAction];

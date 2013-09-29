@@ -21,9 +21,11 @@
 #define RESTITUTION 0.8
 #define MASS 0.01
 
-@interface Stuff()
+@interface Stuff() {
+}
 
 -(void)addSparks;
+-(CGMutablePathRef)createRandomShape;
 
 @end
 
@@ -33,7 +35,7 @@
     if(self = [super init]) {
         self.position = position;
         self.name = NAME;
-        self.path = CreateCirclePath(RADIUS);
+        self.path = [self createRandomShape];
         
         self.lineWidth = LINE_WIDTH;
         self.fillColor = [SKColor redColor];
@@ -56,17 +58,43 @@
     NSLog(@"Stuff created: %@", stuff.description);
 }
 
+-(CGMutablePathRef)createRandomShape {
+    CGMutablePathRef path;
+    
+    float random = RandomFloatBetween(0, 1);
+    
+    if(random < 0.5) {
+        path = CreateTrianglePath(RADIUS);
+    }
+    else {
+        path = CreateCirclePath(RADIUS/2);
+    }
+    
+    return path;
+}
+
 -(void)addSparks {
-    SKEmitterNode *spark1 = [EmitterNodeFactory newSparkEmitter];
-    [self addChild:spark1];
+    SKEmitterNode *spark = [EmitterNodeFactory newSparkEmitter];
+    CGPoint currentPosition = self.position;
+    spark.position = currentPosition;
+    [Field addToGameLayer:spark];
+
+    SKAction *waitForRemoveAction = [SKAction waitForDuration:0.5];
+    SKAction *scaleAction = [SKAction scaleTo:0.0 duration:0.3];
+    SKAction *removeAction = [SKAction removeFromParent];
+    SKAction *sequence = [SKAction sequence:@[waitForRemoveAction, scaleAction, removeAction]];
+    [spark runAction:sequence];
 }
 
 -(void)collided {
+    Field *field = [Field instance];
+    [field printDebugMessage:[NSString stringWithFormat:@"collided(%f)", [NSDate timeIntervalSinceReferenceDate]]];
+
     SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
-    SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
-    SKAction *scaleAction = [SKAction scaleTo:0.0 duration:30.0];
+    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:1.0];
     SKAction *removeAction = [SKAction removeFromParent];
-    SKAction *sequence = [SKAction sequence:@[switchDynamicOnAction, addSparkAction, scaleAction, removeAction]];
+    SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
+    SKAction *sequence = [SKAction sequence:@[switchDynamicOnAction, fadeOutAction, addSparkAction, removeAction]];
     [self runAction:sequence];
 }
 
