@@ -62,11 +62,25 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)deployStuffOnField {
-    for(int i = 0; i < 50; i++) {
+    for(int i = 0; i < 20; i++) {
         float x = RandomFloatBetween(0, self.frame.size.width);
         float y = RandomFloatBetween(0, self.frame.size.height);
         CGPoint position = CGPointMake(x, y);
-        [Stuff addStuffAtPosition:position andPoints:i];
+        [Stuff addStuffWithType:kCircle andPosition:position andPoints:5];
+    }
+
+    for(int i = 0; i < 20; i++) {
+        float x = RandomFloatBetween(0, self.frame.size.width);
+        float y = RandomFloatBetween(0, self.frame.size.height);
+        CGPoint position = CGPointMake(x, y);
+        [Stuff addStuffWithType:kTriangle andPosition:position andPoints:10];
+    }
+
+    for(int i = 0; i < 20; i++) {
+        float x = RandomFloatBetween(0, self.frame.size.width);
+        float y = RandomFloatBetween(0, self.frame.size.height);
+        CGPoint position = CGPointMake(x, y);
+        [Stuff addStuffWithType:kSquare andPosition:position andPoints:20];
     }
 }
 
@@ -107,15 +121,19 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         Stuff *stuff;
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
             stuff = (Stuff *)contact.bodyA.node;
-            [stuff collided];
-            [[Field instance] addPoints:stuff.points];
-            stuff.points = 0;
+            if(stuff.physicsBody.dynamic == NO) {
+                [stuff collided];
+                [[Field instance] addPoints:stuff.points];
+                stuff.points = 0;
+            }
         }
         if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
             stuff = (Stuff *)contact.bodyB.node;
-            [stuff collided];
-            [[Field instance] addPoints:stuff.points];
-            stuff.points = 0;
+            if(stuff.physicsBody.dynamic == NO) {
+                [stuff collided];
+                [[Field instance] addPoints:stuff.points];
+                stuff.points = 0;
+            }
         }
     }
     

@@ -8,15 +8,21 @@
 
 #import <SpriteKit/SpriteKit.h>
 
+typedef enum {
+    kCircle = 1,
+    kTriangle = 2,
+    kSquare = 3
+    } StuffType;
+
 @interface Stuff : SKShapeNode
 
--(id)initWithPosition:(CGPoint)position andPoints:(int)points;
+-(id)initWithType:(StuffType)type andPosition:(CGPoint)position andPoints:(int)points;
 
 -(void)collided;
 
 +(NSString *)name;
 
-+(void)addStuffAtPosition:(CGPoint)position andPoints:(int)points;
++(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position andPoints:(int)points;
 
 @property int points;
 
