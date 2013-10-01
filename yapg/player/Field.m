@@ -13,16 +13,22 @@
 
 #define BOTTOM_NAME @"bottom"
 #define DEBUG_TEXT_NODE_NAME @"debugText"
+#define POINTS_TEXT_NODE_NAME @"pointsText"
 
 #define DEBUG_LAYER_Z_POSITION 1000
 #define GAME_LAYER_Z_POSITION 0
+#define POINTS_LAYER_Z_POSITION 50
 
-@interface Field()
+@interface Field() {
+    SKNode *pointsLayer;
+}
 
 -(void)createEdges;
 -(void)createDebugLayer;
 -(SKLabelNode *)createDebugTextNode;
 -(void)createGameLayer;
+-(void)createPointsLayer;
+-(SKLabelNode *)createPointsTextNode;
 
 @end
 
@@ -37,6 +43,7 @@
     if(self = [super init]) {
         [self createGameLayer];
         [self createDebugLayer];
+        [self createPointsLayer];
         
         [self createEdges];
     }
@@ -48,6 +55,7 @@
     [_gameLayer removeAllChildren];
     [self createEdges];
     [_debugLayer removeAllChildren];
+    [pointsLayer removeAllChildren];
 }
 
 -(void)createGameLayer {
@@ -60,6 +68,15 @@
 -(void)createDebugLayer {
     _debugLayer = [SKNode node];
     _debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
+
+    [self addChild:_debugLayer];
+}
+
+-(void)createPointsLayer {
+    pointsLayer = [SKNode node];
+    pointsLayer.zPosition = POINTS_LAYER_Z_POSITION;
+    
+    [self addChild:pointsLayer];
 }
 
 +(Field*)instance {
@@ -104,6 +121,31 @@
     [_gameLayer addChild:bottom];
 }
 
+#pragma mark points handling
+
+-(SKLabelNode *)createPointsTextNode {
+    SKLabelNode *pointsTextNode = [SKLabelNode node];
+    pointsTextNode.fontSize = 50;
+    pointsTextNode.fontColor = [SKColor grayColor];
+    pointsTextNode.alpha = 0.2;
+    pointsTextNode.position = CGPointMake(self.frame.origin.x + 50, self.frame.origin.y + 10);
+    pointsTextNode.name = POINTS_TEXT_NODE_NAME;
+    pointsTextNode.text = @"0";
+    [pointsLayer addChild:pointsTextNode];
+    
+    return pointsTextNode;
+}
+
+-(void)addPoints:(int)points {
+    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
+    if(pointsTextNode == nil) {
+        pointsTextNode = [self createPointsTextNode];
+    }
+    int currenPoints = [pointsTextNode.text intValue];
+    int newPoints = currenPoints + points;
+    pointsTextNode.text = [NSString stringWithFormat:@"%d", newPoints];
+}
+
 #pragma mark debug
 
 -(SKLabelNode *)createDebugTextNode {
@@ -113,8 +155,6 @@
     debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
     debugTextNode.name = DEBUG_TEXT_NODE_NAME;
     [_debugLayer addChild:debugTextNode];
-    
-    [self addChild:_debugLayer];
     
     return debugTextNode;
 }

@@ -81,7 +81,7 @@
     SKAction *scaleOutEmitter = [SKAction scaleTo:0 duration:1.0];
     SKAction *removeEmitter = [SKAction removeFromParent];
     SKAction *removeEmitterSeq = [SKAction sequence:@[waitBeforeRemoveEmitter, scaleOutEmitter, removeEmitter]];
-    [smoke runAction:removeEmitterSeq completion:^(void){[self removeFromParent];}];
+    [smoke runAction:removeEmitterSeq];
 }
 
 @end

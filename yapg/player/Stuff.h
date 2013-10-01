@@ -10,12 +10,14 @@
 
 @interface Stuff : SKShapeNode
 
--(id)initWithPosition:(CGPoint)position;
+-(id)initWithPosition:(CGPoint)position andPoints:(int)points;
 
 -(void)collided;
 
 +(NSString *)name;
 
-+(void)addStuffAtPosition:(CGPoint)position;
++(void)addStuffAtPosition:(CGPoint)position andPoints:(int)points;
+
+@property int points;
 
 @end

@@ -66,7 +66,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         float x = RandomFloatBetween(0, self.frame.size.width);
         float y = RandomFloatBetween(0, self.frame.size.height);
         CGPoint position = CGPointMake(x, y);
-        [Stuff addStuffAtPosition:position];
+        [Stuff addStuffAtPosition:position andPoints:i];
     }
 }
 
@@ -76,11 +76,19 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)shutDownScene {
+    SKLabelNode *finish = [SKLabelNode node];
+    finish.text = @"END";
+    finish.position = CGPointMake(MainScreenSize().size.width/2, MainScreenSize().size.height/2);
+    finish.fontSize = 100;
+    finish.fontColor = [SKColor blackColor];
+    finish.alpha = 0.2;
+    [self addChild:finish];
+    
     SKAction *wait = [SKAction waitForDuration:3.0];
     SKAction *reset = [SKAction performSelector:@selector(resetField) onTarget:self];
     SKAction *sequence = [SKAction sequence:@[wait, reset]];
     
-    [self runAction:sequence];
+    [self runAction:sequence completion:^(void){[finish removeFromParent];}];
 }
 
 #pragma mark contact handling
@@ -93,16 +101,21 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         else if([contact.bodyB.node.name isEqualToString:[Ball name]]) {
             [((Ball *)contact.bodyB.node) die];
         }
-        
-        [self shutDownScene];
     }
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
+        Stuff *stuff;
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
-            [((Stuff *)contact.bodyA.node) collided];
+            stuff = (Stuff *)contact.bodyA.node;
+            [stuff collided];
+            [[Field instance] addPoints:stuff.points];
+            stuff.points = 0;
         }
         if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
-            [((Stuff *)contact.bodyB.node) collided];
+            stuff = (Stuff *)contact.bodyB.node;
+            [stuff collided];
+            [[Field instance] addPoints:stuff.points];
+            stuff.points = 0;
         }
     }
     
@@ -111,22 +124,25 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    SKNode *existingBalls = [[Field instance].gameLayer childNodeWithName:[Ball name]];
-    if(existingBalls == nil) {
-        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
-        
-        if(timeWhenTouchBegan > 0) {
-            NSTimeInterval now = [event timestamp];
-            NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
-            if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
+    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+    CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
+    
+    if(timeWhenTouchBegan > 0) {
+        NSTimeInterval now = [event timestamp];
+        NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
+        if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
+            SKNode *existingBalls = [[Field instance].gameLayer childNodeWithName:[Ball name]];
+            if(existingBalls == nil) {
                 [Ball addBallAtPosition:positionOfFirstTouch];
             }
+            else {
+                [self shutDownScene];
+            }
         }
-        
-        timeWhenTouchBegan = [event timestamp];
-        positionWhenTouchBegan = positionOfFirstTouch;
     }
+    
+    timeWhenTouchBegan = [event timestamp];
+    positionWhenTouchBegan = positionOfFirstTouch;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

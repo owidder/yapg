@@ -18,6 +18,7 @@
 -(id)init;
 
 -(void)printDebugMessage:(NSString *)message;
+-(void)addPoints:(int)points;
 
 -(void)reset;
 
