@@ -33,11 +33,11 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     NSTimeInterval timeWhenTouchBegan;
     
     Brick *currentBrick;
-    
-    Field *field;
 }
 
--(void)initField;
+-(void)shutDownScene;
+-(void)resetField;
+-(void)deployStuffOnField;
 
 @end
 
@@ -51,12 +51,36 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         self.physicsWorld.contactDelegate = self;
         self.backgroundColor = [SKColor colorWithRed:NORMAL_BACKGROUND_RED green:NORMAL_BACKGROUND_GREEN blue:NORMAL_BACKGROUND_BLUE alpha:NORMAL_BACKGROUND_ALPHA];
         
-        [self initField];
-        [self addChild:field];
+        timeWhenTouchBegan = 0;
+        
+        [self addChild:[Field instance]];
+        [self deployStuffOnField];
         
         currentBrick = NULL;
     }
     return self;
+}
+
+-(void)deployStuffOnField {
+    for(int i = 0; i < 50; i++) {
+        float x = RandomFloatBetween(0, self.frame.size.width);
+        float y = RandomFloatBetween(0, self.frame.size.height);
+        CGPoint position = CGPointMake(x, y);
+        [Stuff addStuffAtPosition:position];
+    }
+}
+
+-(void)resetField {
+    [[Field instance] reset];
+    [self deployStuffOnField];
+}
+
+-(void)shutDownScene {
+    SKAction *wait = [SKAction waitForDuration:3.0];
+    SKAction *reset = [SKAction performSelector:@selector(resetField) onTarget:self];
+    SKAction *sequence = [SKAction sequence:@[wait, reset]];
+    
+    [self runAction:sequence];
 }
 
 #pragma mark contact handling
@@ -69,6 +93,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         else if([contact.bodyB.node.name isEqualToString:[Ball name]]) {
             [((Ball *)contact.bodyB.node) die];
         }
+        
+        [self shutDownScene];
     }
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
@@ -82,26 +108,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
 }
 
-#pragma mark layer handling
-
--(void)initField {
-    timeWhenTouchBegan = 0;
-    
-    field = [[Field instance] initWithFrame:self.frame];
-    
-    for(int i = 0; i < 20; i++) {
-        float x = RandomFloatBetween(0, self.frame.size.width);
-        float y = RandomFloatBetween(0, self.frame.size.height);
-        CGPoint position = CGPointMake(x, y);
-        [Stuff addStuffAtPosition:position];
-    }
-    
-}
-
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    SKNode *existingBalls = [field.gameLayer childNodeWithName:[Ball name]];
+    SKNode *existingBalls = [[Field instance].gameLayer childNodeWithName:[Ball name]];
     if(existingBalls == nil) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
         CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];

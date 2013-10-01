@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 GeekAndPoke. All rights reserved.
 //
 
+#import "drawutil.h"
+
 #import "Field.h"
 #import "Categories.h"
 
@@ -17,8 +19,9 @@
 
 @interface Field()
 
--(void)createEdgesWithFrame:(CGRect)frame;
+-(void)createEdges;
 -(void)createDebugLayer;
+-(SKLabelNode *)createDebugTextNode;
 -(void)createGameLayer;
 
 @end
@@ -30,15 +33,21 @@
 
 #pragma mark initialization
 
--(id)initWithFrame:(CGRect)frame {
+-(id)init {
     if(self = [super init]) {
         [self createGameLayer];
         [self createDebugLayer];
         
-        [self createEdgesWithFrame:frame];
+        [self createEdges];
     }
     
     return self;
+}
+
+-(void)reset {
+    [_gameLayer removeAllChildren];
+    [self createEdges];
+    [_debugLayer removeAllChildren];
 }
 
 -(void)createGameLayer {
@@ -51,15 +60,6 @@
 -(void)createDebugLayer {
     _debugLayer = [SKNode node];
     _debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
-    
-    SKLabelNode *debugTextNode = [SKLabelNode node];
-    debugTextNode.fontSize = 5;
-    debugTextNode.fontColor = [SKColor blackColor];
-    debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
-    debugTextNode.name = DEBUG_TEXT_NODE_NAME;
-    [_debugLayer addChild:debugTextNode];
-    
-    [self addChild:_debugLayer];
 }
 
 +(Field*)instance {
@@ -74,7 +74,9 @@
     return instance;
 }
 
--(void)createEdgesWithFrame:(CGRect)frame {
+-(void)createEdges {
+    CGRect frame = MainScreenSize();
+    
     CGPoint bottomLeft = frame.origin;
     CGPoint topLeft = CGPointMake(bottomLeft.x, bottomLeft.x+frame.size.height);
     CGPoint topRight = CGPointMake(topLeft.x+frame.size.width, topLeft.y);
@@ -104,10 +106,26 @@
 
 #pragma mark debug
 
+-(SKLabelNode *)createDebugTextNode {
+    SKLabelNode *debugTextNode = [SKLabelNode node];
+    debugTextNode.fontSize = 5;
+    debugTextNode.fontColor = [SKColor blackColor];
+    debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
+    debugTextNode.name = DEBUG_TEXT_NODE_NAME;
+    [_debugLayer addChild:debugTextNode];
+    
+    [self addChild:_debugLayer];
+    
+    return debugTextNode;
+}
+
 -(void)printDebugMessage:(NSString *)message {
     NSLog(@"DebugMessage: %@", message);
 #ifdef DEBUG_ON_SCREEN
     SKLabelNode *debugTextNode = (SKLabelNode *) [_debugLayer childNodeWithName:DEBUG_TEXT_NODE_NAME];
+    if(debugTextNode == nil) {
+        debugTextNode = [self createDebugTextNode];
+    }
     debugTextNode.text = message;
 #endif
 }

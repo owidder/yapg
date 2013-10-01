@@ -36,6 +36,8 @@ CGMutablePathRef CreateCirclePath(float radius);
 
 CGMutablePathRef CreateTrianglePath(float sideLength);
 
+CGMutablePathRef CreateSquarePath(float sideLength);
+
 CGRect MainScreenSize();
 
 #endif

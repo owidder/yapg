@@ -15,9 +15,11 @@
 +(void)addToDebugLayer:(SKNode *)node;
 +(NSString *)bottomName;
 
--(id)initWithFrame:(CGRect)frame;
+-(id)init;
 
 -(void)printDebugMessage:(NSString *)message;
+
+-(void)reset;
 
 @property(readonly) SKNode *gameLayer;
 @property(readonly) SKNode *debugLayer;

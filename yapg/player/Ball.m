@@ -70,7 +70,8 @@
 -(void)die {
     CGPoint currentPosition = [self position];
     
-    [self removeFromParent];
+    SKAction *fadeOut = [SKAction fadeOutWithDuration:0.1];
+    [self runAction:fadeOut];
     
     SKEmitterNode *smoke = [EmitterNodeFactory newSmokeEmitter];
     smoke.position = currentPosition;

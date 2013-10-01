@@ -117,3 +117,14 @@ float RandomFloatBetween(float smallNumber, float bigNumber) {
 CGRect MainScreenSize() {
     return [[UIScreen mainScreen] bounds];
 }
+
+CGMutablePathRef CreateSquarePath(float sideLength) {
+    CGMutablePathRef squarePath = CGPathCreateMutable();
+    CGPathMoveToPoint(squarePath, NULL, 0, 0);
+    CGPathAddLineToPoint(squarePath, NULL, sideLength, 0);
+    CGPathAddLineToPoint(squarePath, NULL, sideLength, sideLength);
+    CGPathAddLineToPoint(squarePath, NULL, 0, sideLength);
+    CGPathAddLineToPoint(squarePath, NULL, 0, 0);
+
+    return squarePath;
+}

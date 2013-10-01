@@ -29,6 +29,7 @@
 -(void)createRandomShapeAndPhysicsBody;
 -(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius;
 -(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length;
+-(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length;
 
 @end
 
@@ -36,7 +37,7 @@
 
 -(id)initWithPosition:(CGPoint)position {
     if(self = [super init]) {
-        size = MainScreenSize().size.width / 20;
+        size = MainScreenSize().size.width / 30;
 
         [self createRandomShapeAndPhysicsBody];
         
@@ -44,7 +45,6 @@
         self.name = NAME;
         
         self.lineWidth = LINE_WIDTH;
-        self.fillColor = [SKColor redColor];
         self.alpha = ALPHA;
         
         self.physicsBody.restitution = RESTITUTION;
@@ -59,12 +59,20 @@
 
 -(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius {
     self.path = CreateCirclePath(size/2);
-    self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size];
+    self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size/2];
+    self.fillColor = [SKColor redColor];
 }
 
 -(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length {
     self.path = CreateTrianglePath(length);
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
+    self.fillColor = [SKColor blueColor];
+}
+
+-(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length {
+    self.path = CreateSquarePath(length);
+    self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
+    self.fillColor = [SKColor greenColor];
 }
 
 +(void)addStuffAtPosition:(CGPoint)position {
@@ -74,13 +82,16 @@
 }
 
 -(void)createRandomShapeAndPhysicsBody {
-    float random = RandomFloatBetween(0, 1);
+    float random = RandomFloatBetween(0, 3);
     
-    if(random < 0.5) {
+    if(random < 1.0) {
         [self createCircleShapeAndPhysicsBodyWithRadius:size];
     }
-    else {
+    else if(random < 2.0) {
         [self createTriangleShapeAndPhysicsBodyWithSideLength:size];
+    }
+    else {
+        [self createSquareShapeAndPhysicsBodyWithSideLength:size];
     }
 }
 
