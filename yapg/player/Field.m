@@ -106,8 +106,10 @@
 
 -(void)printDebugMessage:(NSString *)message {
     NSLog(@"DebugMessage: %@", message);
+#ifdef DEBUG_ON_SCREEN
     SKLabelNode *debugTextNode = (SKLabelNode *) [_debugLayer childNodeWithName:DEBUG_TEXT_NODE_NAME];
     debugTextNode.text = message;
+#endif
 }
 
 

@@ -10,6 +10,7 @@
 #define yapg_math_h
 
 #include <CoreGraphics/CGBase.h>
+#import <UIKit/UIKit.h>
 
 // length between the points a and b
 CGFloat Distance(CGPoint a, CGPoint b);
@@ -34,5 +35,7 @@ CGMutablePathRef CreateBezierPathFromArrayOfPositions(NSMutableArray *positions)
 CGMutablePathRef CreateCirclePath(float radius);
 
 CGMutablePathRef CreateTrianglePath(float sideLength);
+
+CGRect MainScreenSize();
 
 #endif

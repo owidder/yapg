@@ -16,16 +16,19 @@
 #define NAME @"stuff"
 
 #define LINE_WIDTH 1.0
-#define RADIUS 10.0
 #define ALPHA 0.5
 #define RESTITUTION 0.8
 #define MASS 0.01
 
 @interface Stuff() {
+    float size;
 }
 
 -(void)addSparks;
--(CGMutablePathRef)createRandomShape;
+
+-(void)createRandomShapeAndPhysicsBody;
+-(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius;
+-(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length;
 
 @end
 
@@ -33,15 +36,17 @@
 
 -(id)initWithPosition:(CGPoint)position {
     if(self = [super init]) {
+        size = MainScreenSize().size.width / 20;
+
+        [self createRandomShapeAndPhysicsBody];
+        
         self.position = position;
         self.name = NAME;
-        self.path = [self createRandomShape];
         
         self.lineWidth = LINE_WIDTH;
         self.fillColor = [SKColor redColor];
         self.alpha = ALPHA;
         
-        self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:RADIUS];
         self.physicsBody.restitution = RESTITUTION;
         self.physicsBody.mass = MASS;
         self.physicsBody.dynamic = NO;
@@ -52,25 +57,31 @@
     return self;
 }
 
+-(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius {
+    self.path = CreateCirclePath(size/2);
+    self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size];
+}
+
+-(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length {
+    self.path = CreateTrianglePath(length);
+    self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
+}
+
 +(void)addStuffAtPosition:(CGPoint)position {
     Stuff *stuff = [[Stuff alloc] initWithPosition:position];
     [Field addToGameLayer:stuff];
     NSLog(@"Stuff created: %@", stuff.description);
 }
 
--(CGMutablePathRef)createRandomShape {
-    CGMutablePathRef path;
-    
+-(void)createRandomShapeAndPhysicsBody {
     float random = RandomFloatBetween(0, 1);
     
     if(random < 0.5) {
-        path = CreateTrianglePath(RADIUS);
+        [self createCircleShapeAndPhysicsBodyWithRadius:size];
     }
     else {
-        path = CreateCirclePath(RADIUS/2);
+        [self createTriangleShapeAndPhysicsBodyWithSideLength:size];
     }
-    
-    return path;
 }
 
 -(void)addSparks {

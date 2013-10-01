@@ -73,11 +73,9 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
-            [field printDebugMessage:[NSString stringWithFormat:@"A(%f)", [NSDate timeIntervalSinceReferenceDate]]];
             [((Stuff *)contact.bodyA.node) collided];
         }
         if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
-            [field printDebugMessage:[NSString stringWithFormat:@"B(%f)", [NSDate timeIntervalSinceReferenceDate]]];
             [((Stuff *)contact.bodyB.node) collided];
         }
     }
@@ -92,8 +90,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     field = [[Field instance] initWithFrame:self.frame];
     
     for(int i = 0; i < 20; i++) {
-        float x = RandomFloatBetween(0, 320);
-        float y = RandomFloatBetween(0, 480);
+        float x = RandomFloatBetween(0, self.frame.size.width);
+        float y = RandomFloatBetween(0, self.frame.size.height);
         CGPoint position = CGPointMake(x, y);
         [Stuff addStuffAtPosition:position];
     }
@@ -103,19 +101,22 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-    CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
-    
-    if(timeWhenTouchBegan > 0) {
-        NSTimeInterval now = [event timestamp];
-        NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
-        if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
-            [Ball addBallAtPosition:positionOfFirstTouch];
+    SKNode *existingBalls = [field.gameLayer childNodeWithName:[Ball name]];
+    if(existingBalls == nil) {
+        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
+        
+        if(timeWhenTouchBegan > 0) {
+            NSTimeInterval now = [event timestamp];
+            NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
+            if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
+                [Ball addBallAtPosition:positionOfFirstTouch];
+            }
         }
+        
+        timeWhenTouchBegan = [event timestamp];
+        positionWhenTouchBegan = positionOfFirstTouch;
     }
-    
-    timeWhenTouchBegan = [event timestamp];
-    positionWhenTouchBegan = positionOfFirstTouch;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
