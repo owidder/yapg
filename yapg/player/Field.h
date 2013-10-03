@@ -17,10 +17,11 @@
 
 -(void)printDebugMessage:(NSString *)message;
 -(void)addToGameLayer:(SKNode *)node;
--(void)addToDebugLayer:(SKNode *)node;
 -(void)addPoints:(int)points;
+-(void)showNumberOfSecondsAsMinSec:(int)numberOfSeconds;
 
 -(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName;
+-(SKNode *)findNodeInGameLayerWithName:(NSString *)nodeName;
 
 -(void)reset;
 

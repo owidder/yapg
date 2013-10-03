@@ -38,9 +38,7 @@
 -(SKLabelNode *)createPointsTextNode;
 
 -(void)createTimeLayer;
--(void)startTimer;
--(void)incrementTimeByOneSecond;
-
+-(SKLabelNode *)createTimeTextNode;
 
 @end
 
@@ -76,7 +74,6 @@
         [self createTimeLayer];
         
         [self createEdges];
-        [self startTimer];
     }
     
     return self;
@@ -88,7 +85,6 @@
     [debugLayer removeAllChildren];
     [pointsLayer removeAllChildren];
     [timeLayer removeAllChildren];
-    [self startTimer];
 }
 
 #pragma mark game layer
@@ -130,6 +126,26 @@
     [gameLayer addChild:bottom];
 }
 
+-(void)addToGameLayer:(SKNode *)node {
+    [gameLayer addChild:node];
+}
+
+-(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName {
+    BOOL exist = NO;
+    
+    SKNode *foundNode = [gameLayer childNodeWithName:nodeName];
+    
+    if(foundNode != nil) {
+        exist = YES;
+    }
+    
+    return exist;
+}
+
+-(SKNode *)findNodeInGameLayerWithName:(NSString *)nodeName {
+    return [gameLayer childNodeWithName:nodeName];
+}
+
 #pragma mark time layer
 
 -(void)createTimeLayer {
@@ -162,7 +178,7 @@
     }
 }
 
--(void)startTimer {
+-(SKLabelNode *)createTimeTextNode {
     SKLabelNode *timeTextNode = [SKLabelNode node];
     timeTextNode.name = TIME_TEXT_NODE_NAME;
     timeTextNode.fontSize = 20;
@@ -175,11 +191,19 @@
     timeTextNode.text = @"0:00";
     [timeLayer addChild:timeTextNode];
     
-    SKAction *waitOneSecond = [SKAction waitForDuration:1.0];
-    SKAction *incrementTime = [SKAction performSelector:@selector(incrementTimeByOneSecond) onTarget:self];
-    SKAction *waitAndIncrement = [SKAction sequence:@[waitOneSecond, incrementTime]];
-    SKAction *repeatTimeForever = [SKAction repeatActionForever:waitAndIncrement];
-    [timeTextNode runAction:repeatTimeForever];
+    return timeTextNode;
+}
+
+-(void)showNumberOfSecondsAsMinSec:(int)numberOfSeconds {
+    int minutesPart = numberOfSeconds / 60;
+    int secondsPart = numberOfSeconds % 60;
+    NSString *minSecString = [NSString stringWithFormat:@"%d:%02d", minutesPart, secondsPart];
+    
+    SKLabelNode *timeTextNode = (SKLabelNode *) [timeLayer childNodeWithName:TIME_TEXT_NODE_NAME];
+    if(timeTextNode == nil) {
+        timeTextNode = [self createTimeTextNode];
+    }
+    timeTextNode.text = minSecString;
 }
 
 #pragma mark points layer
@@ -204,6 +228,16 @@
     return pointsTextNode;
 }
 
+-(void)addPoints:(int)points {
+    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
+    if(pointsTextNode == nil) {
+        pointsTextNode = [self createPointsTextNode];
+    }
+    int currenPoints = [pointsTextNode.text intValue];
+    int newPoints = currenPoints + points;
+    pointsTextNode.text = [NSString stringWithFormat:@"%d", newPoints];
+}
+
 #pragma mark debug layer
 
 -(void)createDebugLayer {
@@ -224,8 +258,6 @@
     return debugTextNode;
 }
 
-#pragma mark public layer access
-
 -(void)printDebugMessage:(NSString *)message {
     NSLog(@"DebugMessage: %@", message);
 #ifdef DEBUG_ON_SCREEN
@@ -235,36 +267,6 @@
     }
     debugTextNode.text = message;
 #endif
-}
-
--(void)addToGameLayer:(SKNode *)node {
-    [gameLayer addChild:node];
-}
-
--(void)addToDebugLayer:(SKNode *)node {
-    [debugLayer addChild:node];
-}
-
--(void)addPoints:(int)points {
-    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
-    if(pointsTextNode == nil) {
-        pointsTextNode = [self createPointsTextNode];
-    }
-    int currenPoints = [pointsTextNode.text intValue];
-    int newPoints = currenPoints + points;
-    pointsTextNode.text = [NSString stringWithFormat:@"%d", newPoints];
-}
-
--(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName {
-    BOOL exist = NO;
-    
-    SKNode *foundNode = [gameLayer childNodeWithName:nodeName];
-    
-    if(foundNode != nil) {
-        exist = YES;
-    }
-    
-    return exist;
 }
 
 @end

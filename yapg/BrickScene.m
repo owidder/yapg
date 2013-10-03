@@ -20,6 +20,7 @@
 
 
 #define STUFF_NAME @"stuff"
+#define SCENE_DURATION_IN_SECONDS 15
 
 static const float NORMAL_BACKGROUND_RED = 1.0;
 static const float NORMAL_BACKGROUND_BLUE = 1.0;
@@ -33,11 +34,18 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     NSTimeInterval timeWhenTouchBegan;
     
     Brick *currentBrick;
+    
+    int residualTimeInSeconds;
+    NSTimer *timer;
 }
 
 -(void)shutDownScene;
--(void)resetField;
+-(void)resetScene;
 -(void)deployStuffOnField;
+
+-(void)decrementTime;
+-(void)gameOver;
+-(void)restartTimer;
 
 @end
 
@@ -54,9 +62,11 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         timeWhenTouchBegan = 0;
         
         [self addChild:[Field instance]];
-        [self deployStuffOnField];
+        [self resetScene];
         
         currentBrick = NULL;
+        
+        residualTimeInSeconds = SCENE_DURATION_IN_SECONDS;
     }
     return self;
 }
@@ -84,9 +94,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     }
 }
 
--(void)resetField {
+-(void)resetScene {
     [[Field instance] reset];
     [self deployStuffOnField];
+    [timer invalidate];
 }
 
 -(void)shutDownScene {
@@ -99,22 +110,43 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [self addChild:finish];
     
     SKAction *wait = [SKAction waitForDuration:3.0];
-    SKAction *reset = [SKAction performSelector:@selector(resetField) onTarget:self];
+    SKAction *reset = [SKAction performSelector:@selector(resetScene) onTarget:self];
     SKAction *sequence = [SKAction sequence:@[wait, reset]];
     
     [self runAction:sequence completion:^(void){[finish removeFromParent];}];
+}
+
+#pragma mark time handling
+
+-(void)gameOver {
+    [timer invalidate];
+    Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
+    [ball die];
+}
+
+-(void)decrementTime {
+    residualTimeInSeconds--;
+    [[Field instance] showNumberOfSecondsAsMinSec:residualTimeInSeconds];
+    if(residualTimeInSeconds == 0) {
+        [timer invalidate];
+        [self gameOver];
+    }
+}
+
+-(void)restartTimer {
+    residualTimeInSeconds = SCENE_DURATION_IN_SECONDS;
+    [[Field instance] showNumberOfSecondsAsMinSec:residualTimeInSeconds];
+    if([timer isValid]) {
+        [timer invalidate];
+    }
+    timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(decrementTime) userInfo:NULL repeats:YES];
 }
 
 #pragma mark contact handling
 
 -(void)didBeginContact:(SKPhysicsContact *)contact {
     if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyA.node.name isEqualToString:[Field bottomName]]) {
-        if([contact.bodyA.node.name isEqualToString:[Ball name]]) {
-            [((Ball *)contact.bodyA.node) die];
-        }
-        else if([contact.bodyB.node.name isEqualToString:[Ball name]]) {
-            [((Ball *)contact.bodyB.node) die];
-        }
+        [self gameOver];
     }
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
@@ -150,6 +182,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
         if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
             if(![[Field instance] doesNodeExistInGameLayer:[Ball name]]) {
+                [self restartTimer];
                 [Ball addBallAtPosition:positionOfFirstTouch];
             }
             else {
