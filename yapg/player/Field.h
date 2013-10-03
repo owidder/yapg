@@ -11,18 +11,17 @@
 @interface Field : SKNode
 
 +(Field*)instance;
-+(void)addToGameLayer:(SKNode *)node;
-+(void)addToDebugLayer:(SKNode *)node;
 +(NSString *)bottomName;
 
 -(id)init;
 
 -(void)printDebugMessage:(NSString *)message;
+-(void)addToGameLayer:(SKNode *)node;
+-(void)addToDebugLayer:(SKNode *)node;
 -(void)addPoints:(int)points;
 
--(void)reset;
+-(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName;
 
-@property(readonly) SKNode *gameLayer;
-@property(readonly) SKNode *debugLayer;
+-(void)reset;
 
 @end

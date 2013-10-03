@@ -45,7 +45,7 @@
 
 +(void)addBallAtPosition:(CGPoint)position {
     Ball *ball = [[Ball alloc] initWithPosition:position];
-    [Field addToGameLayer:ball];
+    [[Field instance] addToGameLayer:ball];
     NSLog(@"Ball created: (%@)", ball.description);
 }
 
@@ -75,7 +75,7 @@
     
     SKEmitterNode *smoke = [EmitterNodeFactory newSmokeEmitter];
     smoke.position = currentPosition;
-    [Field addToGameLayer:smoke];
+    [[Field instance] addToGameLayer:smoke];
     
     SKAction *waitBeforeRemoveEmitter = [SKAction waitForDuration:1.0];
     SKAction *scaleOutEmitter = [SKAction scaleTo:0 duration:1.0];

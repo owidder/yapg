@@ -97,7 +97,7 @@
 
 +(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position andPoints:(int)points {
     Stuff *stuff = [[Stuff alloc] initWithType:type andPosition:position andPoints:points];
-    [Field addToGameLayer:stuff];
+    [[Field instance] addToGameLayer:stuff];
     NSLog(@"Stuff created: %@", stuff.description);
 }
 
@@ -105,7 +105,7 @@
     SKEmitterNode *spark = [EmitterNodeFactory newSparkEmitter];
     CGPoint currentPosition = self.position;
     spark.position = currentPosition;
-    [Field addToGameLayer:spark];
+    [[Field instance] addToGameLayer:spark];
 
     SKAction *waitForRemoveAction = [SKAction waitForDuration:0.5];
     SKAction *scaleAction = [SKAction scaleTo:0.0 duration:0.3];
@@ -122,13 +122,13 @@
     pointsLabel.name = POINTS_LABEL_NAME;
     pointsLabel.position = self.position;
     pointsLabel.fontSize = size/2;
-    pointsLabel.fontColor = [SKColor blackColor];
+    pointsLabel.fontColor = self.fillColor;
     pointsLabel.text = [NSString stringWithFormat:@"%d", self.points];
-    [Field addToGameLayer:pointsLabel];
+    [[Field instance] addToGameLayer:pointsLabel];
     [pointsLabel runAction:[SKAction fadeOutWithDuration:1.0] completion:^(void){[pointsLabel removeFromParent];}];
     
     SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
-    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:1.0];
+    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.2];
     SKAction *removeAction = [SKAction removeFromParent];
     SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
     SKAction *sequence = [SKAction sequence:@[switchDynamicOnAction, fadeOutAction, addSparkAction, removeAction]];

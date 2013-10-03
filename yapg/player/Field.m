@@ -14,28 +14,57 @@
 #define BOTTOM_NAME @"bottom"
 #define DEBUG_TEXT_NODE_NAME @"debugText"
 #define POINTS_TEXT_NODE_NAME @"pointsText"
+#define TIME_TEXT_NODE_NAME @"time"
 
 #define DEBUG_LAYER_Z_POSITION 1000
 #define GAME_LAYER_Z_POSITION 0
 #define POINTS_LAYER_Z_POSITION 50
+#define TIME_LAYER_Z_POSITION 60
 
 @interface Field() {
     SKNode *pointsLayer;
+    SKNode *gameLayer;
+    SKNode *debugLayer;
+    SKNode *timeLayer;
 }
 
+-(void)createGameLayer;
 -(void)createEdges;
+
 -(void)createDebugLayer;
 -(SKLabelNode *)createDebugTextNode;
--(void)createGameLayer;
+
 -(void)createPointsLayer;
 -(SKLabelNode *)createPointsTextNode;
+
+-(void)createTimeLayer;
+-(void)startTimer;
+-(void)incrementTimeByOneSecond;
+
 
 @end
 
 @implementation Field
 
-@synthesize gameLayer = _gameLayer;
-@synthesize debugLayer = _debugLayer;
+#pragma mark node names
+
++(NSString *)bottomName {
+    return BOTTOM_NAME;
+}
+
+#pragma mark singleton
+
++(Field*)instance {
+    static Field *instance = NULL;
+    
+    @synchronized(self) {
+        if(instance == NULL) {
+            instance = [[Field alloc] init];
+        }
+    }
+    
+    return instance;
+}
 
 #pragma mark initialization
 
@@ -44,51 +73,31 @@
         [self createGameLayer];
         [self createDebugLayer];
         [self createPointsLayer];
+        [self createTimeLayer];
         
         [self createEdges];
+        [self startTimer];
     }
     
     return self;
 }
 
 -(void)reset {
-    [_gameLayer removeAllChildren];
+    [gameLayer removeAllChildren];
     [self createEdges];
-    [_debugLayer removeAllChildren];
+    [debugLayer removeAllChildren];
     [pointsLayer removeAllChildren];
+    [timeLayer removeAllChildren];
+    [self startTimer];
 }
+
+#pragma mark game layer
 
 -(void)createGameLayer {
-    _gameLayer = [SKNode node];
-    _gameLayer.zPosition = GAME_LAYER_Z_POSITION;
+    gameLayer = [SKNode node];
+    gameLayer.zPosition = GAME_LAYER_Z_POSITION;
     
-    [self addChild:_gameLayer];
-}
-
--(void)createDebugLayer {
-    _debugLayer = [SKNode node];
-    _debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
-
-    [self addChild:_debugLayer];
-}
-
--(void)createPointsLayer {
-    pointsLayer = [SKNode node];
-    pointsLayer.zPosition = POINTS_LAYER_Z_POSITION;
-    
-    [self addChild:pointsLayer];
-}
-
-+(Field*)instance {
-    static Field *instance = NULL;
- 
-    @synchronized(self) {
-        if(instance == NULL) {
-            instance = [[Field alloc] init];
-        }
-    }
-    
-    return instance;
+    [self addChild:gameLayer];
 }
 
 -(void)createEdges {
@@ -102,26 +111,85 @@
     SKNode *right = [SKNode node];
     right.name = @"right";
     right.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topRight toPoint:bottomRight];
-    [_gameLayer addChild:right];
+    [gameLayer addChild:right];
     
     SKNode *top = [SKNode node];
     top.name = @"top";
     top.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topLeft toPoint:topRight];
-    [_gameLayer addChild:top];
+    [gameLayer addChild:top];
     
     SKNode *left = [SKNode node];
     left.name = @"left";
     left.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:topLeft];
-    [_gameLayer addChild:left];
+    [gameLayer addChild:left];
     
     SKNode *bottom = [SKNode node];
     bottom.name = BOTTOM_NAME;
     bottom.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:bottomRight];
     bottom.physicsBody.categoryBitMask = [Categories bottomCategory];
-    [_gameLayer addChild:bottom];
+    [gameLayer addChild:bottom];
 }
 
-#pragma mark points handling
+#pragma mark time layer
+
+-(void)createTimeLayer {
+    timeLayer = [SKNode node];
+    timeLayer.zPosition = TIME_LAYER_Z_POSITION;
+    
+    [self addChild:timeLayer];
+}
+
+-(void)incrementTimeByOneSecond {
+    SKLabelNode *timeTextNode = (SKLabelNode *) [timeLayer childNodeWithName:TIME_TEXT_NODE_NAME];
+    if(timeTextNode != nil) {
+        NSString *timeString = timeTextNode.text;
+        NSArray *components = [timeString componentsSeparatedByString:@":"];
+        NSInteger mins = [components[0] integerValue];
+        NSInteger secs = [components[1] integerValue];
+        
+        if(secs == 59) {
+            secs = 0;
+            mins++;
+        }
+        else {
+            secs++;
+        }
+        
+        NSString *newTime = [NSString stringWithFormat:@"%d:%02d", mins, secs];
+        
+        NSLog(@"Time: %@", newTime);
+        timeTextNode.text = newTime;
+    }
+}
+
+-(void)startTimer {
+    SKLabelNode *timeTextNode = [SKLabelNode node];
+    timeTextNode.name = TIME_TEXT_NODE_NAME;
+    timeTextNode.fontSize = 20;
+    timeTextNode.fontColor = [SKColor grayColor];
+    timeTextNode.alpha = 0.2;
+    
+    float xPos = self.frame.origin.x + MainScreenSize().size.width - 30;
+    float yPos = self.frame.origin.y + 30;
+    timeTextNode.position = CGPointMake(xPos, yPos);
+    timeTextNode.text = @"0:00";
+    [timeLayer addChild:timeTextNode];
+    
+    SKAction *waitOneSecond = [SKAction waitForDuration:1.0];
+    SKAction *incrementTime = [SKAction performSelector:@selector(incrementTimeByOneSecond) onTarget:self];
+    SKAction *waitAndIncrement = [SKAction sequence:@[waitOneSecond, incrementTime]];
+    SKAction *repeatTimeForever = [SKAction repeatActionForever:waitAndIncrement];
+    [timeTextNode runAction:repeatTimeForever];
+}
+
+#pragma mark points layer
+
+-(void)createPointsLayer {
+    pointsLayer = [SKNode node];
+    pointsLayer.zPosition = POINTS_LAYER_Z_POSITION;
+    
+    [self addChild:pointsLayer];
+}
 
 -(SKLabelNode *)createPointsTextNode {
     SKLabelNode *pointsTextNode = [SKLabelNode node];
@@ -136,17 +204,14 @@
     return pointsTextNode;
 }
 
--(void)addPoints:(int)points {
-    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
-    if(pointsTextNode == nil) {
-        pointsTextNode = [self createPointsTextNode];
-    }
-    int currenPoints = [pointsTextNode.text intValue];
-    int newPoints = currenPoints + points;
-    pointsTextNode.text = [NSString stringWithFormat:@"%d", newPoints];
-}
+#pragma mark debug layer
 
-#pragma mark debug
+-(void)createDebugLayer {
+    debugLayer = [SKNode node];
+    debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
+    
+    [self addChild:debugLayer];
+}
 
 -(SKLabelNode *)createDebugTextNode {
     SKLabelNode *debugTextNode = [SKLabelNode node];
@@ -154,10 +219,12 @@
     debugTextNode.fontColor = [SKColor blackColor];
     debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
     debugTextNode.name = DEBUG_TEXT_NODE_NAME;
-    [_debugLayer addChild:debugTextNode];
+    [debugLayer addChild:debugTextNode];
     
     return debugTextNode;
 }
+
+#pragma mark public layer access
 
 -(void)printDebugMessage:(NSString *)message {
     NSLog(@"DebugMessage: %@", message);
@@ -170,20 +237,34 @@
 #endif
 }
 
-
-#pragma mark class methods
-
-+(NSString *)bottomName {
-    return BOTTOM_NAME;
+-(void)addToGameLayer:(SKNode *)node {
+    [gameLayer addChild:node];
 }
 
-+(void)addToGameLayer:(SKNode *)node {
-    Field *field = [Field instance];
-    [field.gameLayer addChild:node];
+-(void)addToDebugLayer:(SKNode *)node {
+    [debugLayer addChild:node];
 }
 
-+(void)addToDebugLayer:(SKNode *)node {
-    [[Field instance].debugLayer addChild:node];
+-(void)addPoints:(int)points {
+    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
+    if(pointsTextNode == nil) {
+        pointsTextNode = [self createPointsTextNode];
+    }
+    int currenPoints = [pointsTextNode.text intValue];
+    int newPoints = currenPoints + points;
+    pointsTextNode.text = [NSString stringWithFormat:@"%d", newPoints];
+}
+
+-(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName {
+    BOOL exist = NO;
+    
+    SKNode *foundNode = [gameLayer childNodeWithName:nodeName];
+    
+    if(foundNode != nil) {
+        exist = YES;
+    }
+    
+    return exist;
 }
 
 @end

@@ -149,8 +149,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         NSTimeInterval now = [event timestamp];
         NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
         if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
-            SKNode *existingBalls = [[Field instance].gameLayer childNodeWithName:[Ball name]];
-            if(existingBalls == nil) {
+            if(![[Field instance] doesNodeExistInGameLayer:[Ball name]]) {
                 [Ball addBallAtPosition:positionOfFirstTouch];
             }
             else {

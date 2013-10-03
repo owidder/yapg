@@ -44,7 +44,7 @@
         positions = [NSMutableArray array];
         [positions addObject:[NSValue valueWithPointer:&CGPointZero]];
         
-        [Field addToGameLayer:self];
+        [[Field instance] addToGameLayer:self];
         [self runFadeOutAction:self];
         
         field = [Field instance];
