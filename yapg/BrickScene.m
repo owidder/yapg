@@ -20,7 +20,7 @@
 
 
 #define STUFF_NAME @"stuff"
-#define SCENE_DURATION_IN_SECONDS 15
+#define SCENE_DURATION_IN_SECONDS 30
 
 static const float NORMAL_BACKGROUND_RED = 1.0;
 static const float NORMAL_BACKGROUND_BLUE = 1.0;
