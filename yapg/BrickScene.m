@@ -84,8 +84,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)addStuffWithType:(StuffType)type {
-    float x = RandomFloatBetween(0, MainScreenSize().size.width);
-    float y = RandomFloatBetween(0, MainScreenSize().size.height-50);
+    float x = RandomFloatBetween(0, [Field mainAreaRect].size.width);
+    float y = RandomFloatBetween(0, [Field mainAreaRect].size.height);
     CGPoint position = CGPointMake(x, y);
     
     [Stuff addStuffWithType:type andPosition:position];
@@ -195,9 +195,11 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
         if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
             if(!gameStarted) {
-                gameStarted = YES;
-                lastBallPosition = positionOfFirstTouch;
-                [Ball addBallAtPosition:positionOfFirstTouch];
+                if(positionOfFirstTouch.y > [Field ballStartAreaRect].origin.y) {
+                    gameStarted = YES;
+                    lastBallPosition = positionOfFirstTouch;
+                    [Ball addBallAtPosition:positionOfFirstTouch];
+                }
             }
             else {
                 [self shutDownScene];

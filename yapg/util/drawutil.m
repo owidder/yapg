@@ -115,16 +115,22 @@ float RandomFloatBetween(float smallNumber, float bigNumber) {
 }
 
 CGRect MainScreenSize() {
-    return [[UIScreen mainScreen] bounds];
+    CGRect totalBounds = [[UIScreen mainScreen] bounds];
+    CGRect mainScreenBounds = CGRectMake(totalBounds.origin.x, totalBounds.origin.y, totalBounds.size.width, totalBounds.size.height-20);
+    return mainScreenBounds;
 }
 
 CGMutablePathRef CreateSquarePath(float sideLength) {
-    CGMutablePathRef squarePath = CGPathCreateMutable();
-    CGPathMoveToPoint(squarePath, NULL, 0, 0);
-    CGPathAddLineToPoint(squarePath, NULL, sideLength, 0);
-    CGPathAddLineToPoint(squarePath, NULL, sideLength, sideLength);
-    CGPathAddLineToPoint(squarePath, NULL, 0, sideLength);
-    CGPathAddLineToPoint(squarePath, NULL, 0, 0);
+    return CreateRectanglePath(sideLength, sideLength);
+}
 
-    return squarePath;
+CGMutablePathRef CreateRectanglePath(float a, float b) {
+    CGMutablePathRef rectanglePath = CGPathCreateMutable();
+    CGPathMoveToPoint(rectanglePath, NULL, 0, 0);
+    CGPathAddLineToPoint(rectanglePath, NULL, a, 0);
+    CGPathAddLineToPoint(rectanglePath, NULL, a, b);
+    CGPathAddLineToPoint(rectanglePath, NULL, 0, b);
+    CGPathAddLineToPoint(rectanglePath, NULL, 0, 0);
+    
+    return rectanglePath;
 }

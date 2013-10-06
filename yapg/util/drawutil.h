@@ -38,6 +38,8 @@ CGMutablePathRef CreateTrianglePath(float sideLength);
 
 CGMutablePathRef CreateSquarePath(float sideLength);
 
+CGMutablePathRef CreateRectanglePath(float a, float b);
+
 CGRect MainScreenSize();
 
 #endif

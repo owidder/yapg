@@ -30,6 +30,7 @@
 
 -(void)createGameLayer;
 -(void)createEdges;
+-(void)createBallStartArea;
 
 -(void)createDebugLayer;
 -(SKLabelNode *)createDebugTextNode;
@@ -43,6 +44,23 @@
 @end
 
 @implementation Field
+
+#pragma mark size
+
++(CGRect)ballStartAreaRect {
+    float height = MainScreenSize().size.height/20;
+    float originY = MainScreenSize().origin.y + MainScreenSize().size.height - height;
+    CGRect area = CGRectMake(MainScreenSize().origin.x, originY, MainScreenSize().size.width, height);
+    
+    return area;
+}
+
++(CGRect)mainAreaRect {
+    CGRect screenSize = MainScreenSize();
+    float subtractFromHeight = [Field ballStartAreaRect].size.height;
+    CGRect fieldSize = CGRectMake(screenSize.origin.x, screenSize.origin.y, screenSize.size.width, screenSize.size.height-subtractFromHeight);
+    return fieldSize;
+}
 
 #pragma mark node names
 
@@ -74,6 +92,7 @@
         [self createTimeLayer];
         
         [self createEdges];
+        [self createBallStartArea];
     }
     
     return self;
@@ -95,6 +114,17 @@
     gameLayer.zPosition = GAME_LAYER_Z_POSITION;
     
     [self addChild:gameLayer];
+}
+
+-(void)createBallStartArea {
+    SKShapeNode *ballStartArea = [SKShapeNode node];
+    ballStartArea.lineWidth = 0.0;
+    CGRect ballStartAreaRect = [Field ballStartAreaRect];
+    ballStartArea.path = CreateRectanglePath(ballStartAreaRect.size.width, ballStartAreaRect.size.height);
+    ballStartArea.position = ballStartAreaRect.origin;
+    ballStartArea.fillColor = [SKColor grayColor];
+    ballStartArea.alpha = 0.5;
+    [self addChild:ballStartArea];
 }
 
 -(void)createEdges {
