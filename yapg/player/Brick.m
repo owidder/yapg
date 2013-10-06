@@ -61,11 +61,6 @@
     CGPoint lastBrickPosition = [lastElement CGPointValue];
     CGFloat distanceToLastBrickPosition = Distance(lastBrickPosition, relativePosition);
     
-    [field printDebugMessage:[NSString stringWithFormat:@"(%f, %f)/(%f,%f) - %d",
-                              lastBrickPosition.x, lastBrickPosition.y,
-                              relativePosition.x, relativePosition.y,
-                              [positions count]]];
-    
     if(distanceToLastBrickPosition > MIN_SEGMENT_LENGTH) {
         [positions addObject:[NSValue valueWithCGPoint:relativePosition]];
         path = CreateBezierPathFromArrayOfPositions(positions);

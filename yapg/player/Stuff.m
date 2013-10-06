@@ -35,6 +35,8 @@
 -(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius;
 -(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length;
 -(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length;
+-(void)showAndRemovePoints;
+-(void)removeWithWaitTime:(float)waitTime;
 
 @end
 
@@ -87,8 +89,8 @@
     self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size/2];
     color = [SKColor redColor];
     particleName = @"fire-red";
-    timeToLiveAfterCollision = 0.2;
-    _points = 5;
+    timeToLiveAfterCollision = 0.5;
+    _points = 10;
 }
 
 -(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length{
@@ -96,8 +98,8 @@
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
     color = [SKColor blueColor];
     particleName = @"fire-blue";
-    timeToLiveAfterCollision = 0.5;
-    _points = 10;
+    timeToLiveAfterCollision = 1.0;
+    _points = 20;
 }
 
 -(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length{
@@ -105,8 +107,8 @@
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
     color = [SKColor greenColor];
     particleName = @"fire-green";
-    timeToLiveAfterCollision = 1.0;
-    _points = 20;
+    timeToLiveAfterCollision = 1.5;
+    _points = 50;
 }
 
 +(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position {
@@ -127,28 +129,44 @@
     [spark runAction:sequence];
 }
 
--(void)collided {
+-(void)showAndRemovePoints {
+    SKLabelNode *pointsLabel = [SKLabelNode node];
+    pointsLabel.name = POINTS_LABEL_NAME;
+    pointsLabel.position = self.position;
+    pointsLabel.fontSize = size/2;
+    pointsLabel.fontColor = color;
+    pointsLabel.text = [NSString stringWithFormat:@"%d", self.points];
+    [[Field instance] addToGameLayer:pointsLabel];
+    
+    SKAction *fadoOut = [SKAction fadeOutWithDuration:timeToLiveAfterCollision];
+    SKAction *remove = [SKAction removeFromParent];
+    SKAction *seq = [SKAction sequence:@[fadoOut, remove]];
+    [pointsLabel runAction:seq];
+}
+
+-(void)removeWithWaitTime:(float)waitTime {
+    SKAction *waitAction = [SKAction waitForDuration:waitTime];
+    SKAction *showPointsAction = [SKAction performSelector:@selector(showAndRemovePoints) onTarget:self];
+    SKAction *addPointsAction = [SKAction runBlock:^(void){[[Field instance] addPoints:-_points];}];
+    SKAction *changeColorAction = [SKAction runBlock:^(void){self.strokeColor = color;}];
+    SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
+    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.5];
+    SKAction *removeAction = [SKAction removeFromParent];
+    SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
+    SKAction *sequence = [SKAction sequence:@[waitAction, showPointsAction, addPointsAction, changeColorAction, switchDynamicOnAction, fadeOutAction, addSparkAction, removeAction]];
+    [self runAction:sequence];
+}
+
+-(void)collidedWithRandomWait:(BOOL)doRandomWait {
     if(!collided) {
         collided = YES;
-        _points = 0;
-        Field *field = [Field instance];
-        [field printDebugMessage:[NSString stringWithFormat:@"collided(%f)", [NSDate timeIntervalSinceReferenceDate]]];
         
-        SKLabelNode *pointsLabel = [SKLabelNode node];
-        pointsLabel.name = POINTS_LABEL_NAME;
-        pointsLabel.position = self.position;
-        pointsLabel.fontSize = size/2;
-        pointsLabel.fontColor = color;
-        pointsLabel.text = [NSString stringWithFormat:@"%d", self.points];
-        [[Field instance] addToGameLayer:pointsLabel];
-        [pointsLabel runAction:[SKAction fadeOutWithDuration:timeToLiveAfterCollision] completion:^(void){[pointsLabel removeFromParent];}];
+        float randomWait = 0.0;
+        if(doRandomWait) {
+            randomWait = RandomFloatBetween(0.1, 4.0);
+        }
         
-        SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
-        SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.5];
-        SKAction *removeAction = [SKAction removeFromParent];
-        SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
-        SKAction *sequence = [SKAction sequence:@[switchDynamicOnAction, fadeOutAction, addSparkAction, removeAction]];
-        [self runAction:sequence];
+        [self removeWithWaitTime:randomWait];
     }
 }
 

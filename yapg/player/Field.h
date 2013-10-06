@@ -22,6 +22,9 @@
 
 -(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName;
 -(SKNode *)findNodeInGameLayerWithName:(NSString *)nodeName;
+-(NSArray *)findAllNodesInGameLayerWithName:(NSString *)nodeName;
+-(void)removeAllNodesInGameLayerWithName:(NSString *)name andPosition:(CGPoint)position;
+-(CGPoint)positionOfNodeInGameLayerWithName:(NSString *)name;
 
 -(void)reset;
 

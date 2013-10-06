@@ -128,7 +128,6 @@
 }
 
 -(void)addToGameLayer:(SKNode *)node {
-    NSLog(@"added node: %@", node.description);
     [gameLayer addChild:node];
 }
 
@@ -144,8 +143,38 @@
     return exist;
 }
 
+-(CGPoint)positionOfNodeInGameLayerWithName:(NSString *)name {
+    SKNode *node = [gameLayer childNodeWithName:name];
+    return node.position;
+}
+
+-(void)removeAllNodesInGameLayerWithName:(NSString *)name andPosition:(CGPoint)position {
+    NSArray *nodesAtPosition = [gameLayer nodesAtPoint:position];
+    for(SKNode *node in nodesAtPosition) {
+        if([name isEqualToString:node.name]) {
+            [node removeAllActions];
+            SKAction *fadeOut = [SKAction fadeOutWithDuration:1.0];
+            SKAction *remove = [SKAction removeFromParent];
+            SKAction *seq = [SKAction sequence:@[fadeOut, remove]];
+            [node runAction:seq];
+        }
+    }
+}
+
 -(SKNode *)findNodeInGameLayerWithName:(NSString *)nodeName {
     return [gameLayer childNodeWithName:nodeName];
+}
+
+-(NSArray *)findAllNodesInGameLayerWithName:(NSString *)nodeName {
+    NSMutableArray *allNodesWithName = [NSMutableArray array];
+    NSArray *children = [gameLayer children];
+    for(SKNode *node in children) {
+        if([nodeName isEqualToString:node.name]) {
+            [allNodesWithName addObject:node];
+        }
+    }
+    
+    return allNodesWithName;
 }
 
 #pragma mark time layer
@@ -185,7 +214,7 @@
     timeTextNode.name = TIME_TEXT_NODE_NAME;
     timeTextNode.fontSize = 20;
     timeTextNode.fontColor = [SKColor grayColor];
-    timeTextNode.alpha = 0.2;
+    timeTextNode.alpha = 0.5;
     
     float xPos = self.frame.origin.x + MainScreenSize().size.width - 30;
     float yPos = self.frame.origin.y + 30;
@@ -222,8 +251,8 @@
     SKLabelNode *pointsTextNode = [SKLabelNode node];
     pointsTextNode.fontSize = 50;
     pointsTextNode.fontColor = [SKColor grayColor];
-    pointsTextNode.alpha = 0.2;
-    pointsTextNode.position = CGPointMake(self.frame.origin.x + 50, self.frame.origin.y + 10);
+    pointsTextNode.alpha = 0.5;
+    pointsTextNode.position = CGPointMake(self.frame.origin.x + 80, self.frame.origin.y + 10);
     pointsTextNode.name = POINTS_TEXT_NODE_NAME;
     pointsTextNode.text = @"0";
     [pointsLayer addChild:pointsTextNode];

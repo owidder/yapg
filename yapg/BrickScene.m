@@ -21,7 +21,7 @@
 #import "debugutil.h"
 
 #define STUFF_NAME @"stuff"
-#define SCENE_DURATION_IN_SECONDS 30
+#define SCENE_DURATION_IN_SECONDS 10
 
 static const float NORMAL_BACKGROUND_RED = 0.0;
 static const float NORMAL_BACKGROUND_BLUE = 0.0;
@@ -38,6 +38,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     int residualTimeInSeconds;
     NSTimer *timer;
+    
+    BOOL gameStarted;
+    
+    CGPoint lastBallPosition;
 }
 
 -(void)shutDownScene;
@@ -46,9 +50,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(void)decrementTime;
 -(void)gameOver;
+-(void)timeOver;
 -(void)restartTimer;
 
--(void)collisionWithStuff:(Stuff *)stuff;
+-(void)collisionWithStuff:(Stuff *)stuff andRandomWait:(BOOL)doRandomWait;
 
 -(void)addStuffWithType:(StuffType)type;
 
@@ -71,6 +76,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         [self resetScene];
         
         currentBrick = NULL;
+        gameStarted = NO;
         
         residualTimeInSeconds = SCENE_DURATION_IN_SECONDS;
     }
@@ -103,6 +109,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [[Field instance] reset];
     [self deployStuffOnField];
     [timer invalidate];
+    gameStarted = NO;
 }
 
 -(void)shutDownScene {
@@ -110,7 +117,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     finish.text = @"END";
     finish.position = CGPointMake(MainScreenSize().size.width/2, MainScreenSize().size.height/2);
     finish.fontSize = 100;
-    finish.fontColor = [SKColor blackColor];
+    finish.fontColor = [SKColor whiteColor];
     finish.alpha = 0.2;
     [self addChild:finish];
     
@@ -123,10 +130,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 #pragma mark stuff handling
 
--(void)collisionWithStuff:(Stuff *)stuff {
-    int points = stuff.points;
-    [stuff collided];
-    [[Field instance] addPoints:-points];
+-(void)collisionWithStuff:(Stuff *)stuff andRandomWait:(BOOL)doRandomWait {
+    [stuff collidedWithRandomWait:doRandomWait];
 }
 
 #pragma mark time handling
@@ -137,12 +142,18 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [ball die];
 }
 
+-(void)timeOver {
+    [self gameOver];
+    for(Stuff *stuff in [[Field instance] findAllNodesInGameLayerWithName:[Stuff name]]) {
+        [self collisionWithStuff:stuff andRandomWait:YES];
+    }
+}
+
 -(void)decrementTime {
     residualTimeInSeconds--;
     [[Field instance] showNumberOfSecondsAsMinSec:residualTimeInSeconds];
     if(residualTimeInSeconds == 0) {
-        [timer invalidate];
-        [self gameOver];
+        [self timeOver];
     }
 }
 
@@ -164,10 +175,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
-            [self collisionWithStuff:(Stuff *)contact.bodyA.node];
+            [self collisionWithStuff:(Stuff *)contact.bodyA.node andRandomWait:NO];
         }
         if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
-            [self collisionWithStuff:(Stuff *)contact.bodyB.node];
+            [self collisionWithStuff:(Stuff *)contact.bodyB.node andRandomWait:NO];
         }
     }
 }
@@ -182,8 +193,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         NSTimeInterval now = [event timestamp];
         NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
         if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
-            if(![[Field instance] doesNodeExistInGameLayer:[Ball name]]) {
+            if(!gameStarted) {
+                gameStarted = YES;
                 [self restartTimer];
+                lastBallPosition = positionOfFirstTouch;
                 [Ball addBallAtPosition:positionOfFirstTouch];
             }
             else {
@@ -201,15 +214,17 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if(![[Field instance] doesNodeExistInGameLayer:[Ball name]]) {
-        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
-        
+    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+    CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
+    if(!gameStarted) {
         if(currentBrick == NULL) {
             currentBrick = [[Brick alloc] initWithAbsolutePositionOfBrick:positionWhenTouchBegan];
         }
         
         [currentBrick updateWithAbsolutePositionOfBrickSegment:positionOfFirstTouch];
+    }
+    else {
+        [[Field instance] removeAllNodesInGameLayerWithName:[Brick name] andPosition:positionOfFirstTouch];
     }
 }
 
@@ -218,6 +233,19 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 #pragma mark SKScene
+
+-(void)didEvaluateActions {
+    if([[Field instance] doesNodeExistInGameLayer:[Ball name]]) {
+        CGPoint currentBallPosition = [[Field instance] positionOfNodeInGameLayerWithName:[Ball name]];
+        if(currentBallPosition.y < lastBallPosition.y) {
+            CGFloat distance = Distance(lastBallPosition, currentBallPosition);
+            if(distance > 10.0) {
+                lastBallPosition = currentBallPosition;
+                [[Field instance] addPoints:(int)(distance/10)];
+            }
+        }
+    }
+}
 
 -(void)update:(CFTimeInterval)currentTime {
     /* Called before each frame is rendered */

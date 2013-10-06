@@ -18,7 +18,7 @@ typedef enum {
 
 -(id)initWithType:(StuffType)type andPosition:(CGPoint)position;
 
--(void)collided;
+-(void)collidedWithRandomWait:(BOOL)doRandomWait;
 
 +(NSString *)name;
 
