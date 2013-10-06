@@ -89,7 +89,7 @@
     self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size/2];
     color = [SKColor redColor];
     particleName = @"fire-red";
-    timeToLiveAfterCollision = 0.5;
+    timeToLiveAfterCollision = 1.0;
     _points = 10;
 }
 
@@ -98,7 +98,7 @@
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
     color = [SKColor blueColor];
     particleName = @"fire-blue";
-    timeToLiveAfterCollision = 1.0;
+    timeToLiveAfterCollision = 2.0;
     _points = 20;
 }
 
@@ -107,7 +107,7 @@
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
     color = [SKColor greenColor];
     particleName = @"fire-green";
-    timeToLiveAfterCollision = 1.5;
+    timeToLiveAfterCollision = 3.0;
     _points = 50;
 }
 
@@ -150,7 +150,7 @@
     SKAction *addPointsAction = [SKAction runBlock:^(void){[[Field instance] addPoints:-_points];}];
     SKAction *changeColorAction = [SKAction runBlock:^(void){self.strokeColor = color;}];
     SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
-    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.5];
+    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:timeToLiveAfterCollision];
     SKAction *removeAction = [SKAction removeFromParent];
     SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
     SKAction *sequence = [SKAction sequence:@[waitAction, showPointsAction, addPointsAction, changeColorAction, switchDynamicOnAction, fadeOutAction, addSparkAction, removeAction]];

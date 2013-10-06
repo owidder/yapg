@@ -21,7 +21,7 @@
 #import "debugutil.h"
 
 #define STUFF_NAME @"stuff"
-#define SCENE_DURATION_IN_SECONDS 10
+#define SCENE_DURATION_IN_SECONDS 30
 
 static const float NORMAL_BACKGROUND_RED = 0.0;
 static const float NORMAL_BACKGROUND_BLUE = 0.0;
@@ -110,11 +110,12 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [self deployStuffOnField];
     [timer invalidate];
     gameStarted = NO;
+    [self restartTimer];
 }
 
 -(void)shutDownScene {
     SKLabelNode *finish = [SKLabelNode node];
-    finish.text = @"END";
+    finish.text = @"NEW GAME";
     finish.position = CGPointMake(MainScreenSize().size.width/2, MainScreenSize().size.height/2);
     finish.fontSize = 100;
     finish.fontColor = [SKColor whiteColor];
@@ -195,7 +196,6 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
             if(!gameStarted) {
                 gameStarted = YES;
-                [self restartTimer];
                 lastBallPosition = positionOfFirstTouch;
                 [Ball addBallAtPosition:positionOfFirstTouch];
             }
