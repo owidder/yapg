@@ -91,6 +91,7 @@
 
 -(void)createGameLayer {
     gameLayer = [SKNode node];
+    gameLayer.name = @"gameLayer";
     gameLayer.zPosition = GAME_LAYER_Z_POSITION;
     
     [self addChild:gameLayer];
@@ -127,6 +128,7 @@
 }
 
 -(void)addToGameLayer:(SKNode *)node {
+    NSLog(@"added node: %@", node.description);
     [gameLayer addChild:node];
 }
 
@@ -150,6 +152,7 @@
 
 -(void)createTimeLayer {
     timeLayer = [SKNode node];
+    timeLayer.name = @"timeLayer";
     timeLayer.zPosition = TIME_LAYER_Z_POSITION;
     
     [self addChild:timeLayer];
@@ -173,7 +176,6 @@
         
         NSString *newTime = [NSString stringWithFormat:@"%d:%02d", mins, secs];
         
-        NSLog(@"Time: %@", newTime);
         timeTextNode.text = newTime;
     }
 }
@@ -210,6 +212,7 @@
 
 -(void)createPointsLayer {
     pointsLayer = [SKNode node];
+    pointsLayer.name = @"pointsLayer";
     pointsLayer.zPosition = POINTS_LAYER_Z_POSITION;
     
     [self addChild:pointsLayer];
@@ -242,6 +245,7 @@
 
 -(void)createDebugLayer {
     debugLayer = [SKNode node];
+    debugLayer.name = @"debugLayer";
     debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
     
     [self addChild:debugLayer];

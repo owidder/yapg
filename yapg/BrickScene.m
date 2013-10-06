@@ -17,15 +17,17 @@
 #import "Field.h"
 #import "Brick.h"
 #import "Stuff.h"
+#import "Stuff2.h"
 
+#import "debugutil.h"
 
 #define STUFF_NAME @"stuff"
 #define SCENE_DURATION_IN_SECONDS 30
 
-static const float NORMAL_BACKGROUND_RED = 1.0;
-static const float NORMAL_BACKGROUND_BLUE = 1.0;
-static const float NORMAL_BACKGROUND_GREEN = 1.0;
-static const float NORMAL_BACKGROUND_ALPHA = 1.0;
+static const float NORMAL_BACKGROUND_RED = 0.0;
+static const float NORMAL_BACKGROUND_BLUE = 0.0;
+static const float NORMAL_BACKGROUND_GREEN = 0.0;
+static const float NORMAL_BACKGROUND_ALPHA = 0.0;
 
 static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
@@ -47,6 +49,10 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(void)gameOver;
 -(void)restartTimer;
 
+-(void)collisionWithStuff:(Stuff *)stuff;
+
+-(void)addStuffWithType:(StuffType)type;
+
 @end
 
 @implementation BrickScene
@@ -55,6 +61,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(id)initWithSize:(CGSize)size {
     if (self = [super initWithSize:size]) {
+        self.name = @"brickScene";
 
         self.physicsWorld.contactDelegate = self;
         self.backgroundColor = [SKColor colorWithRed:NORMAL_BACKGROUND_RED green:NORMAL_BACKGROUND_GREEN blue:NORMAL_BACKGROUND_BLUE alpha:NORMAL_BACKGROUND_ALPHA];
@@ -71,26 +78,25 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     return self;
 }
 
+-(void)addStuffWithType:(StuffType)type {
+    float x = RandomFloatBetween(0, MainScreenSize().size.width);
+    float y = RandomFloatBetween(0, MainScreenSize().size.height-50);
+    CGPoint position = CGPointMake(x, y);
+    
+    [Stuff addStuffWithType:type andPosition:position];
+}
+
 -(void)deployStuffOnField {
     for(int i = 0; i < 20; i++) {
-        float x = RandomFloatBetween(0, self.frame.size.width);
-        float y = RandomFloatBetween(0, self.frame.size.height);
-        CGPoint position = CGPointMake(x, y);
-        [Stuff addStuffWithType:kCircle andPosition:position andPoints:5];
+        [self addStuffWithType:kCircle];
     }
 
     for(int i = 0; i < 20; i++) {
-        float x = RandomFloatBetween(0, self.frame.size.width);
-        float y = RandomFloatBetween(0, self.frame.size.height);
-        CGPoint position = CGPointMake(x, y);
-        [Stuff addStuffWithType:kTriangle andPosition:position andPoints:10];
+        [self addStuffWithType:kTriangle];
     }
 
     for(int i = 0; i < 20; i++) {
-        float x = RandomFloatBetween(0, self.frame.size.width);
-        float y = RandomFloatBetween(0, self.frame.size.height);
-        CGPoint position = CGPointMake(x, y);
-        [Stuff addStuffWithType:kSquare andPosition:position andPoints:20];
+        [self addStuffWithType:kSquare];
     }
 }
 
@@ -114,6 +120,13 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     SKAction *sequence = [SKAction sequence:@[wait, reset]];
     
     [self runAction:sequence completion:^(void){[finish removeFromParent];}];
+}
+
+#pragma mark timeHandling
+
+-(void)collisionWithStuff:(Stuff *)stuff {
+    [stuff collided];
+    [[Field instance] addPoints:stuff.points];
 }
 
 #pragma mark time handling
@@ -150,25 +163,13 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     }
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
-        Stuff *stuff;
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
-            stuff = (Stuff *)contact.bodyA.node;
-            if(stuff.physicsBody.dynamic == NO) {
-                [stuff collided];
-                [[Field instance] addPoints:stuff.points];
-                stuff.points = 0;
-            }
+            [self collisionWithStuff:(Stuff *)contact.bodyA.node];
         }
         if([contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
-            stuff = (Stuff *)contact.bodyB.node;
-            if(stuff.physicsBody.dynamic == NO) {
-                [stuff collided];
-                [[Field instance] addPoints:stuff.points];
-                stuff.points = 0;
-            }
+            [self collisionWithStuff:(Stuff *)contact.bodyB.node];
         }
     }
-    
 }
 
 #pragma mark touch handling

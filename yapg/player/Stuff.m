@@ -15,7 +15,7 @@
 
 #define NAME @"stuff"
 
-#define LINE_WIDTH 1.0
+#define LINE_WIDTH 0.1
 #define ALPHA 0.5
 #define RESTITUTION 0.8
 #define MASS 0.01
@@ -24,13 +24,16 @@
 
 @interface Stuff() {
     float size;
+    SKColor *color;
+    float timeToLiveAfterCollision;
+    BOOL collided;
 }
 
 -(void)addSparks;
 
--(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius andPoints:(int)points;
--(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length andPoints:(int)points;
--(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length andPoints:(int)points;
+-(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius;
+-(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length;
+-(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length;
 
 @end
 
@@ -42,26 +45,25 @@
 
 #pragma mark init
 
--(id)initWithType:(StuffType)type andPosition:(CGPoint)position andPoints:(int)points {
+-(id)initWithType:(StuffType)type andPosition:(CGPoint)position {
     if(self = [super init]) {
-        _points = points;
+        self.position = position;
         
         size = MainScreenSize().size.width / 30;
 
         switch (type) {
             case kCircle:
-                [self createCircleShapeAndPhysicsBodyWithRadius:size andPoints:points];
+                [self createCircleShapeAndPhysicsBodyWithRadius:size];
                 break;
                 
             case kTriangle:
-                [self createTriangleShapeAndPhysicsBodyWithSideLength:size andPoints:points];
+                [self createTriangleShapeAndPhysicsBodyWithSideLength:size];
                 break;
                 
             default:
-                [self createSquareShapeAndPhysicsBodyWithSideLength:size andPoints:points];
+                [self createSquareShapeAndPhysicsBodyWithSideLength:size];
         }
         
-        self.position = position;
         self.name = NAME;
         
         self.lineWidth = LINE_WIDTH;
@@ -72,33 +74,40 @@
         self.physicsBody.dynamic = NO;
         self.physicsBody.categoryBitMask = [Categories stuffCategory];
         self.physicsBody.contactTestBitMask = [Categories stuffCategory];
+        
+        collided = NO;
     }
     
     return self;
 }
 
--(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius andPoints:(int)points{
+-(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius{
     self.path = CreateCirclePath(size/2);
     self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size/2];
-    self.fillColor = [SKColor redColor];
+    color = [SKColor redColor];
+    timeToLiveAfterCollision = 0.2;
+    _points = 5;
 }
 
--(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length andPoints:(int)points{
+-(void)createTriangleShapeAndPhysicsBodyWithSideLength:(float)length{
     self.path = CreateTrianglePath(length);
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
-    self.fillColor = [SKColor blueColor];
+    color = [SKColor blueColor];
+    timeToLiveAfterCollision = 0.5;
+    _points = 10;
 }
 
--(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length andPoints:(int)points{
+-(void)createSquareShapeAndPhysicsBodyWithSideLength:(float)length{
     self.path = CreateSquarePath(length);
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
-    self.fillColor = [SKColor greenColor];
+    color = [SKColor greenColor];
+    timeToLiveAfterCollision = 1.0;
+    _points = 20;
 }
 
-+(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position andPoints:(int)points {
-    Stuff *stuff = [[Stuff alloc] initWithType:type andPosition:position andPoints:points];
++(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position {
+    Stuff *stuff = [[Stuff node] initWithType:type andPosition:position];
     [[Field instance] addToGameLayer:stuff];
-    NSLog(@"Stuff created: %@", stuff.description);
 }
 
 -(void)addSparks {
@@ -115,24 +124,28 @@
 }
 
 -(void)collided {
-    Field *field = [Field instance];
-    [field printDebugMessage:[NSString stringWithFormat:@"collided(%f)", [NSDate timeIntervalSinceReferenceDate]]];
-    
-    SKLabelNode *pointsLabel = [SKLabelNode node];
-    pointsLabel.name = POINTS_LABEL_NAME;
-    pointsLabel.position = self.position;
-    pointsLabel.fontSize = size/2;
-    pointsLabel.fontColor = self.fillColor;
-    pointsLabel.text = [NSString stringWithFormat:@"%d", self.points];
-    [[Field instance] addToGameLayer:pointsLabel];
-    [pointsLabel runAction:[SKAction fadeOutWithDuration:1.0] completion:^(void){[pointsLabel removeFromParent];}];
-    
-    SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
-    SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.2];
-    SKAction *removeAction = [SKAction removeFromParent];
-    SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
-    SKAction *sequence = [SKAction sequence:@[switchDynamicOnAction, fadeOutAction, addSparkAction, removeAction]];
-    [self runAction:sequence];
+    if(!collided) {
+        collided = YES;
+        _points = 0;
+        Field *field = [Field instance];
+        [field printDebugMessage:[NSString stringWithFormat:@"collided(%f)", [NSDate timeIntervalSinceReferenceDate]]];
+        
+        SKLabelNode *pointsLabel = [SKLabelNode node];
+        pointsLabel.name = POINTS_LABEL_NAME;
+        pointsLabel.position = self.position;
+        pointsLabel.fontSize = size/2;
+        pointsLabel.fontColor = color;
+        pointsLabel.text = [NSString stringWithFormat:@"%d", self.points];
+        [[Field instance] addToGameLayer:pointsLabel];
+        [pointsLabel runAction:[SKAction fadeOutWithDuration:timeToLiveAfterCollision] completion:^(void){[pointsLabel removeFromParent];}];
+        
+        SKAction *switchDynamicOnAction = [SKAction runBlock:^(void){self.physicsBody.dynamic = YES;}];
+        SKAction *fadeOutAction = [SKAction fadeOutWithDuration:0.5];
+        SKAction *removeAction = [SKAction removeFromParent];
+        SKAction *addSparkAction = [SKAction performSelector:@selector(addSparks) onTarget:self];
+        SKAction *sequence = [SKAction sequence:@[switchDynamicOnAction, fadeOutAction, addSparkAction, removeAction]];
+        [self runAction:sequence];
+    }
 }
 
 +(NSString *)name {

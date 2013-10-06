@@ -39,7 +39,7 @@
         self.position = position;
         self.lineWidth = LINE_WIDTH;
         self.glowWidth = GLOW_WIDTH;
-        self.strokeColor = [SKColor lightGrayColor];
+        self.strokeColor = [SKColor whiteColor];
 
         positions = [NSMutableArray array];
         [positions addObject:[NSValue valueWithPointer:&CGPointZero]];

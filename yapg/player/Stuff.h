@@ -16,14 +16,14 @@ typedef enum {
 
 @interface Stuff : SKShapeNode
 
--(id)initWithType:(StuffType)type andPosition:(CGPoint)position andPoints:(int)points;
+-(id)initWithType:(StuffType)type andPosition:(CGPoint)position;
 
 -(void)collided;
 
 +(NSString *)name;
 
-+(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position andPoints:(int)points;
++(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position;
 
-@property int points;
+@property(readonly) int points;
 
 @end

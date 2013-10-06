@@ -46,7 +46,6 @@
 +(void)addBallAtPosition:(CGPoint)position {
     Ball *ball = [[Ball alloc] initWithPosition:position];
     [[Field instance] addToGameLayer:ball];
-    NSLog(@"Ball created: (%@)", ball.description);
 }
 
 -(void)createBallNode {
@@ -54,7 +53,7 @@
     self.path = ballPath;
     
     self.lineWidth = LINE_WIDTH;
-    self.fillColor = [SKColor blackColor];
+    self.fillColor = [SKColor whiteColor];
 
     SKPhysicsBody *physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:RADIUS];
     physicsBody.restitution = RESTITUTION;
