@@ -17,8 +17,9 @@
 		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
 		99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99463F7817E2529000DC690A /* EmitterNodeFactory.m */; };
 		996D97ED1800ABD1002E605D /* debugutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 996D97EC1800ABD1002E605D /* debugutil.m */; };
-		996D97F01800B653002E605D /* Stuff2.m in Sources */ = {isa = PBXBuildFile; fileRef = 996D97EF1800B653002E605D /* Stuff2.m */; };
 		996D97F21800C8BD002E605D /* fire-red.sks in Resources */ = {isa = PBXBuildFile; fileRef = 996D97F11800C8BD002E605D /* fire-red.sks */; };
+		996D97F518013D2E002E605D /* fire-blue.sks in Resources */ = {isa = PBXBuildFile; fileRef = 996D97F318013D2E002E605D /* fire-blue.sks */; };
+		996D97F618013D2E002E605D /* fire-green.sks in Resources */ = {isa = PBXBuildFile; fileRef = 996D97F418013D2E002E605D /* fire-green.sks */; };
 		997EF8DC17F814CB0071815E /* fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = 997EF8DB17F814CB0071815E /* fire.sks */; };
 		99C4AD6E17DC762100CBCFB6 /* icon-src.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6917DC762100CBCFB6 /* icon-src.png */; };
 		99C4AD6F17DC762100CBCFB6 /* icon29.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C4AD6A17DC762100CBCFB6 /* icon29.png */; };
@@ -79,9 +80,9 @@
 		99463F7817E2529000DC690A /* EmitterNodeFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmitterNodeFactory.m; sourceTree = "<group>"; };
 		996D97EB1800AB3B002E605D /* debugutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debugutil.h; sourceTree = "<group>"; };
 		996D97EC1800ABD1002E605D /* debugutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = debugutil.m; sourceTree = "<group>"; };
-		996D97EE1800B653002E605D /* Stuff2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stuff2.h; sourceTree = "<group>"; };
-		996D97EF1800B653002E605D /* Stuff2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stuff2.m; sourceTree = "<group>"; };
 		996D97F11800C8BD002E605D /* fire-red.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = "fire-red.sks"; sourceTree = "<group>"; };
+		996D97F318013D2E002E605D /* fire-blue.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = "fire-blue.sks"; sourceTree = "<group>"; };
+		996D97F418013D2E002E605D /* fire-green.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = "fire-green.sks"; sourceTree = "<group>"; };
 		997EF8DB17F814CB0071815E /* fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = fire.sks; sourceTree = "<group>"; };
 		99C4AD6917DC762100CBCFB6 /* icon-src.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-src.png"; sourceTree = "<group>"; };
 		99C4AD6A17DC762100CBCFB6 /* icon29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon29.png; sourceTree = "<group>"; };
@@ -158,8 +159,6 @@
 				990E5ED617F054EB00201793 /* Brick.m */,
 				990E5ED817F06CC900201793 /* Stuff.h */,
 				990E5ED917F06CC900201793 /* Stuff.m */,
-				996D97EE1800B653002E605D /* Stuff2.h */,
-				996D97EF1800B653002E605D /* Stuff2.m */,
 			);
 			path = player;
 			sourceTree = "<group>";
@@ -183,6 +182,8 @@
 				99463F7017E24FC700DC690A /* spark.png */,
 				997EF8DB17F814CB0071815E /* fire.sks */,
 				996D97F11800C8BD002E605D /* fire-red.sks */,
+				996D97F318013D2E002E605D /* fire-blue.sks */,
+				996D97F418013D2E002E605D /* fire-green.sks */,
 			);
 			path = particle;
 			sourceTree = "<group>";
@@ -386,10 +387,12 @@
 				99463F7117E24FC700DC690A /* smoke.sks in Resources */,
 				99C4AD6F17DC762100CBCFB6 /* icon29.png in Resources */,
 				99C4AD7617DC775700CBCFB6 /* icon80.png in Resources */,
+				996D97F618013D2E002E605D /* fire-green.sks in Resources */,
 				996D97F21800C8BD002E605D /* fire-red.sks in Resources */,
 				99D3B63317C0DB040064FA09 /* Spaceship.png in Resources */,
 				99C4AD7A17DC780F00CBCFB6 /* icon152.png in Resources */,
 				99C4AD7017DC762100CBCFB6 /* icon40.png in Resources */,
+				996D97F518013D2E002E605D /* fire-blue.sks in Resources */,
 				99D3B63517C0DB040064FA09 /* Images.xcassets in Resources */,
 				997EF8DC17F814CB0071815E /* fire.sks in Resources */,
 				99D3B62B17C0DB040064FA09 /* Main_iPad.storyboard in Resources */,
@@ -424,7 +427,6 @@
 				99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */,
 				99D3B65317C0DBF70064FA09 /* BrickScene.m in Sources */,
 				990E5ED017ED947600201793 /* Field.m in Sources */,
-				996D97F01800B653002E605D /* Stuff2.m in Sources */,
 				99D3B62E17C0DB040064FA09 /* ViewController.m in Sources */,
 				99D3B62517C0DB040064FA09 /* AppDelegate.m in Sources */,
 				99D3B62117C0DB040064FA09 /* main.m in Sources */,

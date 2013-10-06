@@ -13,5 +13,6 @@
 
 +(SKEmitterNode *)newSmokeEmitter;
 +(SKEmitterNode *)newSparkEmitter;
++(SKEmitterNode *)newEmitterWithName:(NSString *)name;
 
 @end

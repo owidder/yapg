@@ -27,6 +27,7 @@
     SKColor *color;
     float timeToLiveAfterCollision;
     BOOL collided;
+    NSString *particleName;
 }
 
 -(void)addSparks;
@@ -85,6 +86,7 @@
     self.path = CreateCirclePath(size/2);
     self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size/2];
     color = [SKColor redColor];
+    particleName = @"fire-red";
     timeToLiveAfterCollision = 0.2;
     _points = 5;
 }
@@ -93,6 +95,7 @@
     self.path = CreateTrianglePath(length);
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
     color = [SKColor blueColor];
+    particleName = @"fire-blue";
     timeToLiveAfterCollision = 0.5;
     _points = 10;
 }
@@ -101,6 +104,7 @@
     self.path = CreateSquarePath(length);
     self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path];
     color = [SKColor greenColor];
+    particleName = @"fire-green";
     timeToLiveAfterCollision = 1.0;
     _points = 20;
 }
@@ -111,7 +115,7 @@
 }
 
 -(void)addSparks {
-    SKEmitterNode *spark = [EmitterNodeFactory newSparkEmitter];
+    SKEmitterNode *spark = [EmitterNodeFactory newEmitterWithName:particleName];
     CGPoint currentPosition = self.position;
     spark.position = currentPosition;
     [[Field instance] addToGameLayer:spark];

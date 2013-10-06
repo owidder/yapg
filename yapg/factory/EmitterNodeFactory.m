@@ -22,4 +22,10 @@
     return spark;
 }
 
++(SKEmitterNode *)newEmitterWithName:(NSString *)name {
+    NSString *emitterPath = [[NSBundle mainBundle] pathForResource:name ofType:@"sks"];
+    SKEmitterNode *emitter = [NSKeyedUnarchiver unarchiveObjectWithFile:emitterPath];
+    return emitter;
+}
+
 @end

@@ -17,7 +17,6 @@
 #import "Field.h"
 #import "Brick.h"
 #import "Stuff.h"
-#import "Stuff2.h"
 
 #import "debugutil.h"
 
@@ -122,11 +121,12 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [self runAction:sequence completion:^(void){[finish removeFromParent];}];
 }
 
-#pragma mark timeHandling
+#pragma mark stuff handling
 
 -(void)collisionWithStuff:(Stuff *)stuff {
+    int points = stuff.points;
     [stuff collided];
-    [[Field instance] addPoints:stuff.points];
+    [[Field instance] addPoints:-points];
 }
 
 #pragma mark time handling
@@ -201,14 +201,16 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-    CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
-    
-    if(currentBrick == NULL) {
-        currentBrick = [[Brick alloc] initWithAbsolutePositionOfBrick:positionWhenTouchBegan];
+    if(![[Field instance] doesNodeExistInGameLayer:[Ball name]]) {
+        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
+        
+        if(currentBrick == NULL) {
+            currentBrick = [[Brick alloc] initWithAbsolutePositionOfBrick:positionWhenTouchBegan];
+        }
+        
+        [currentBrick updateWithAbsolutePositionOfBrickSegment:positionOfFirstTouch];
     }
-    
-    [currentBrick updateWithAbsolutePositionOfBrickSegment:positionOfFirstTouch];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
