@@ -22,6 +22,8 @@
 
 #define STUFF_NAME @"stuff"
 #define SCENE_DURATION_IN_SECONDS 30
+#define START_NUMBER_OF_STUFF 5
+#define INC_NUMBER_OF_STUFF 5
 
 static const float NORMAL_BACKGROUND_RED = 0.0;
 static const float NORMAL_BACKGROUND_BLUE = 0.0;
@@ -42,6 +44,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     BOOL gameStarted;
     
     CGPoint lastBallPosition;
+    
+    int numberOfStuff;
 }
 
 -(void)shutDownScene;
@@ -49,7 +53,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 -(void)deployStuffOnField;
 
 -(void)decrementTime;
--(void)gameOver;
+-(void)nextLevel;
 -(void)timeOver;
 -(void)restartTimer;
 
@@ -73,12 +77,15 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         timeWhenTouchBegan = 0;
         
         [self addChild:[Field instance]];
-        [self resetScene];
         
         currentBrick = NULL;
         gameStarted = NO;
         
         residualTimeInSeconds = SCENE_DURATION_IN_SECONDS;
+        
+        numberOfStuff = START_NUMBER_OF_STUFF;
+
+        [self resetScene];
     }
     return self;
 }
@@ -92,15 +99,15 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)deployStuffOnField {
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < numberOfStuff; i++) {
         [self addStuffWithType:kCircle];
     }
 
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < numberOfStuff; i++) {
         [self addStuffWithType:kTriangle];
     }
 
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < numberOfStuff; i++) {
         [self addStuffWithType:kSquare];
     }
 }
@@ -115,7 +122,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(void)shutDownScene {
     SKLabelNode *finish = [SKLabelNode node];
-    finish.text = @"NEW GAME";
+    finish.text = @"NEXT LEVEL";
     finish.position = CGPointMake(MainScreenSize().size.width/2, MainScreenSize().size.height/2);
     finish.fontSize = 100;
     finish.fontColor = [SKColor whiteColor];
@@ -137,14 +144,24 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 #pragma mark time handling
 
--(void)gameOver {
-    [timer invalidate];
-    Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
-    [ball die];
+-(void)nextLevel {
+    if([Field instance].points < 0) {
+        [self timeOver];
+        numberOfStuff = START_NUMBER_OF_STUFF;
+    }
+    else {
+        [timer invalidate];
+        Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
+        [ball die];
+        [self shutDownScene];
+        numberOfStuff+=INC_NUMBER_OF_STUFF;
+    }
 }
 
 -(void)timeOver {
-    [self gameOver];
+    [timer invalidate];
+    Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
+    [ball die];
     for(Stuff *stuff in [[Field instance] findAllNodesInGameLayerWithName:[Stuff name]]) {
         [self collisionWithStuff:stuff andRandomWait:YES];
     }
@@ -171,7 +188,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(void)didBeginContact:(SKPhysicsContact *)contact {
     if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyA.node.name isEqualToString:[Field bottomName]]) {
-        [self gameOver];
+        [self nextLevel];
     }
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {

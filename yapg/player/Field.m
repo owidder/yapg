@@ -47,6 +47,18 @@
 
 @implementation Field
 
+#pragma mark properties
+
+-(int)points {
+    int points = 0;
+    
+    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
+    if(pointsTextNode != nil) {
+        points = [pointsTextNode.text intValue];
+    }
+    return points;
+}
+
 #pragma mark size
 
 +(CGRect)ballStartAreaRect {

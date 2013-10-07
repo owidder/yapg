@@ -30,4 +30,6 @@
 
 -(void)reset;
 
+@property(readonly) int points;
+
 @end
