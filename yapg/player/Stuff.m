@@ -113,6 +113,16 @@
 
 +(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position {
     Stuff *stuff = [[Stuff node] initWithType:type andPosition:position];
+    stuff.xScale = 0.0;
+    stuff.yScale = 0.0;
+    
+    float randomWaitTime = RandomFloatBetween(0.1, 1.0);
+    float randomGrowTime = RandomFloatBetween(0.1, 5.0);
+    SKAction *wait = [SKAction waitForDuration:randomWaitTime];
+    SKAction *scaleTo1 = [SKAction scaleTo:1.0 duration:randomGrowTime];
+    SKAction *seq = [SKAction sequence:@[wait, scaleTo1]];
+    [stuff runAction:seq];
+    
     [[Field instance] addToGameLayer:stuff];
 }
 

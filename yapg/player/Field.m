@@ -21,6 +21,8 @@
 #define POINTS_LAYER_Z_POSITION 50
 #define TIME_LAYER_Z_POSITION 60
 
+#define COLOR_CHANGE_TIME 3.0
+
 @interface Field() {
     SKNode *pointsLayer;
     SKNode *gameLayer;
@@ -117,13 +119,33 @@
 }
 
 -(void)createBallStartArea {
-    SKShapeNode *ballStartArea = [SKShapeNode node];
-    ballStartArea.lineWidth = 0.0;
     CGRect ballStartAreaRect = [Field ballStartAreaRect];
+
+    SKShapeNode *ballStartAreaStroke = [SKShapeNode node];
+    ballStartAreaStroke.position = ballStartAreaRect.origin;
+    ballStartAreaStroke.path = CreateRectanglePath(ballStartAreaRect.size.width, ballStartAreaRect.size.height);
+    ballStartAreaStroke.lineWidth = 0.1;
+    ballStartAreaStroke.strokeColor = [SKColor whiteColor];
+    ballStartAreaStroke.alpha = 0.3;
+    
+    [self addChild:ballStartAreaStroke];
+    
+    SKShapeNode *ballStartArea = [SKShapeNode node];
     ballStartArea.path = CreateRectanglePath(ballStartAreaRect.size.width, ballStartAreaRect.size.height);
     ballStartArea.position = ballStartAreaRect.origin;
     ballStartArea.fillColor = [SKColor grayColor];
-    ballStartArea.alpha = 0.5;
+    ballStartArea.alpha = 0.3;
+    
+    SKAction *red = [SKAction runBlock:^(void){ballStartArea.fillColor = [SKColor redColor];}];
+    SKAction *green = [SKAction runBlock:^(void){ballStartArea.fillColor = [SKColor greenColor];}];
+    SKAction *blue = [SKAction runBlock:^(void){ballStartArea.fillColor = [SKColor blueColor];}];
+    SKAction *yellow = [SKAction runBlock:^(void){ballStartArea.fillColor = [SKColor yellowColor];}];
+    SKAction *fadeIn = [SKAction fadeAlphaTo:0.2 duration:COLOR_CHANGE_TIME];
+    SKAction *fadeOut = [SKAction fadeAlphaTo:0.05 duration:COLOR_CHANGE_TIME];
+    SKAction *seqColors = [SKAction sequence:@[fadeOut, red, fadeIn, fadeOut, green, fadeIn, fadeOut, blue, fadeIn, fadeOut, yellow]];
+    SKAction *repeatColors = [SKAction repeatActionForever:seqColors];
+    [ballStartArea runAction:repeatColors];
+    
     [self addChild:ballStartArea];
 }
 
