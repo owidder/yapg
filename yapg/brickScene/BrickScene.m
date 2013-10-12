@@ -10,7 +10,7 @@
 #import <float.h>
 
 #import "BrickScene.h"
-#import "util/drawutil.h"
+#import "drawutil.h"
 #import "EmitterNodeFactory.h"
 #import "Categories.h"
 #import "Ball.h"

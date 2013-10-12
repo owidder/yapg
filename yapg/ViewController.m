@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "MyScene.h"
 #import "BrickScene.h"
+#import "MenuScene.h"
 
 @implementation ViewController
 
@@ -22,11 +23,14 @@
     skView.showsNodeCount = YES;
     
     // Create and configure the scene.
-    SKScene * scene = [BrickScene sceneWithSize:skView.bounds.size];
-    scene.scaleMode = SKSceneScaleModeAspectFill;
+    BrickScene *brickScene = [BrickScene sceneWithSize:skView.bounds.size];
+    brickScene.scaleMode = SKSceneScaleModeAspectFill;
+    
+    MenuScene *menuScene = [MenuScene sceneWithSize:skView.bounds.size];
+    menuScene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.
-    [skView presentScene:scene];
+    [skView presentScene:menuScene];
 }
 
 - (BOOL)shouldAutorotate

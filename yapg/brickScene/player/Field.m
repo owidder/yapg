@@ -167,9 +167,9 @@
     CGRect frame = MainScreenSize();
     
     CGPoint bottomLeft = frame.origin;
-    CGPoint topLeft = CGPointMake(bottomLeft.x, bottomLeft.x+frame.size.height);
-    CGPoint topRight = CGPointMake(topLeft.x+frame.size.width, topLeft.y);
-    CGPoint bottomRight = CGPointMake(topRight.x, bottomLeft.y);
+    CGPoint topLeft = CGPointMake(frame.origin.x, frame.origin.y+frame.size.height);
+    CGPoint topRight = CGPointMake(frame.origin.x+frame.size.width, frame.origin.y+frame.size.height);
+    CGPoint bottomRight = CGPointMake(frame.origin.x+frame.size.width, frame.origin.y);
     
     SKNode *right = [SKNode node];
     right.name = @"right";
