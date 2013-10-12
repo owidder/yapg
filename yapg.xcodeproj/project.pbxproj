@@ -168,7 +168,6 @@
 			children = (
 				99332CAD17DB02A100B7EC57 /* drawutil.h */,
 				99332CAE17DB034E00B7EC57 /* drawutil.m */,
-				99463F7317E2526200DC690A /* factory */,
 				996D97EB1800AB3B002E605D /* debugutil.h */,
 				996D97EC1800ABD1002E605D /* debugutil.m */,
 			);
@@ -194,8 +193,7 @@
 				99463F7717E2529000DC690A /* EmitterNodeFactory.h */,
 				99463F7817E2529000DC690A /* EmitterNodeFactory.m */,
 			);
-			name = factory;
-			path = ../factory;
+			path = factory;
 			sourceTree = "<group>";
 		};
 		99C4AD6717DC762100CBCFB6 /* resource */ = {
@@ -257,6 +255,7 @@
 		99D3B61A17C0DB040064FA09 /* yapg */ = {
 			isa = PBXGroup;
 			children = (
+				99463F7317E2526200DC690A /* factory */,
 				990E5ECA17ED8F2400201793 /* player */,
 				99463F6E17E24F5A00DC690A /* particle */,
 				99332CAC17DB028800B7EC57 /* util */,

@@ -2,26 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="49c9c9a2-2604-4598-868d-5324811204f2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/xcode.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/yapg.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/particle/fire.sks" afterPath="$PROJECT_DIR$/yapg/particle/fire.sks" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/particle/smoke.sks" afterPath="$PROJECT_DIR$/yapg/particle/smoke.sks" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/player/Ball.m" afterPath="$PROJECT_DIR$/yapg/player/Ball.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg.xcodeproj/xcuserdata/oliverwidder.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" afterPath="$PROJECT_DIR$/yapg.xcodeproj/xcuserdata/oliverwidder.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/player/Brick.m" afterPath="$PROJECT_DIR$/yapg/player/Brick.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/BrickScene.m" afterPath="$PROJECT_DIR$/yapg/BrickScene.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/player/Field.h" afterPath="$PROJECT_DIR$/yapg/player/Field.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/player/Field.m" afterPath="$PROJECT_DIR$/yapg/player/Field.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/player/Stuff.m" afterPath="$PROJECT_DIR$/yapg/player/Stuff.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/util/drawutil.h" afterPath="$PROJECT_DIR$/yapg/util/drawutil.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg/util/drawutil.m" afterPath="$PROJECT_DIR$/yapg/util/drawutil.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yapg.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/yapg.xcodeproj/project.pbxproj" />
     </list>
     <ignored path="yapg.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="49c9c9a2-2604-4598-868d-5324811204f2" time="1381002946819" ignored="false" />
+    <file path="/Dummy.txt" changelist="49c9c9a2-2604-4598-868d-5324811204f2" time="1381348593504" ignored="false" />
     <file path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/c++/v1/__locale" changelist="49c9c9a2-2604-4598-868d-5324811204f2" time="1381003023750" ignored="false" />
     <file path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/c++/v1/cctype" changelist="49c9c9a2-2604-4598-868d-5324811204f2" time="1381003023750" ignored="false" />
     <file path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/c++/v1/iterator" changelist="49c9c9a2-2604-4598-868d-5324811204f2" time="1381003023750" ignored="false" />
@@ -60,20 +50,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BrickScene.m" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/yapg/BrickScene.m">
+      <file leaf-file-name="Stuff.m" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/yapg/player/Stuff.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="91" column="15" selection-start="2392" selection-end="2392" vertical-scroll-proportion="0.7258883">
+            <state line="123" column="7" selection-start="3415" selection-end="3415" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Stuff.m" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/yapg/player/Stuff.m">
+      <file leaf-file-name="BrickScene.m" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/yapg/BrickScene.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="97" column="7" selection-start="2700" selection-end="2700" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="146" column="10" selection-start="3666" selection-end="3666" vertical-scroll-proportion="0.32019705">
+              <folding>
+                <element signature="e#134#152#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -91,6 +83,13 @@
   <component name="GitLogSettings">
     <option name="myDateState">
       <MyDateState />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/yapg/BrickScene.m" />
+      </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
@@ -124,6 +123,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="DirectoryView.Xcode" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -170,7 +170,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="DirectoryView.Xcode" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -203,25 +202,25 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1366" height="742" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3287037" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24944155" sideWeight="0.6712963" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3287037" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -287,15 +286,33 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/yapg/player/Stuff.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="7" selection-start="2700" selection-end="2700" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/yapg/BrickScene.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="15" selection-start="2392" selection-end="2392" vertical-scroll-proportion="0.7258883">
+        <state line="91" column="15" selection-start="2392" selection-end="2392" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#134#152#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/yapg/player/Stuff.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="123" column="7" selection-start="3415" selection-end="3415" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/yapg/BrickScene.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="146" column="10" selection-start="3666" selection-end="3666" vertical-scroll-proportion="0.32019705">
+          <folding>
+            <element signature="e#134#152#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

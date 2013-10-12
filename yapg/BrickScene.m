@@ -48,13 +48,13 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     int numberOfStuff;
 }
 
--(void)shutDownScene;
+-(void)startNextLevel;
 -(void)resetScene;
 -(void)deployStuffOnField;
 
 -(void)decrementTime;
--(void)nextLevel;
--(void)timeOver;
+-(void)levelFinished;
+-(void)gameOver;
 -(void)restartTimer;
 
 -(void)collisionWithStuff:(Stuff *)stuff andRandomWait:(BOOL)doRandomWait;
@@ -120,20 +120,22 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     [self restartTimer];
 }
 
--(void)shutDownScene {
-    SKLabelNode *finish = [SKLabelNode node];
-    finish.text = @"NEXT LEVEL";
-    finish.position = CGPointMake(MainScreenSize().size.width/2, MainScreenSize().size.height/2);
-    finish.fontSize = 100;
-    finish.fontColor = [SKColor whiteColor];
-    finish.alpha = 0.2;
-    [self addChild:finish];
+-(void)startNextLevel {
+    numberOfStuff+=INC_NUMBER_OF_STUFF;
+    
+    SKLabelNode *finishText = [SKLabelNode node];
+    finishText.text = @"Next Level";
+    finishText.position = CGPointMake(MainScreenSize().size.width/2, MainScreenSize().size.height/2);
+    finishText.fontSize = 50;
+    finishText.fontColor = [SKColor whiteColor];
+    finishText.alpha = 0.2;
+    [self addChild:finishText];
     
     SKAction *wait = [SKAction waitForDuration:3.0];
     SKAction *reset = [SKAction performSelector:@selector(resetScene) onTarget:self];
     SKAction *sequence = [SKAction sequence:@[wait, reset]];
     
-    [self runAction:sequence completion:^(void){[finish removeFromParent];}];
+    [self runAction:sequence completion:^(void){[finishText removeFromParent];}];
 }
 
 #pragma mark stuff handling
@@ -144,21 +146,20 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 #pragma mark time handling
 
--(void)nextLevel {
+-(void)levelFinished {
     if([Field instance].points < 0) {
-        [self timeOver];
+        [self gameOver];
         numberOfStuff = START_NUMBER_OF_STUFF;
     }
     else {
         [timer invalidate];
         Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
         [ball die];
-        [self shutDownScene];
-        numberOfStuff+=INC_NUMBER_OF_STUFF;
+        [self startNextLevel];
     }
 }
 
--(void)timeOver {
+-(void)gameOver {
     [timer invalidate];
     Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
     [ball die];
@@ -171,7 +172,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     residualTimeInSeconds--;
     [[Field instance] showNumberOfSecondsAsMinSec:residualTimeInSeconds];
     if(residualTimeInSeconds == 0) {
-        [self timeOver];
+        [self gameOver];
     }
 }
 
@@ -188,7 +189,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(void)didBeginContact:(SKPhysicsContact *)contact {
     if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyA.node.name isEqualToString:[Field bottomName]]) {
-        [self nextLevel];
+        [self levelFinished];
     }
     
     if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
@@ -217,9 +218,6 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
                     lastBallPosition = positionOfFirstTouch;
                     [Ball addBallAtPosition:positionOfFirstTouch];
                 }
-            }
-            else {
-                [self shutDownScene];
             }
         }
     }

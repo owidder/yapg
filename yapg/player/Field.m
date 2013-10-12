@@ -14,6 +14,7 @@
 #define BOTTOM_NAME @"bottom"
 #define DEBUG_TEXT_NODE_NAME @"debugText"
 #define POINTS_TEXT_NODE_NAME @"pointsText"
+#define TOTAL_POINTS_TEXT_NODE_NAME @"totalPointsText"
 #define TIME_TEXT_NODE_NAME @"time"
 
 #define DEBUG_LAYER_Z_POSITION 1000
@@ -39,6 +40,7 @@
 
 -(void)createPointsLayer;
 -(SKLabelNode *)createPointsTextNode;
+-(SKLabelNode *)createTotalPointsTextNode;
 
 -(void)createTimeLayer;
 -(SKLabelNode *)createTimeTextNode;
@@ -324,14 +326,40 @@
     return pointsTextNode;
 }
 
+-(SKLabelNode *)createTotalPointsTextNode {
+    SKLabelNode *totalPointsTextNode = [SKLabelNode node];
+    totalPointsTextNode.fontSize = 10;
+    totalPointsTextNode.fontColor = [SKColor whiteColor];
+    totalPointsTextNode.alpha = 0.5;
+    totalPointsTextNode.text = @"0";
+    totalPointsTextNode.name = TOTAL_POINTS_TEXT_NODE_NAME;
+    
+    CGRect ballStartAreaRect = [Field ballStartAreaRect];
+    float totalPointsOriginX = ballStartAreaRect.origin.x + 10;
+    float totalPointsOriginY = ballStartAreaRect.origin.y + ballStartAreaRect.size.height - 20;
+    totalPointsTextNode.position = CGPointMake(totalPointsOriginX, totalPointsOriginY);
+    
+    return totalPointsTextNode;
+}
+
 -(void)addPoints:(int)points {
     SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
     if(pointsTextNode == nil) {
         pointsTextNode = [self createPointsTextNode];
     }
-    int currenPoints = [pointsTextNode.text intValue];
-    int newPoints = currenPoints + points;
-    pointsTextNode.text = [NSString stringWithFormat:@"%d", newPoints];
+    pointsTextNode.text = AddIntToString(pointsTextNode.text, points);
+}
+
+-(void)addTotalPoints:(int)points {
+    SKLabelNode *totalPointsNode = (SKLabelNode *)[pointsLayer childNodeWithName:TOTAL_POINTS_TEXT_NODE_NAME];
+    if(totalPointsNode == nil) {
+        totalPointsNode = [self createTotalPointsTextNode];
+    }
+    totalPointsNode.text = AddIntToString(totalPointsNode.text, points);
+}
+
+-(void)setLevel:(int)level {
+    
 }
 
 #pragma mark debug layer

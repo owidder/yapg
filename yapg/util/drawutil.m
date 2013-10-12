@@ -134,3 +134,11 @@ CGMutablePathRef CreateRectanglePath(float a, float b) {
     
     return rectanglePath;
 }
+
+NSString *AddIntToString(NSString *string, int i) {
+    int stringAsInt = [string intValue];
+    int sumAsInt = stringAsInt + i;
+    NSString *sumAsString = [NSString stringWithFormat:@"%d", sumAsInt];
+    
+    return sumAsString;
+}

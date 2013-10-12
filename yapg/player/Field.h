@@ -20,6 +20,8 @@
 -(void)printDebugMessage:(NSString *)message;
 -(void)addToGameLayer:(SKNode *)node;
 -(void)addPoints:(int)points;
+-(void)setLevel:(int)level;
+-(void)addTotalPoints:(int)points;
 -(void)showNumberOfSecondsAsMinSec:(int)numberOfSeconds;
 
 -(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName;
