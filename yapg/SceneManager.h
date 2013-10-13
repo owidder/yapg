@@ -10,7 +10,8 @@
 
 typedef enum {
     kMenuScene = 1,
-    kBrickScene = 2
+    kBrickScene = 2,
+    kPauseScene = 3
 } SceneType;
 
 @interface SceneManager : NSObject

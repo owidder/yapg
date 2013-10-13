@@ -10,6 +10,8 @@
 
 #import "drawutil.h"
 #import "EmitterNodeFactory.h"
+#import "SceneManager.h"
+#import "Constants.h"
 
 #define BALL_CATEGORY 0x1
 #define BALL_NAME @"ball"
@@ -49,7 +51,7 @@
 -(void)addMenuPointWithText:(NSString *)text andName:(NSString *)name {
     CGSize rectangleSize = CGSizeMake(150, 70);
     
-    SKLabelNode *textNode = [SKLabelNode labelNodeWithFontNamed:@"Avenir-Light"];
+    SKLabelNode *textNode = [SKLabelNode labelNodeWithFontNamed:STD_FONT];
     textNode.name = name;
     textNode.text = text;
     textNode.fontColor = [SKColor whiteColor];
@@ -111,11 +113,6 @@
     ball.physicsBody.categoryBitMask = BALL_CATEGORY;
     ball.physicsBody.contactTestBitMask = BALL_CATEGORY;
     
-//    float randomWait = RandomFloatBetween(1.0, 20.0);
-//    SKAction *wait = [SKAction waitForDuration:randomWait];
-//    SKAction *remove = [SKAction runBlock:^(void){[self killBall:ball];}];
-//    [ball runAction:[SKAction sequence:@[wait, remove]]];
-    
     float x = RandomFloatBetween(5.0, self.frame.size.width-5);
     float y = self.frame.size.height + 10;
     ball.position = CGPointMake(x, y);
@@ -158,6 +155,18 @@
     if([contact.bodyA.node.name isEqualToString:BALL_NAME] && [contact.bodyB.node.name isEqualToString:BALL_NAME]) {
         [self killBall:(SKShapeNode *) contact.bodyA.node];
         [self killBall:(SKShapeNode *) contact.bodyB.node];
+    }
+}
+
+#pragma mark touch handling
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInNode:self];
+    SKNode *node = [self nodeAtPoint:location];
+    
+    if ([node.name isEqualToString:START_GAME_NAME]) {
+        [[SceneManager instance] changeScene:kBrickScene];
     }
 }
 

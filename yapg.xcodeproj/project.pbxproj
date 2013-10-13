@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* drawutil.m */; };
+		993F37BB180B3BA8005B0B9A /* PauseScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 993F37BA180B3BA8005B0B9A /* PauseScene.m */; };
 		99463F7117E24FC700DC690A /* smoke.sks in Resources */ = {isa = PBXBuildFile; fileRef = 99463F6F17E24FC700DC690A /* smoke.sks */; };
 		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
 		99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 99463F7817E2529000DC690A /* EmitterNodeFactory.m */; };
@@ -67,6 +68,9 @@
 /* Begin PBXFileReference section */
 		99332CAD17DB02A100B7EC57 /* drawutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = drawutil.h; sourceTree = "<group>"; };
 		99332CAE17DB034E00B7EC57 /* drawutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawutil.m; sourceTree = "<group>"; };
+		993F37B9180B3BA8005B0B9A /* PauseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseScene.h; sourceTree = "<group>"; };
+		993F37BA180B3BA8005B0B9A /* PauseScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PauseScene.m; sourceTree = "<group>"; };
+		993F37BD180B46BC005B0B9A /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		99463F6F17E24FC700DC690A /* smoke.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smoke.sks; sourceTree = "<group>"; };
 		99463F7017E24FC700DC690A /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		99463F7717E2529000DC690A /* EmitterNodeFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmitterNodeFactory.h; sourceTree = "<group>"; };
@@ -158,12 +162,22 @@
 		99332CAC17DB028800B7EC57 /* util */ = {
 			isa = PBXGroup;
 			children = (
+				993F37BD180B46BC005B0B9A /* Constants.h */,
 				99332CAD17DB02A100B7EC57 /* drawutil.h */,
 				99332CAE17DB034E00B7EC57 /* drawutil.m */,
 				996D97EB1800AB3B002E605D /* debugutil.h */,
 				996D97EC1800ABD1002E605D /* debugutil.m */,
 			);
 			path = util;
+			sourceTree = "<group>";
+		};
+		993F37B8180B3B97005B0B9A /* pauseScene */ = {
+			isa = PBXGroup;
+			children = (
+				993F37B9180B3BA8005B0B9A /* PauseScene.h */,
+				993F37BA180B3BA8005B0B9A /* PauseScene.m */,
+			);
+			path = pauseScene;
 			sourceTree = "<group>";
 		};
 		99463F6E17E24F5A00DC690A /* particle */ = {
@@ -292,6 +306,7 @@
 		99D3B61A17C0DB040064FA09 /* yapg */ = {
 			isa = PBXGroup;
 			children = (
+				993F37B8180B3B97005B0B9A /* pauseScene */,
 				996B5830180AABB3005B0CEE /* ErrorScene */,
 				996B58291809335E005B0CEE /* menuScene */,
 				996B5814180932C2005B0CEE /* brickScene */,
@@ -458,6 +473,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				993F37BB180B3BA8005B0B9A /* PauseScene.m in Sources */,
 				996B5825180932C2005B0CEE /* Categories.m in Sources */,
 				996B5822180932C2005B0CEE /* BrickScene.m in Sources */,
 				996B5827180932C2005B0CEE /* Stuff.m in Sources */,
