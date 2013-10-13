@@ -42,6 +42,8 @@ CGMutablePathRef CreateRectanglePath(float a, float b);
 
 CGRect MainScreenSize();
 
+CGRect DefaultSceneSize();
+
 NSString *AddIntToString(NSString *string, int number);
 
 #endif

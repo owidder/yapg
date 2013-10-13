@@ -7,9 +7,8 @@
 //
 
 #import "ViewController.h"
-#import "MyScene.h"
-#import "BrickScene.h"
-#import "MenuScene.h"
+
+#import "SceneManager.h"
 
 @implementation ViewController
 
@@ -22,15 +21,8 @@
     skView.showsFPS = YES;
     skView.showsNodeCount = YES;
     
-    // Create and configure the scene.
-    BrickScene *brickScene = [BrickScene sceneWithSize:skView.bounds.size];
-    brickScene.scaleMode = SKSceneScaleModeAspectFill;
-    
-    MenuScene *menuScene = [MenuScene sceneWithSize:skView.bounds.size];
-    menuScene.scaleMode = SKSceneScaleModeAspectFill;
-    
-    // Present the scene.
-    [skView presentScene:menuScene];
+    [SceneManager instance].view = skView;
+    [[SceneManager instance] changeScene:kMenuScene];;
 }
 
 - (BOOL)shouldAutorotate

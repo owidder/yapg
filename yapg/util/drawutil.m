@@ -120,6 +120,10 @@ CGRect MainScreenSize() {
     return mainScreenBounds;
 }
 
+CGRect DefaultSceneSize() {
+    return MainScreenSize();
+}
+
 CGMutablePathRef CreateSquarePath(float sideLength) {
     return CreateRectanglePath(sideLength, sideLength);
 }

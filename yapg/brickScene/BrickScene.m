@@ -147,22 +147,18 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 #pragma mark time handling
 
 -(void)levelFinished {
+    [timer invalidate];
+    Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
+    [ball die];
     if([Field instance].points < 0) {
         [self gameOver];
-        numberOfStuff = START_NUMBER_OF_STUFF;
     }
     else {
-        [timer invalidate];
-        Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
-        [ball die];
         [self startNextLevel];
     }
 }
 
 -(void)gameOver {
-    [timer invalidate];
-    Ball *ball = (Ball *) [[Field instance] findNodeInGameLayerWithName:[Ball name]];
-    [ball die];
     for(Stuff *stuff in [[Field instance] findAllNodesInGameLayerWithName:[Stuff name]]) {
         [self collisionWithStuff:stuff andRandomWait:YES];
     }
@@ -188,7 +184,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 #pragma mark contact handling
 
 -(void)didBeginContact:(SKPhysicsContact *)contact {
-    if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyA.node.name isEqualToString:[Field bottomName]]) {
+    if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyB.node.name isEqualToString:[Field bottomName]]) {
         [self levelFinished];
     }
     

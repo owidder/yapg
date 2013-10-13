@@ -18,6 +18,8 @@
 		996B5826180932C2005B0CEE /* Field.m in Sources */ = {isa = PBXBuildFile; fileRef = 996B581F180932C2005B0CEE /* Field.m */; };
 		996B5827180932C2005B0CEE /* Stuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 996B5821180932C2005B0CEE /* Stuff.m */; };
 		996B582C180933A3005B0CEE /* MenuScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 996B582B180933A3005B0CEE /* MenuScene.m */; };
+		996B582F180A97D1005B0CEE /* SceneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 996B582E180A97D1005B0CEE /* SceneManager.m */; };
+		996B5833180AABCB005B0CEE /* ErrorScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 996B5832180AABCB005B0CEE /* ErrorScene.m */; };
 		996D97ED1800ABD1002E605D /* debugutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 996D97EC1800ABD1002E605D /* debugutil.m */; };
 		996D97F21800C8BD002E605D /* fire-red.sks in Resources */ = {isa = PBXBuildFile; fileRef = 996D97F11800C8BD002E605D /* fire-red.sks */; };
 		996D97F518013D2E002E605D /* fire-blue.sks in Resources */ = {isa = PBXBuildFile; fileRef = 996D97F318013D2E002E605D /* fire-blue.sks */; };
@@ -83,6 +85,10 @@
 		996B5821180932C2005B0CEE /* Stuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stuff.m; sourceTree = "<group>"; };
 		996B582A180933A3005B0CEE /* MenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuScene.h; sourceTree = "<group>"; };
 		996B582B180933A3005B0CEE /* MenuScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuScene.m; sourceTree = "<group>"; };
+		996B582D180A97D1005B0CEE /* SceneManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneManager.h; sourceTree = "<group>"; };
+		996B582E180A97D1005B0CEE /* SceneManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneManager.m; sourceTree = "<group>"; };
+		996B5831180AABCB005B0CEE /* ErrorScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorScene.h; sourceTree = "<group>"; };
+		996B5832180AABCB005B0CEE /* ErrorScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorScene.m; sourceTree = "<group>"; };
 		996D97EB1800AB3B002E605D /* debugutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debugutil.h; sourceTree = "<group>"; };
 		996D97EC1800ABD1002E605D /* debugutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = debugutil.m; sourceTree = "<group>"; };
 		996D97F11800C8BD002E605D /* fire-red.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = "fire-red.sks"; sourceTree = "<group>"; };
@@ -218,6 +224,15 @@
 			path = menuScene;
 			sourceTree = "<group>";
 		};
+		996B5830180AABB3005B0CEE /* ErrorScene */ = {
+			isa = PBXGroup;
+			children = (
+				996B5831180AABCB005B0CEE /* ErrorScene.h */,
+				996B5832180AABCB005B0CEE /* ErrorScene.m */,
+			);
+			path = ErrorScene;
+			sourceTree = "<group>";
+		};
 		99C4AD6717DC762100CBCFB6 /* resource */ = {
 			isa = PBXGroup;
 			children = (
@@ -277,6 +292,7 @@
 		99D3B61A17C0DB040064FA09 /* yapg */ = {
 			isa = PBXGroup;
 			children = (
+				996B5830180AABB3005B0CEE /* ErrorScene */,
 				996B58291809335E005B0CEE /* menuScene */,
 				996B5814180932C2005B0CEE /* brickScene */,
 				99463F7317E2526200DC690A /* factory */,
@@ -293,6 +309,8 @@
 				99D3B63217C0DB040064FA09 /* Spaceship.png */,
 				99D3B63417C0DB040064FA09 /* Images.xcassets */,
 				99D3B61B17C0DB040064FA09 /* Supporting Files */,
+				996B582D180A97D1005B0CEE /* SceneManager.h */,
+				996B582E180A97D1005B0CEE /* SceneManager.m */,
 			);
 			path = yapg;
 			sourceTree = "<group>";
@@ -443,6 +461,7 @@
 				996B5825180932C2005B0CEE /* Categories.m in Sources */,
 				996B5822180932C2005B0CEE /* BrickScene.m in Sources */,
 				996B5827180932C2005B0CEE /* Stuff.m in Sources */,
+				996B582F180A97D1005B0CEE /* SceneManager.m in Sources */,
 				996B582C180933A3005B0CEE /* MenuScene.m in Sources */,
 				99D3B63117C0DB040064FA09 /* MyScene.m in Sources */,
 				996D97ED1800ABD1002E605D /* debugutil.m in Sources */,
@@ -454,6 +473,7 @@
 				996B5824180932C2005B0CEE /* Brick.m in Sources */,
 				99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */,
 				996B5823180932C2005B0CEE /* Ball.m in Sources */,
+				996B5833180AABCB005B0CEE /* ErrorScene.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
