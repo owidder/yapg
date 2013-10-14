@@ -60,12 +60,13 @@
     textNode.physicsBody.mass = RandomFloatBetween(0.1, 1.0);
     textNode.physicsBody.friction = RandomFloatBetween(0.5, 5.0);
     textNode.physicsBody.restitution = RandomFloatBetween(0.1, 1.0);
+    textNode.physicsBody.linearDamping = RandomFloatBetween(1.0, 5.0);
     
     float xPos = RandomFloatBetween(self.frame.size.width/3, self.frame.size.width/3*2);
     float yPos = self.frame.size.height*2;
     textNode.position = CGPointMake(xPos, yPos);
     
-    [textNode runAction:[SKAction sequence:@[[SKAction waitForDuration:MAX_WAIT_TIME], [SKAction removeFromParent]]]];
+    [textNode runAction:[SKAction sequence:@[[SKAction waitForDuration:3*MAX_WAIT_TIME], [SKAction removeFromParent]]]];
     
     [self addChild:textNode];
 }
