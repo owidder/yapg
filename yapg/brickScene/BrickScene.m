@@ -19,6 +19,7 @@
 #import "Stuff.h"
 
 #import "debugutil.h"
+#import "SceneManager.h"
 
 #define STUFF_NAME @"stuff"
 #define SCENE_DURATION_IN_SECONDS 30
@@ -201,25 +202,30 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-    CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
-    
-    if(timeWhenTouchBegan > 0) {
-        NSTimeInterval now = [event timestamp];
-        NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
-        if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
-            if(!gameStarted) {
-                if(positionOfFirstTouch.y > [Field ballStartAreaRect].origin.y) {
-                    gameStarted = YES;
-                    lastBallPosition = positionOfFirstTouch;
-                    [Ball addBallAtPosition:positionOfFirstTouch];
+    if([touches count] > 1) {
+        [[SceneManager instance] changeScene:kPauseScene];
+    }
+    else {
+        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
+        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
+        
+        if(timeWhenTouchBegan > 0) {
+            NSTimeInterval now = [event timestamp];
+            NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
+            if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
+                if(!gameStarted) {
+                    if(positionOfFirstTouch.y > [Field ballStartAreaRect].origin.y) {
+                        gameStarted = YES;
+                        lastBallPosition = positionOfFirstTouch;
+                        [Ball addBallAtPosition:positionOfFirstTouch];
+                    }
                 }
             }
         }
+        
+        timeWhenTouchBegan = [event timestamp];
+        positionWhenTouchBegan = positionOfFirstTouch;
     }
-    
-    timeWhenTouchBegan = [event timestamp];
-    positionWhenTouchBegan = positionOfFirstTouch;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

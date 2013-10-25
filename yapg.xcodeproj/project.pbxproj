@@ -407,7 +407,7 @@
 				ORGANIZATIONNAME = GeekAndPoke;
 				TargetAttributes = {
 					99D3B63917C0DB050064FA09 = {
-						TestTargetID = 99D3B60E17C0DB040064FA09;
+						TestTargetID = 99D3B60E17C0DB040064FA09 /* yapg */;
 					};
 				};
 			};

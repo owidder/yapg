@@ -9,6 +9,7 @@
 #import "PauseScene.h"
 #import "drawutil.h"
 #import "Constants.h"
+#import "SceneManager.h"
 
 #define STD_LENGTH 10.0
 #define MIN_WAIT_TIME 1.0
@@ -70,5 +71,12 @@
     
     [self addChild:textNode];
 }
+
+#pragma mark touch handling
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [[SceneManager instance] popScene];
+}
+
 
 @end

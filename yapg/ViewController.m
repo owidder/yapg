@@ -22,7 +22,7 @@
     skView.showsNodeCount = YES;
     
     [SceneManager instance].view = skView;
-    [[SceneManager instance] changeScene:kPauseScene];
+    [[SceneManager instance] changeScene:kMenuScene];
 }
 
 - (BOOL)shouldAutorotate
