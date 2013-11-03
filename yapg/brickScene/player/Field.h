@@ -12,6 +12,7 @@
 
 +(Field*)instance;
 +(NSString *)bottomName;
++(NSString *)targetName;
 +(CGRect)mainAreaRect;
 +(CGRect)ballStartAreaRect;
 

@@ -40,6 +40,8 @@ CGMutablePathRef CreateSquarePath(float sideLength);
 
 CGMutablePathRef CreateRectanglePath(float a, float b);
 
+CGMutablePathRef CreateLinePath(float length);
+
 CGRect MainScreenSize();
 
 CGRect DefaultSceneSize();

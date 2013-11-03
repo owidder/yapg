@@ -139,6 +139,14 @@ CGMutablePathRef CreateRectanglePath(float a, float b) {
     return rectanglePath;
 }
 
+CGMutablePathRef CreateLinePath(float length) {
+    CGMutablePathRef linePath = CGPathCreateMutable();
+    CGPathMoveToPoint(linePath, NULL, 0, 0);
+    CGPathAddLineToPoint(linePath, NULL, length, 0);
+    
+    return linePath;
+}
+
 NSString *AddIntToString(NSString *string, int i) {
     int stringAsInt = [string intValue];
     int sumAsInt = stringAsInt + i;

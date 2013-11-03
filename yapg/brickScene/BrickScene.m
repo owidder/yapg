@@ -186,10 +186,12 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 
 -(void)didBeginContact:(SKPhysicsContact *)contact {
     if([contact.bodyA.node.name isEqualToString:[Field bottomName]] || [contact.bodyB.node.name isEqualToString:[Field bottomName]]) {
+        [self gameOver];
+    }
+    else if([contact.bodyA.node.name isEqualToString:[Field targetName]] || [contact.bodyB.node.name isEqualToString:[Field targetName]]) {
         [self levelFinished];
     }
-    
-    if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
+    else if([contact.bodyA.node.name isEqualToString:STUFF_NAME] || [contact.bodyB.node.name isEqualToString:STUFF_NAME]) {
         if([contact.bodyA.node.name isEqualToString:STUFF_NAME]) {
             [self collisionWithStuff:(Stuff *)contact.bodyA.node andRandomWait:NO];
         }

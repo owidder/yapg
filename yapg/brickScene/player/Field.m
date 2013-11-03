@@ -12,6 +12,8 @@
 #import "Categories.h"
 
 #define BOTTOM_NAME @"bottom"
+#define TARGET_NAME @"target"
+
 #define DEBUG_TEXT_NODE_NAME @"debugText"
 #define POINTS_TEXT_NODE_NAME @"pointsText"
 #define TOTAL_POINTS_TEXT_NODE_NAME @"totalPointsText"
@@ -21,6 +23,8 @@
 #define GAME_LAYER_Z_POSITION 0
 #define POINTS_LAYER_Z_POSITION 50
 #define TIME_LAYER_Z_POSITION 60
+
+#define TARGET_WIDTH 100.0
 
 #define COLOR_CHANGE_TIME 3.0
 
@@ -82,6 +86,10 @@
 
 +(NSString *)bottomName {
     return BOTTOM_NAME;
+}
+
++(NSString *)targetName {
+    return TARGET_NAME;
 }
 
 #pragma mark singleton
@@ -186,11 +194,30 @@
     left.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:topLeft];
     [gameLayer addChild:left];
     
-    SKNode *bottom = [SKNode node];
-    bottom.name = BOTTOM_NAME;
-    bottom.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:bottomRight];
-    bottom.physicsBody.categoryBitMask = [Categories bottomCategory];
-    [gameLayer addChild:bottom];
+    float targetStartX = RandomFloatBetween(10.0, bottomRight.x - TARGET_WIDTH);
+    CGPoint targetStart = CGPointMake(targetStartX, bottomRight.y);
+    CGPoint targetEnd = CGPointMake(targetStartX + TARGET_WIDTH, bottomRight.y);
+    
+    SKNode *bottom1 = [SKNode node];
+    bottom1.name = BOTTOM_NAME;
+    bottom1.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:targetStart];
+    bottom1.physicsBody.categoryBitMask = [Categories bottomCategory];
+    [gameLayer addChild:bottom1];
+
+    SKNode *bottom2 = [SKNode node];
+    bottom2.name = BOTTOM_NAME;
+    bottom2.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:targetEnd toPoint:bottomRight];
+    bottom2.physicsBody.categoryBitMask = [Categories bottomCategory];
+    [gameLayer addChild:bottom2];
+    
+    SKShapeNode *target = [SKShapeNode node];
+    target.name = TARGET_NAME;
+    target.strokeColor = [SKColor redColor];
+    target.path = CreateLinePath(TARGET_WIDTH);
+    target.position = targetStart;
+    target.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:target.path];
+    target.physicsBody.categoryBitMask = [Categories bottomCategory];
+    [gameLayer addChild:target];
 }
 
 -(void)addToGameLayer:(SKNode *)node {
