@@ -22,12 +22,12 @@
     skView.showsNodeCount = YES;
     
     [SceneManager instance].view = skView;
-    [[SceneManager instance] changeScene:kMenuScene];
+    [[SceneManager instance] changeSceneToSceneType:kMenuScene fromCurrentScene:nil];
 }
 
 - (BOOL)shouldAutorotate
 {
-    return YES;
+    return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations

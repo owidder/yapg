@@ -166,7 +166,7 @@
     SKNode *node = [self nodeAtPoint:location];
     
     if ([node.name isEqualToString:START_GAME_NAME]) {
-        [[SceneManager instance] changeScene:kBrickScene];
+        [[SceneManager instance] changeSceneToSceneType:kBrickScene fromCurrentScene:self];
     }
 }
 

@@ -18,9 +18,14 @@ typedef enum {
 
 +(SceneManager *)instance;
 
--(void)changeScene:(SceneType)sceneType;
--(void)pushScene:(SceneType)sceneType;
--(void)popScene;
+// clear scene stack and change scene to the given scene type
+-(void)changeSceneToSceneType:(SceneType)sceneType fromCurrentScene:(SKScene *)currentScene;
+// gosub into the given scene
+-(void)gosubIntoSceneWithType:(SceneType)sceneType fromCurrentScene:(SKScene *)currentScene;
+// resume from the current scene and go back to scene on top of stack
+-(void)resume;
+
+
 
 @property SKView* view;
 

@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "yapg/brickScene/BrickScene.m"
-            timestampString = "405207709.411973"
+            timestampString = "406373905.054658"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
-            landmarkName = "-touchesBegan:withEvent:"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "-initWithSize:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,29 +25,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "yapg/brickScene/BrickScene.m"
-            timestampString = "405208634.644343"
+            filePath = "yapg/SceneManager.m"
+            timestampString = "406374281.944642"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
-            landmarkName = "-didBeginContact:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "yapg/brickScene/BrickScene.m"
-            timestampString = "405208636.906372"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "192"
-            endingLineNumber = "192"
-            landmarkName = "-didBeginContact:"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "-changeSceneToSceneType:fromCurrentScene:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

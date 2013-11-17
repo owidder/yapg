@@ -26,6 +26,8 @@
 -(void)clearSceneStack;
 -(void)pushSceneOnStack:(SKScene *)scene;
 -(SKScene *)popSceneFromStack;
+-(SKScene *)topOfStack;
+-(id)init;
 
 @end
 
@@ -45,7 +47,7 @@
     return instance;
 }
 
--(id)init:(SKView *)view {
+-(id)init {
     if(self = [super init]) {
         stack = [NSMutableArray array];
     }
@@ -81,6 +83,9 @@
 }
 
 -(void)clearSceneStack {
+    for(SKScene *scene in stack) {
+        [scene removeFromParent];
+    }
     [stack removeAllObjects];
 }
 
@@ -89,8 +94,15 @@
 }
 
 -(SKScene *)popSceneFromStack {
-    SKScene *topOfStack = [stack objectAtIndex:[stack count]-1];
+    SKScene *topOfStack = [self topOfStack];
+    [topOfStack removeFromParent];
     [stack removeLastObject];
+    
+    return topOfStack;
+}
+
+-(SKScene *)topOfStack {
+    SKScene *topOfStack = [stack objectAtIndex:[stack count]-1];
     
     return topOfStack;
 }
@@ -101,22 +113,27 @@
 
 #pragma mark SceneManager
 
--(void)changeScene:(SceneType)sceneType {
-    [self clearSceneStack];
-    [self pushScene:sceneType];
-}
-
--(void)pushScene:(SceneType)sceneType {
+-(void)gosubIntoSceneWithType:(SceneType)sceneType fromCurrentScene:(SKScene *)currentScene {
+    [self pushSceneOnStack:currentScene];
     SKScene *newScene = [self createSceneFromType:sceneType];
-    [self pushSceneOnStack:newScene];
     
     [self presentScene:newScene];
 }
 
--(void)popScene {
+-(void)resume {
     SKScene *nextScene = [self popSceneFromStack];
-    
     [self presentScene:nextScene];
+}
+
+-(void)changeSceneToSceneType:(SceneType)sceneType fromCurrentScene:(SKScene *)currentScene {
+    if(currentScene != nil) {
+        [currentScene removeFromParent];
+    }
+    [self clearSceneStack];
+    SKScene *newScene = [self createSceneFromType:sceneType];
+    [self pushSceneOnStack:newScene];
+    
+    [self presentScene:newScene];
 }
 
 @end

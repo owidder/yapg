@@ -44,6 +44,8 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
     
     BOOL gameStarted;
     
+    BOOL gameOver;
+    
     CGPoint lastBallPosition;
     
     int numberOfStuff;
@@ -81,6 +83,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
         
         currentBrick = NULL;
         gameStarted = NO;
+        gameOver = NO;
         
         residualTimeInSeconds = SCENE_DURATION_IN_SECONDS;
         
@@ -160,6 +163,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 }
 
 -(void)gameOver {
+    gameOver = YES;
     for(Stuff *stuff in [[Field instance] findAllNodesInGameLayerWithName:[Stuff name]]) {
         [self collisionWithStuff:stuff andRandomWait:YES];
     }
@@ -204,19 +208,29 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    if(gameOver) {
+        [[Field instance] removeFromParent];
+        [[SceneManager instance] changeSceneToSceneType:kMenuScene fromCurrentScene:self];
+    }
     if([touches count] > 1) {
-        [[SceneManager instance] changeScene:kPauseScene];
+        // multitouch --> pause game
+        [[SceneManager instance] gosubIntoSceneWithType:kPauseScene fromCurrentScene:self];
     }
     else {
+        // no multitouch:
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
         CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
         
         if(timeWhenTouchBegan > 0) {
+            // check whether it's a double touch inside the dropping area
             NSTimeInterval now = [event timestamp];
             NSTimeInterval timeSinceLastTouchBegan = now - timeWhenTouchBegan;
             if(timeSinceLastTouchBegan < MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL) {
+                // time since first touch of this double touch is short enough
                 if(!gameStarted) {
                     if(positionOfFirstTouch.y > [Field ballStartAreaRect].origin.y) {
+                        // second touch was inside the dropping area
+                        // and there is not already a ball --> drop ball
                         gameStarted = YES;
                         lastBallPosition = positionOfFirstTouch;
                         [Ball addBallAtPosition:positionOfFirstTouch];

@@ -15,7 +15,13 @@
 #define MIN_WAIT_TIME 1.0
 #define MAX_WAIT_TIME 5.0
 
-@interface PauseScene ()
+#define PAUSE_TEXT @"Pause - Tap to Resume"
+
+#define TIMEINTERVAL_UNTIL_RESUME_IS_ALLOWED .05
+
+@interface PauseScene () {
+    NSDate *startTime;
+}
 
 -(void)createEdge;
 -(void)dropText:(NSString *)text;
@@ -48,7 +54,7 @@
 }
 
 -(void)scheduleDropPauseText {
-    [self dropText:@"Pause"];
+    [self dropText:PAUSE_TEXT];
     float waitTime = RandomFloatBetween(MIN_WAIT_TIME, MAX_WAIT_TIME);
     [NSTimer scheduledTimerWithTimeInterval:waitTime target:self selector:@selector(scheduleDropPauseText) userInfo:NULL repeats:NO];
 }
@@ -75,8 +81,20 @@
 #pragma mark touch handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [[SceneManager instance] popScene];
+    NSTimeInterval timeSinceStart = ABS([startTime timeIntervalSinceNow]);
+    if(timeSinceStart > TIMEINTERVAL_UNTIL_RESUME_IS_ALLOWED) {
+        [[SceneManager instance] resume];
+    }
 }
 
+#pragma mark SKScene
+
+- (void)didMoveToView:(SKView *)view {
+    // store the time when the scene starts to be seen
+    // we need this to wait sime milliseconds before a the scene
+    // can be ended via a touch
+    // (due to sime weird behaviour)
+    startTime = [NSDate date];
+}
 
 @end
