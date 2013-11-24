@@ -195,27 +195,30 @@
     [gameLayer addChild:left];
     
     float targetStartX = RandomFloatBetween(10.0, bottomRight.x - TARGET_WIDTH);
-    CGPoint targetStart = CGPointMake(targetStartX, bottomRight.y);
-    CGPoint targetEnd = CGPointMake(targetStartX + TARGET_WIDTH, bottomRight.y);
+    CGPoint targetStart = CGPointMake(targetStartX, bottomRight.y-5);
+    CGPoint targetEnd = CGPointMake(targetStartX + TARGET_WIDTH, bottomRight.y-5);
     
-    SKNode *bottom1 = [SKNode node];
+    SKShapeNode *bottom1 = [SKShapeNode node];
     bottom1.name = BOTTOM_NAME;
-    bottom1.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:targetStart];
+    bottom1.strokeColor = [SKColor redColor];
+    bottom1.path = CreateLinePath(targetStartX);
+    bottom1.position = bottomLeft;
+    bottom1.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:bottom1.path];
     bottom1.physicsBody.categoryBitMask = [Categories bottomCategory];
     [gameLayer addChild:bottom1];
 
-    SKNode *bottom2 = [SKNode node];
+    SKShapeNode *bottom2 = [SKShapeNode node];
     bottom2.name = BOTTOM_NAME;
-    bottom2.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:targetEnd toPoint:bottomRight];
+    bottom2.strokeColor = [SKColor redColor];
+    bottom2.path = CreateLinePath(bottomRight.x - targetEnd.x);
+    bottom2.position = targetEnd;
+    bottom2.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:bottom2.path];
     bottom2.physicsBody.categoryBitMask = [Categories bottomCategory];
     [gameLayer addChild:bottom2];
     
-    SKShapeNode *target = [SKShapeNode node];
+    SKNode *target = [SKNode node];
     target.name = TARGET_NAME;
-    target.strokeColor = [SKColor redColor];
-    target.path = CreateLinePath(TARGET_WIDTH);
-    target.position = targetStart;
-    target.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:target.path];
+    target.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:targetStart toPoint:targetEnd];
     target.physicsBody.categoryBitMask = [Categories bottomCategory];
     [gameLayer addChild:target];
 }
