@@ -195,8 +195,7 @@
     [gameLayer addChild:left];
     
     float targetStartX = RandomFloatBetween(10.0, bottomRight.x - TARGET_WIDTH);
-    CGPoint targetStart = CGPointMake(targetStartX, bottomRight.y-5);
-    CGPoint targetEnd = CGPointMake(targetStartX + TARGET_WIDTH, bottomRight.y-5);
+    CGPoint targetEnd = CGPointMake(targetStartX + TARGET_WIDTH, bottomRight.y);
     
     SKShapeNode *bottom1 = [SKShapeNode node];
     bottom1.name = BOTTOM_NAME;
@@ -216,9 +215,12 @@
     bottom2.physicsBody.categoryBitMask = [Categories bottomCategory];
     [gameLayer addChild:bottom2];
     
+    CGPoint utilLineStart = CGPointMake(bottomLeft.x - 100, bottomLeft.y - 20);
+    CGPoint utilLineEnd = CGPointMake(bottomRight.x + 100, bottomRight.y - 20);
+    
     SKNode *target = [SKNode node];
     target.name = TARGET_NAME;
-    target.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:targetStart toPoint:targetEnd];
+    target.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:utilLineStart toPoint:utilLineEnd];
     target.physicsBody.categoryBitMask = [Categories bottomCategory];
     [gameLayer addChild:target];
 }
