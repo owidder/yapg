@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* drawutil.m */; };
+		993F012B184553EC0026047C /* ScrollBrickScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 993F012A184553EC0026047C /* ScrollBrickScene.m */; };
 		993F37BB180B3BA8005B0B9A /* PauseScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 993F37BA180B3BA8005B0B9A /* PauseScene.m */; };
 		99463F7117E24FC700DC690A /* smoke.sks in Resources */ = {isa = PBXBuildFile; fileRef = 99463F6F17E24FC700DC690A /* smoke.sks */; };
 		99463F7217E24FC700DC690A /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 99463F7017E24FC700DC690A /* spark.png */; };
@@ -68,6 +69,8 @@
 /* Begin PBXFileReference section */
 		99332CAD17DB02A100B7EC57 /* drawutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = drawutil.h; sourceTree = "<group>"; };
 		99332CAE17DB034E00B7EC57 /* drawutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawutil.m; sourceTree = "<group>"; };
+		993F0129184553EC0026047C /* ScrollBrickScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollBrickScene.h; sourceTree = "<group>"; };
+		993F012A184553EC0026047C /* ScrollBrickScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollBrickScene.m; sourceTree = "<group>"; };
 		993F37B9180B3BA8005B0B9A /* PauseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseScene.h; sourceTree = "<group>"; };
 		993F37BA180B3BA8005B0B9A /* PauseScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PauseScene.m; sourceTree = "<group>"; };
 		993F37BD180B46BC005B0B9A /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -205,6 +208,8 @@
 		996B5814180932C2005B0CEE /* brickScene */ = {
 			isa = PBXGroup;
 			children = (
+				993F0129184553EC0026047C /* ScrollBrickScene.h */,
+				993F012A184553EC0026047C /* ScrollBrickScene.m */,
 				996B5815180932C2005B0CEE /* BrickScene.h */,
 				996B5816180932C2005B0CEE /* BrickScene.m */,
 				996B5817180932C2005B0CEE /* player */,
@@ -407,7 +412,7 @@
 				ORGANIZATIONNAME = GeekAndPoke;
 				TargetAttributes = {
 					99D3B63917C0DB050064FA09 = {
-						TestTargetID = 99D3B60E17C0DB040064FA09 /* yapg */;
+						TestTargetID = 99D3B60E17C0DB040064FA09;
 					};
 				};
 			};
@@ -486,6 +491,7 @@
 				996B5826180932C2005B0CEE /* Field.m in Sources */,
 				99D3B62517C0DB040064FA09 /* AppDelegate.m in Sources */,
 				99D3B62117C0DB040064FA09 /* main.m in Sources */,
+				993F012B184553EC0026047C /* ScrollBrickScene.m in Sources */,
 				996B5824180932C2005B0CEE /* Brick.m in Sources */,
 				99463F7917E2529000DC690A /* EmitterNodeFactory.m in Sources */,
 				996B5823180932C2005B0CEE /* Ball.m in Sources */,
