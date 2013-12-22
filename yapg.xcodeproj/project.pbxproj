@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		990C3D971866D08200E28DC9 /* BrickDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 990C3D961866D08200E28DC9 /* BrickDrawer.m */; };
 		99332CAF17DB034E00B7EC57 /* drawutil.m in Sources */ = {isa = PBXBuildFile; fileRef = 99332CAE17DB034E00B7EC57 /* drawutil.m */; };
 		993F012B184553EC0026047C /* ScrollBrickScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 993F012A184553EC0026047C /* ScrollBrickScene.m */; };
 		993F37BB180B3BA8005B0B9A /* PauseScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 993F37BA180B3BA8005B0B9A /* PauseScene.m */; };
@@ -67,6 +68,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		990C3D951866D08200E28DC9 /* BrickDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrickDrawer.h; sourceTree = "<group>"; };
+		990C3D961866D08200E28DC9 /* BrickDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrickDrawer.m; sourceTree = "<group>"; };
+		990C3D981866D29100E28DC9 /* TouchHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchHandler.h; sourceTree = "<group>"; };
 		99332CAD17DB02A100B7EC57 /* drawutil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = drawutil.h; sourceTree = "<group>"; };
 		99332CAE17DB034E00B7EC57 /* drawutil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawutil.m; sourceTree = "<group>"; };
 		993F0129184553EC0026047C /* ScrollBrickScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollBrickScene.h; sourceTree = "<group>"; };
@@ -213,6 +217,9 @@
 				996B5815180932C2005B0CEE /* BrickScene.h */,
 				996B5816180932C2005B0CEE /* BrickScene.m */,
 				996B5817180932C2005B0CEE /* player */,
+				990C3D951866D08200E28DC9 /* BrickDrawer.h */,
+				990C3D961866D08200E28DC9 /* BrickDrawer.m */,
+				990C3D981866D29100E28DC9 /* TouchHandler.h */,
 			);
 			path = brickScene;
 			sourceTree = "<group>";
@@ -480,6 +487,7 @@
 			files = (
 				993F37BB180B3BA8005B0B9A /* PauseScene.m in Sources */,
 				996B5825180932C2005B0CEE /* Categories.m in Sources */,
+				990C3D971866D08200E28DC9 /* BrickDrawer.m in Sources */,
 				996B5822180932C2005B0CEE /* BrickScene.m in Sources */,
 				996B5827180932C2005B0CEE /* Stuff.m in Sources */,
 				996B582F180A97D1005B0CEE /* SceneManager.m in Sources */,

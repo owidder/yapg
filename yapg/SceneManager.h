@@ -11,7 +11,8 @@
 typedef enum {
     kMenuScene = 1,
     kBrickScene = 2,
-    kPauseScene = 3
+    kPauseScene = 3,
+    kScrollBrickScene = 4
 } SceneType;
 
 @interface SceneManager : NSObject

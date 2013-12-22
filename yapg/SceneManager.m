@@ -12,6 +12,7 @@
 #import "BrickScene.h"
 #import "ErrorScene.h"
 #import "PauseScene.h"
+#import "ScrollBrickScene.h"
 
 #import "drawutil.h"
 
@@ -73,6 +74,10 @@
             
         case kPauseScene:
             scene = [PauseScene sceneWithSize:sceneSize];
+            break;
+        
+        case kScrollBrickScene:
+            scene = [ScrollBrickScene sceneWithSize:sceneSize];
             break;
             
         default:
