@@ -15,7 +15,8 @@
 
 #define BALL_CATEGORY 0x1
 #define BALL_NAME @"ball"
-#define START_GAME_NAME @"startGame"
+#define START_GAME1_NAME @"startGame1"
+#define START_GAME2_NAME @"startGame2"
 #define DEMO_NAME @"demo"
 
 @interface MenuScene ()
@@ -38,11 +39,11 @@
         
         [self createEdges];
         
-        SKAction *addStartGameMenuPoint = [SKAction runBlock:^(void){[self addMenuPointWithText:@"Start Game" andName:START_GAME_NAME];}];
-        SKAction *addDemoMenuPoint = [SKAction runBlock:^(void){[self addMenuPointWithText:@"Demo" andName:DEMO_NAME];}];
+        SKAction *addStartGame1MenuPoint = [SKAction runBlock:^(void){[self addMenuPointWithText:@"Start Game 1" andName:START_GAME1_NAME];}];
+        SKAction *addStartGame2MenuPoint = [SKAction runBlock:^(void){[self addMenuPointWithText:@"Start Game 2" andName:START_GAME2_NAME];}];
         SKAction *wait = [SKAction waitForDuration:1.0];
         
-        [self runAction:[SKAction sequence:@[wait, addStartGameMenuPoint, wait, addDemoMenuPoint]]];
+        [self runAction:[SKAction sequence:@[wait, addStartGame1MenuPoint, wait, addStartGame2MenuPoint]]];
     }
     
     return self;
@@ -165,8 +166,11 @@
     CGPoint location = [touch locationInNode:self];
     SKNode *node = [self nodeAtPoint:location];
     
-    if ([node.name isEqualToString:START_GAME_NAME]) {
+    if ([node.name isEqualToString:START_GAME1_NAME]) {
         [[SceneManager instance] changeSceneToSceneType:kBrickScene fromCurrentScene:self];
+    }
+    else if ([node.name isEqualToString:START_GAME2_NAME]) {
+        [[SceneManager instance] changeSceneToSceneType:kScrollBrickScene fromCurrentScene:self];
     }
 }
 

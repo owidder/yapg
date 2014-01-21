@@ -9,13 +9,12 @@
 #import "BrickDrawer.h"
 #import "Brick.h"
 
-@interface BrickDrawer () {
-    CGPoint _positionWhenTouchBegan;
-    SKScene *_scene;
-    Brick *_currentBrick;
-    
-    BOOL _brickDrawBegan;
-}
+@interface BrickDrawer ()
+
+@property SKScene *scene;
+@property CGPoint positionWhenTouchBegan;
+@property BOOL brickDrawBegan;
+@property Brick *currentBrick;
 
 @end
 
@@ -23,8 +22,8 @@
 
 -(id)initWithScene:(SKScene *)scene {
     if(self = [super init]) {
-        _scene = scene;
-        _brickDrawBegan = NO;
+        self.scene = scene;
+        self.brickDrawBegan = NO;
     }
     
     return self;
@@ -38,9 +37,9 @@
     if([touches count] == 1) {
         // no multitouch:
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        CGPoint positionOfFirstTouch = [firstTouch locationInNode:_scene];
-        _positionWhenTouchBegan = positionOfFirstTouch;
-        _brickDrawBegan = YES;
+        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self.scene];
+        self.positionWhenTouchBegan = positionOfFirstTouch;
+        self.brickDrawBegan = YES;
         
         processed = YES;
     }
@@ -51,9 +50,9 @@
 -(BOOL)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     BOOL processed = NO;
     
-    if(_brickDrawBegan) {
-        _brickDrawBegan = NO;
-        _currentBrick = NULL;
+    if(self.brickDrawBegan) {
+        self.brickDrawBegan = NO;
+        self.currentBrick = NULL;
         processed = YES;
     }
     
@@ -63,14 +62,14 @@
 -(BOOL)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     BOOL processed = NO;
     
-    if(_brickDrawBegan) {
+    if(self.brickDrawBegan) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        CGPoint positionOfFirstTouch = [firstTouch locationInNode:_scene];
-        if(_currentBrick == NULL) {
-            _currentBrick = [[Brick alloc] initWithAbsolutePositionOfBrick:_positionWhenTouchBegan];
+        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self.scene];
+        if(self.currentBrick == NULL) {
+            self.currentBrick = [[Brick alloc] initWithAbsolutePositionOfBrick:self.positionWhenTouchBegan];
         }
         
-        [_currentBrick updateWithAbsolutePositionOfBrickSegment:positionOfFirstTouch];
+        [self.currentBrick updateWithAbsolutePositionOfBrickSegment:positionOfFirstTouch];
         
         processed = YES;
     }

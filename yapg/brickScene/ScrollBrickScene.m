@@ -8,53 +8,45 @@
 
 #import "ScrollBrickScene.h"
 #import "SceneManager.h"
+#import "BrickDrawer.h"
+#import "SceneHandler.h"
 
-@interface ScrollBrickScene() {
+@interface ScrollBrickScene()
 
-    CGPoint positionWhenTouchBegan;
-
-}
+@property BrickDrawer *brickDrawer;
+@property SceneHandler *sceneHandler;
 
 @end
 
 @implementation ScrollBrickScene
 
+-(id)initWithSize:(CGSize)size {
+    if(self = [super initWithSize:size]) {
+        self.brickDrawer = [[BrickDrawer alloc] initWithScene:self];
+        self.sceneHandler = [[SceneHandler alloc] initWithScene:self];
+    }
+    
+    return self;
+}
+
 #pragma mark touch handling
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    if([touches count] > 1) {
-        // multitouch --> pause game
-        [[SceneManager instance] gosubIntoSceneWithType:kPauseScene fromCurrentScene:self];
-    }
-    else {
-        // no multitouch:
-        UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];        
-        positionWhenTouchBegan = positionOfFirstTouch;
+    if(![self.sceneHandler touchesBegan:touches withEvent:event]) {
+        [self.brickDrawer touchesBegan:touches withEvent:event];
     }
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    currentBrick = NULL;
+    [self.brickDrawer touchesEnded:touches withEvent:event];
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-    CGPoint positionOfFirstTouch = [firstTouch locationInNode:self];
-    if(!gameStarted) {
-        if(currentBrick == NULL) {
-            currentBrick = [[Brick alloc] initWithAbsolutePositionOfBrick:positionWhenTouchBegan];
-        }
-        
-        [currentBrick updateWithAbsolutePositionOfBrickSegment:positionOfFirstTouch];
-    }
-    else {
-        [[Field instance] removeAllNodesInGameLayerWithName:[Brick name] andPosition:positionOfFirstTouch];
-    }
+    [self.brickDrawer touchesMoved:touches withEvent:event];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    currentBrick = NULL;
+    [self.brickDrawer touchesCancelled:touches withEvent:event];
 }
 
 

@@ -10,6 +10,8 @@
 
 @protocol TouchHandler <NSObject>
 
+-(id)initWithScene:(SKScene *)scene;
+
 @optional
 -(BOOL)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 -(BOOL)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;

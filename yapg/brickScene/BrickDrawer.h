@@ -12,6 +12,4 @@
 
 @interface BrickDrawer : NSObject<TouchHandler>
 
--(id)initWithScene:(SKScene *)scene;
-
 @end

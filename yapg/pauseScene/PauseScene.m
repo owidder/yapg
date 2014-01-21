@@ -83,7 +83,12 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     NSTimeInterval timeSinceStart = ABS([startTime timeIntervalSinceNow]);
     if(timeSinceStart > TIMEINTERVAL_UNTIL_RESUME_IS_ALLOWED) {
-        [[SceneManager instance] resume];
+        if([touches count] == 1) {
+            // single touch -> resume
+            [[SceneManager instance] resume];
+        } else {
+            // multi touch -> end game
+        }
     }
 }
 
