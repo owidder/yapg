@@ -1,7 +1,8 @@
 #!/opt/local/bin/perl
 
-my $type = $ARGV[0]; # tree or blob?
+my $type = $ARGV[0]; # 'tree' or 'blob'?
 my $pattern = $ARGV[1]; # filename to search for as regex
+my $createBranches = $ARGV[2]; # 'y' if you want to create branches (only when search for 'tree')
 
 ##################################################################
 # find all objects (blobs, trees, commits, tags) in .git/objects
@@ -18,7 +19,7 @@ for my $object (@AllFiles) {
 }
 
 ##################################################################
-# find all trees containing the file
+# find all trees or blobs containing the pattern
 ##################################################################
 
 my $ctr = 0;
@@ -34,10 +35,10 @@ for my $foundSha1 (@AllSha1) {
 			if($line =~ /$pattern/) {
 				$ctr++;
 				printf "found $type: %s\n", $foundSha1;
-				if($type eq 'tree') {
+				if($type eq 'tree' && $createBranches eq 'y') {
 					my $branchName = sprintf "found/%03s", $ctr;
 					printf "created branch: %s\n", $branchName;
-					#`git commit-tree $treeSha1 -m "found $pattern" | xargs -I{} git branch $branchName {}`;
+					`git commit-tree $foundSha1 -m "found $pattern" | xargs -I{} git branch $branchName {}`;
 				}
 				break;
 			}
