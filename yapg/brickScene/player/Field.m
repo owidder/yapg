@@ -28,11 +28,9 @@
 
 #define COLOR_CHANGE_TIME 3.0
 
+static BOOL __edgesFlag = YES;
+
 @interface Field() {
-    SKNode *pointsLayer;
-    SKNode *gameLayer;
-    SKNode *debugLayer;
-    SKNode *timeLayer;
 }
 
 -(void)createGameLayer;
@@ -49,6 +47,11 @@
 -(void)createTimeLayer;
 -(SKLabelNode *)createTimeTextNode;
 
+@property SKNode *pointsLayer;
+@property SKNode *gameLayer;
+@property SKNode *debugLayer;
+@property SKNode *timeLayer;
+
 @end
 
 @implementation Field
@@ -58,7 +61,7 @@
 -(int)points {
     int points = 0;
     
-    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
+    SKLabelNode *pointsTextNode = (SKLabelNode *)[self.pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
     if(pointsTextNode != nil) {
         points = [pointsTextNode.text intValue];
     }
@@ -115,7 +118,9 @@
         [self createPointsLayer];
         [self createTimeLayer];
         
-        [self createEdges];
+        if(__edgesFlag) {
+            [self createEdges];
+        }
         [self createBallStartArea];
     }
     
@@ -123,21 +128,36 @@
 }
 
 -(void)reset {
-    [gameLayer removeAllChildren];
-    [self createEdges];
-    [debugLayer removeAllChildren];
-    [pointsLayer removeAllChildren];
-    [timeLayer removeAllChildren];
+    [self.gameLayer removeAllChildren];
+    
+    if(__edgesFlag) {
+        [self createEdges];
+    }
+    [self.debugLayer removeAllChildren];
+    [self.pointsLayer removeAllChildren];
+    [self.timeLayer removeAllChildren];
 }
 
 #pragma mark game layer
 
++(void)setEdgesFlag:(BOOL)edgesFlag {
+    __edgesFlag = edgesFlag;
+}
+
 -(void)createGameLayer {
-    gameLayer = [SKNode node];
-    gameLayer.name = @"gameLayer";
-    gameLayer.zPosition = GAME_LAYER_Z_POSITION;
+    self.gameLayer = [SKNode node];
+    self.gameLayer.name = @"gameLayer";
+    self.gameLayer.zPosition = GAME_LAYER_Z_POSITION;
     
-    [self addChild:gameLayer];
+    [self addChild:self.gameLayer];
+}
+
+-(void)scrollGameLayer:(float)offset {
+    self.gameLayer.position = CGPointMake(self.gameLayer.position.x, self.gameLayer.position.y + offset);
+}
+
+-(CGPoint)positionOfTouchInGameLayer:(UITouch *)touch {
+    return [touch locationInNode:self.gameLayer];
 }
 
 -(void)createBallStartArea {
@@ -182,17 +202,17 @@
     SKNode *right = [SKNode node];
     right.name = @"right";
     right.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topRight toPoint:bottomRight];
-    [gameLayer addChild:right];
+    [self.gameLayer addChild:right];
     
     SKNode *top = [SKNode node];
     top.name = @"top";
     top.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:topLeft toPoint:topRight];
-    [gameLayer addChild:top];
+    [self.gameLayer addChild:top];
     
     SKNode *left = [SKNode node];
     left.name = @"left";
     left.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:bottomLeft toPoint:topLeft];
-    [gameLayer addChild:left];
+    [self.gameLayer addChild:left];
     
     float targetStartX = RandomFloatBetween(10.0, bottomRight.x - TARGET_WIDTH);
     CGPoint targetEnd = CGPointMake(targetStartX + TARGET_WIDTH, bottomRight.y);
@@ -204,7 +224,7 @@
     bottom1.position = bottomLeft;
     bottom1.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:bottom1.path];
     bottom1.physicsBody.categoryBitMask = [Categories bottomCategory];
-    [gameLayer addChild:bottom1];
+    [self.gameLayer addChild:bottom1];
 
     SKShapeNode *bottom2 = [SKShapeNode node];
     bottom2.name = BOTTOM_NAME;
@@ -213,7 +233,7 @@
     bottom2.position = targetEnd;
     bottom2.physicsBody = [SKPhysicsBody bodyWithEdgeChainFromPath:bottom2.path];
     bottom2.physicsBody.categoryBitMask = [Categories bottomCategory];
-    [gameLayer addChild:bottom2];
+    [self.gameLayer addChild:bottom2];
     
     CGPoint utilLineStart = CGPointMake(bottomLeft.x - 100, bottomLeft.y - 20);
     CGPoint utilLineEnd = CGPointMake(bottomRight.x + 100, bottomRight.y - 20);
@@ -222,17 +242,17 @@
     target.name = TARGET_NAME;
     target.physicsBody = [SKPhysicsBody bodyWithEdgeFromPoint:utilLineStart toPoint:utilLineEnd];
     target.physicsBody.categoryBitMask = [Categories bottomCategory];
-    [gameLayer addChild:target];
+    [self.gameLayer addChild:target];
 }
 
 -(void)addToGameLayer:(SKNode *)node {
-    [gameLayer addChild:node];
+    [self.gameLayer addChild:node];
 }
 
 -(BOOL)doesNodeExistInGameLayer:(NSString *)nodeName {
     BOOL exist = NO;
     
-    SKNode *foundNode = [gameLayer childNodeWithName:nodeName];
+    SKNode *foundNode = [self.gameLayer childNodeWithName:nodeName];
     
     if(foundNode != nil) {
         exist = YES;
@@ -242,12 +262,12 @@
 }
 
 -(CGPoint)positionOfNodeInGameLayerWithName:(NSString *)name {
-    SKNode *node = [gameLayer childNodeWithName:name];
+    SKNode *node = [self.gameLayer childNodeWithName:name];
     return node.position;
 }
 
 -(void)removeAllNodesInGameLayerWithName:(NSString *)name andPosition:(CGPoint)position {
-    NSArray *nodesAtPosition = [gameLayer nodesAtPoint:position];
+    NSArray *nodesAtPosition = [self.gameLayer nodesAtPoint:position];
     for(SKNode *node in nodesAtPosition) {
         if([name isEqualToString:node.name]) {
             [node removeAllActions];
@@ -260,12 +280,12 @@
 }
 
 -(SKNode *)findNodeInGameLayerWithName:(NSString *)nodeName {
-    return [gameLayer childNodeWithName:nodeName];
+    return [self.gameLayer childNodeWithName:nodeName];
 }
 
 -(NSArray *)findAllNodesInGameLayerWithName:(NSString *)nodeName {
     NSMutableArray *allNodesWithName = [NSMutableArray array];
-    NSArray *children = [gameLayer children];
+    NSArray *children = [self.gameLayer children];
     for(SKNode *node in children) {
         if([nodeName isEqualToString:node.name]) {
             [allNodesWithName addObject:node];
@@ -278,15 +298,15 @@
 #pragma mark time layer
 
 -(void)createTimeLayer {
-    timeLayer = [SKNode node];
-    timeLayer.name = @"timeLayer";
-    timeLayer.zPosition = TIME_LAYER_Z_POSITION;
+    self.timeLayer = [SKNode node];
+    self.timeLayer.name = @"timeLayer";
+    self.timeLayer.zPosition = TIME_LAYER_Z_POSITION;
     
-    [self addChild:timeLayer];
+    [self addChild:self.timeLayer];
 }
 
 -(void)incrementTimeByOneSecond {
-    SKLabelNode *timeTextNode = (SKLabelNode *) [timeLayer childNodeWithName:TIME_TEXT_NODE_NAME];
+    SKLabelNode *timeTextNode = (SKLabelNode *) [self.timeLayer childNodeWithName:TIME_TEXT_NODE_NAME];
     if(timeTextNode != nil) {
         NSString *timeString = timeTextNode.text;
         NSArray *components = [timeString componentsSeparatedByString:@":"];
@@ -318,7 +338,7 @@
     float yPos = self.frame.origin.y + 30;
     timeTextNode.position = CGPointMake(xPos, yPos);
     timeTextNode.text = @"0:00";
-    [timeLayer addChild:timeTextNode];
+    [self.timeLayer addChild:timeTextNode];
     
     return timeTextNode;
 }
@@ -328,7 +348,7 @@
     int secondsPart = numberOfSeconds % 60;
     NSString *minSecString = [NSString stringWithFormat:@"%d:%02d", minutesPart, secondsPart];
     
-    SKLabelNode *timeTextNode = (SKLabelNode *) [timeLayer childNodeWithName:TIME_TEXT_NODE_NAME];
+    SKLabelNode *timeTextNode = (SKLabelNode *) [self.timeLayer childNodeWithName:TIME_TEXT_NODE_NAME];
     if(timeTextNode == nil) {
         timeTextNode = [self createTimeTextNode];
     }
@@ -338,11 +358,11 @@
 #pragma mark points layer
 
 -(void)createPointsLayer {
-    pointsLayer = [SKNode node];
-    pointsLayer.name = @"pointsLayer";
-    pointsLayer.zPosition = POINTS_LAYER_Z_POSITION;
+    self.pointsLayer = [SKNode node];
+    self.pointsLayer.name = @"pointsLayer";
+    self.pointsLayer.zPosition = POINTS_LAYER_Z_POSITION;
     
-    [self addChild:pointsLayer];
+    [self addChild:self.pointsLayer];
 }
 
 -(SKLabelNode *)createPointsTextNode {
@@ -353,7 +373,7 @@
     pointsTextNode.position = CGPointMake(self.frame.origin.x + 80, self.frame.origin.y + 10);
     pointsTextNode.name = POINTS_TEXT_NODE_NAME;
     pointsTextNode.text = @"0";
-    [pointsLayer addChild:pointsTextNode];
+    [self.pointsLayer addChild:pointsTextNode];
     
     return pointsTextNode;
 }
@@ -375,7 +395,7 @@
 }
 
 -(void)addPoints:(int)points {
-    SKLabelNode *pointsTextNode = (SKLabelNode *)[pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
+    SKLabelNode *pointsTextNode = (SKLabelNode *)[self.pointsLayer childNodeWithName:POINTS_TEXT_NODE_NAME];
     if(pointsTextNode == nil) {
         pointsTextNode = [self createPointsTextNode];
     }
@@ -383,7 +403,7 @@
 }
 
 -(void)addTotalPoints:(int)points {
-    SKLabelNode *totalPointsNode = (SKLabelNode *)[pointsLayer childNodeWithName:TOTAL_POINTS_TEXT_NODE_NAME];
+    SKLabelNode *totalPointsNode = (SKLabelNode *)[self.pointsLayer childNodeWithName:TOTAL_POINTS_TEXT_NODE_NAME];
     if(totalPointsNode == nil) {
         totalPointsNode = [self createTotalPointsTextNode];
     }
@@ -397,11 +417,11 @@
 #pragma mark debug layer
 
 -(void)createDebugLayer {
-    debugLayer = [SKNode node];
-    debugLayer.name = @"debugLayer";
-    debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
+    self.debugLayer = [SKNode node];
+    self.debugLayer.name = @"debugLayer";
+    self.debugLayer.zPosition = DEBUG_LAYER_Z_POSITION;
     
-    [self addChild:debugLayer];
+    [self addChild:self.debugLayer];
 }
 
 -(SKLabelNode *)createDebugTextNode {
@@ -410,7 +430,7 @@
     debugTextNode.fontColor = [SKColor blackColor];
     debugTextNode.position = CGPointMake(self.frame.origin.x + 200, self.frame.origin.y + 50);
     debugTextNode.name = DEBUG_TEXT_NODE_NAME;
-    [debugLayer addChild:debugTextNode];
+    [self.debugLayer addChild:debugTextNode];
     
     return debugTextNode;
 }

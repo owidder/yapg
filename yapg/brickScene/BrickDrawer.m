@@ -8,6 +8,7 @@
 
 #import "BrickDrawer.h"
 #import "Brick.h"
+#import "Field.h"
 
 @interface BrickDrawer ()
 
@@ -37,7 +38,7 @@
     if([touches count] == 1) {
         // no multitouch:
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self.scene];
+        CGPoint positionOfFirstTouch = [[Field instance] positionOfTouchInGameLayer:firstTouch];
         self.positionWhenTouchBegan = positionOfFirstTouch;
         self.brickDrawBegan = YES;
         
@@ -64,7 +65,7 @@
     
     if(self.brickDrawBegan) {
         UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
-        CGPoint positionOfFirstTouch = [firstTouch locationInNode:self.scene];
+        CGPoint positionOfFirstTouch = [[Field instance] positionOfTouchInGameLayer:firstTouch];
         if(self.currentBrick == NULL) {
             self.currentBrick = [[Brick alloc] initWithAbsolutePositionOfBrick:self.positionWhenTouchBegan];
         }

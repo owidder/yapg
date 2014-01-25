@@ -18,8 +18,16 @@
 
 -(id)init;
 
+#pragma mark debug layer
 -(void)printDebugMessage:(NSString *)message;
+
+#pragma mark game layer
++(void)setEdgesFlag:(BOOL)edgesFlag;
 -(void)addToGameLayer:(SKNode *)node;
+-(void)scrollGameLayer:(float)offset;
+-(CGPoint)positionOfTouchInGameLayer:(UITouch *)touch;
+
+#pragma mark points layer
 -(void)addPoints:(int)points;
 -(void)setLevel:(int)level;
 -(void)addTotalPoints:(int)points;
