@@ -18,11 +18,9 @@
 #define RESTITUTION 0.1
 #define NAME @"ball"
 
-@interface Ball() {
-    SKNode *circle;
-}
+@interface Ball()
 
--(void)createBallNode;
+-(void)createBallNodeWithDuration:(float)duration;
 
 @end
 
@@ -34,21 +32,21 @@
 
 #pragma mark initialization
 
--(id)initWithPosition:(CGPoint)position {
+-(id)initWithPosition:(CGPoint)position andDuration:(float)duration {
     if(self = [super init]) {
         self.position = position;
         self.name = NAME;
-        [self createBallNode];
+        [self createBallNodeWithDuration:duration];
     }
     return self;
 }
 
 +(void)addBallAtPosition:(CGPoint)position {
-    Ball *ball = [[Ball alloc] initWithPosition:position];
+    Ball *ball = [[Ball alloc] initWithPosition:position andDuration:1.0];
     [[Field instance] addToGameLayer:ball];
 }
 
--(void)createBallNode {
+-(void)createBallNodeWithDuration:(float)duration {
     CGMutablePathRef ballPath = CreateCirclePath(RADIUS);
     self.path = ballPath;
     
@@ -57,11 +55,17 @@
 
     SKPhysicsBody *physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:RADIUS];
     physicsBody.restitution = RESTITUTION;
-    physicsBody.dynamic = YES;
+    physicsBody.dynamic = NO;
     physicsBody.categoryBitMask = [Categories ballCategory];
     physicsBody.contactTestBitMask = [Categories bottomCategory] | [Categories stuffCategory];
     
     self.physicsBody = physicsBody;
+    
+    SKAction *switchOnDynamic = [SKAction runBlock:^{
+        physicsBody.dynamic = YES;
+    }];
+    SKAction *waitAction = [SKAction waitForDuration:duration];
+    SKAction *waitAndSwitch = [SKAction sequence:@[waitAction, switchOnDynamic]];
 }
 
 #pragma mark behaviour

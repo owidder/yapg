@@ -10,7 +10,7 @@
 
 @interface Ball : SKShapeNode
 
--(id)initWithPosition:(CGPoint)position;
+-(id)initWithPosition:(CGPoint)position andDuration:(float)duration;
 
 -(void)die;
 
