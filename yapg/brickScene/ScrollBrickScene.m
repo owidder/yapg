@@ -17,6 +17,8 @@
 
 @interface ScrollBrickScene()
 
+-(void)dropRandomBall;
+
 @property BrickDrawer *brickDrawer;
 @property SceneHandler *sceneHandler;
 @property CGPoint positionWhereTouchBegan;
@@ -33,6 +35,9 @@
         self.sceneHandler = [[SceneHandler alloc] initWithScene:self];
         
         [self addChild:[Field instance]];
+
+//        float randomTime = RandomFloatBetween(5.0, 10.0);
+//        [NSTimer scheduledTimerWithTimeInterval:randomTime target:self selector:@selector(dropRandomBall) userInfo:NULL repeats:NO];
     }
     
     return self;
@@ -53,7 +58,7 @@
     UITouch *firstTouch = [[touches allObjects] objectAtIndex:0];
     CGPoint currentPosition = [[Field instance] positionOfTouchInGameLayer:firstTouch];
     
-    if(Distance(currentPosition, self.positionWhereTouchBegan) < 1)  {
+    if(Distance(currentPosition, self.positionWhereTouchBegan) < 10)  {
         [Ball addBallAtPosition:currentPosition];
     }
     
@@ -68,10 +73,21 @@
     [self.brickDrawer touchesCancelled:touches withEvent:event];
 }
 
+#pragma mark ScrollBrickScene
+
+-(void)dropRandomBall {
+    float rndX = RandomFloatBetween(30, [Field mainAreaRect].size.width-30);
+    CGPoint dropPosition = CGPointMake(rndX, [Field mainAreaRect].origin.y + [Field mainAreaRect].size.height/2);
+    [Ball addBallAtPosition:dropPosition];
+    
+    float randomTime = RandomFloatBetween(5.0, 20.0);
+    [NSTimer scheduledTimerWithTimeInterval:randomTime target:self selector:@selector(dropRandomBall) userInfo:NULL repeats:NO];
+}
+
 #pragma mark SKScene
 
 -(void)didSimulatePhysics {
-    [[Field instance] scrollGameLayer:.1];
+    [[Field instance] scrollGameLayer:.5];
 }
 
 
