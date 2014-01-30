@@ -16,6 +16,6 @@
 
 +(NSString *)name;
 
-+(void)addBallAtPosition:(CGPoint)position;
++(void)addBallAtPosition:(CGPoint)position withDuration:(float)duration;
 
 @end

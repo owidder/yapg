@@ -41,8 +41,8 @@
     return self;
 }
 
-+(void)addBallAtPosition:(CGPoint)position {
-    Ball *ball = [[Ball alloc] initWithPosition:position andDuration:1.0];
++(void)addBallAtPosition:(CGPoint)position withDuration:(float)duration {
+    Ball *ball = [[Ball alloc] initWithPosition:position andDuration:duration];
     [[Field instance] addToGameLayer:ball];
 }
 
@@ -55,17 +55,23 @@
 
     SKPhysicsBody *physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:RADIUS];
     physicsBody.restitution = RESTITUTION;
-    physicsBody.dynamic = NO;
     physicsBody.categoryBitMask = [Categories ballCategory];
     physicsBody.contactTestBitMask = [Categories bottomCategory] | [Categories stuffCategory];
     
     self.physicsBody = physicsBody;
-    
-    SKAction *switchOnDynamic = [SKAction runBlock:^{
+
+    if(duration > 0.0) {
+        physicsBody.dynamic = NO;
+        SKAction *switchOnDynamic = [SKAction runBlock:^{
+            physicsBody.dynamic = YES;
+        }];
+        SKAction *waitAction = [SKAction waitForDuration:duration];
+        SKAction *waitAndSwitch = [SKAction sequence:@[waitAction, switchOnDynamic]];
+        [self runAction:waitAndSwitch];
+    }
+    else {
         physicsBody.dynamic = YES;
-    }];
-    SKAction *waitAction = [SKAction waitForDuration:duration];
-    SKAction *waitAndSwitch = [SKAction sequence:@[waitAction, switchOnDynamic]];
+    }
 }
 
 #pragma mark behaviour

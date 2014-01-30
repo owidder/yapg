@@ -233,7 +233,7 @@ static const float MAX_TIME_BETWEEN_TOUCHES_TO_DRAW_BALL = 0.3;
                         // and there is not already a ball --> drop ball
                         gameStarted = YES;
                         lastBallPosition = positionOfFirstTouch;
-                        [Ball addBallAtPosition:positionOfFirstTouch];
+                        [Ball addBallAtPosition:positionOfFirstTouch withDuration:0.0];
                     }
                 }
             }
