@@ -67,7 +67,7 @@
         }];
         SKAction *waitAction = [SKAction waitForDuration:duration];
         SKAction *waitAndSwitch = [SKAction sequence:@[waitAction, switchOnDynamic]];
-        [self runAction:waitAndSwitch];
+        [self runAction:waitAndSwitch]; 
     }
     else {
         physicsBody.dynamic = YES;

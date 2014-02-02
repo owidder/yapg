@@ -56,6 +56,7 @@
 		99D3B63E17C0DB050064FA09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D3B61617C0DB040064FA09 /* UIKit.framework */; };
 		99D3B64617C0DB050064FA09 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 99D3B64417C0DB050064FA09 /* InfoPlist.strings */; };
 		99D3B64817C0DB050064FA09 /* yapgTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 99D3B64717C0DB050064FA09 /* yapgTests.m */; };
+		99EDD913189C536200F0931B /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 99EDD912189C536200F0931B /* ball.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +143,7 @@
 		99D3B64317C0DB050064FA09 /* yapgTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "yapgTests-Info.plist"; sourceTree = "<group>"; };
 		99D3B64517C0DB050064FA09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		99D3B64717C0DB050064FA09 /* yapgTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = yapgTests.m; sourceTree = "<group>"; };
+		99EDD912189C536200F0931B /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,6 +269,7 @@
 		99C4AD6717DC762100CBCFB6 /* resource */ = {
 			isa = PBXGroup;
 			children = (
+				99EDD912189C536200F0931B /* ball.png */,
 				99C4AD6817DC762100CBCFB6 /* icon */,
 			);
 			path = resource;
@@ -472,6 +475,7 @@
 				99463F7217E24FC700DC690A /* spark.png in Resources */,
 				99C4AD7417DC76A700CBCFB6 /* icon58.png in Resources */,
 				99C4AD7217DC762100CBCFB6 /* icon76.png in Resources */,
+				99EDD913189C536200F0931B /* ball.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
