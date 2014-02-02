@@ -26,6 +26,7 @@
 -(void)addToGameLayer:(SKNode *)node;
 -(void)scrollGameLayer:(float)offset;
 -(CGPoint)positionOfTouchInGameLayer:(UITouch *)touch;
+-(CGPoint)convertPointToGameLayerCoordinates:(CGPoint)point;
 
 #pragma mark points layer
 -(void)addPoints:(int)points;

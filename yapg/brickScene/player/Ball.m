@@ -47,11 +47,8 @@
 }
 
 -(void)createBallNodeWithDuration:(float)duration {
-    CGMutablePathRef ballPath = CreateCirclePath(RADIUS);
-    self.path = ballPath;
-    
-    self.lineWidth = LINE_WIDTH;
-    self.fillColor = [SKColor whiteColor];
+    self.texture = [SKTexture textureWithImageNamed:@"ball.png"];
+    self.size = CGSizeMake(2*RADIUS, 2*RADIUS);
 
     SKPhysicsBody *physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:RADIUS];
     physicsBody.restitution = RESTITUTION;

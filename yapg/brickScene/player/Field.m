@@ -160,6 +160,10 @@ static BOOL __edgesFlag = YES;
     return [touch locationInNode:self.gameLayer];
 }
 
+-(CGPoint)convertPointToGameLayerCoordinates:(CGPoint)point {
+    return [self.gameLayer convertPoint:point fromNode:self.parent];
+}
+
 -(void)createBallStartArea {
     CGRect ballStartAreaRect = [Field ballStartAreaRect];
 
