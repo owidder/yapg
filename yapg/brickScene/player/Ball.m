@@ -73,6 +73,18 @@
 
 #pragma mark behaviour
 
+-(void)stopPhysics {
+    if(self.physicsBody.dynamic) {
+        self.physicsBody.dynamic = NO;
+    }
+}
+
+-(void)startPhysics {
+    if(!self.physicsBody.dynamic) {
+        self.physicsBody.dynamic = YES;
+    }
+}
+
 -(void)die {
     CGPoint currentPosition = [self position];
     

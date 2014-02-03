@@ -14,6 +14,10 @@
 
 -(void)die;
 
+-(void)stopPhysics;
+
+-(void)startPhysics;
+
 +(NSString *)name;
 
 +(void)addBallAtPosition:(CGPoint)position withDuration:(float)duration;

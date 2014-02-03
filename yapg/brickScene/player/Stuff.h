@@ -24,6 +24,8 @@ typedef enum {
 
 +(void)addStuffWithType:(StuffType)type andPosition:(CGPoint)position;
 
++(StuffType)randomStuff;
+
 @property(readonly) int points;
 
 @end

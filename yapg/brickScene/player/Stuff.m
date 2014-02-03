@@ -84,6 +84,8 @@
     return self;
 }
 
+#pragma mark create stuff
+
 -(void)createCircleShapeAndPhysicsBodyWithRadius:(float)radius{
     self.path = CreateCirclePath(size/2);
     self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:size/2];
@@ -126,6 +128,8 @@
     [[Field instance] addToGameLayer:stuff];
 }
 
+#pragma mark stuff behaviour
+
 -(void)addSparks {
     SKEmitterNode *spark = [EmitterNodeFactory newEmitterWithName:particleName];
     CGPoint currentPosition = self.position;
@@ -167,6 +171,8 @@
     [self runAction:sequence];
 }
 
+#pragma mark collision
+
 -(void)collidedWithRandomWait:(BOOL)doRandomWait {
     if(!collided) {
         collided = YES;
@@ -180,8 +186,26 @@
     }
 }
 
+#pragma mark static methods
+
 +(NSString *)name {
     return NAME;
+}
+
++(StuffType)randomStuff {
+    StuffType stuffType;
+    float rnd = RandomFloatBetween(0, 3);
+    if(rnd < 1.0) {
+        stuffType = kCircle;
+    }
+    else if(rnd < 2.0) {
+        stuffType = kTriangle;
+    }
+    else {
+        stuffType = kSquare;
+    }
+    
+    return stuffType;
 }
 
 @end

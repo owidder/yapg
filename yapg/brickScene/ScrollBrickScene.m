@@ -24,6 +24,9 @@
 -(void)addStuff;
 -(void)collisionWithStuff:(Stuff *)stuff andRandomWait:(BOOL)doRandomWait;
 
+-(void)scroll;
+-(void)ballPostProcessing;
+
 @property BrickDrawer *brickDrawer;
 @property SceneHandler *sceneHandler;
 @property CGPoint positionWhereTouchBegan;
@@ -92,34 +95,24 @@
 #pragma mark ScrollBrickScene
 
 -(void)dropBall {
-    static int ballCtr = 0;
+//    static int ballCtr = 0;
     
-    float startX = [Field mainAreaRect].origin.x + [Field mainAreaRect].size.width/2;
-    float startY = [Field mainAreaRect].origin.y + [Field mainAreaRect].size.height/2;
+    float startX = [Field middleWidth];
+    float startY = [Field middleHeight];
     CGPoint firstBallStartPoint = CGPointMake(startX, startY);
     [Ball addBallAtPosition:firstBallStartPoint withDuration:1.0];
 
-    ballCtr++;
-    if(ballCtr < 3) {
-        float randomTime = RandomFloatBetween(3.0, 5.0);
-        self.ballTimer = [NSTimer scheduledTimerWithTimeInterval:randomTime target:self selector:@selector(dropBall) userInfo:NULL repeats:NO];
-    }
+//    ballCtr++;
+//    if(ballCtr < 3) {
+//        float randomTime = RandomFloatBetween(3.0, 5.0);
+//        self.ballTimer = [NSTimer scheduledTimerWithTimeInterval:randomTime target:self selector:@selector(dropBall) userInfo:NULL repeats:NO];
+//    }
 }
 
 #pragma mark stuff
 
 -(void)addStuff {
-    StuffType stuffType;
-    float rnd = RandomFloatBetween(0, 3);
-    if(rnd < 1.0) {
-        stuffType = kCircle;
-    }
-    else if(rnd < 2.0) {
-        stuffType = kTriangle;
-    }
-    else {
-        stuffType = kSquare;
-    }
+    StuffType stuffType = [Stuff randomStuff];
     
     float x = RandomFloatBetween(0, [Field mainAreaRect].size.width);
     CGPoint position = [[Field instance] convertPointToGameLayerCoordinates:CGPointMake(x, -10)];
@@ -147,11 +140,32 @@
     }
 }
 
-#pragma mark SKScene
+#pragma mark post processing
 
 -(void)didSimulatePhysics {
+    [self scroll];
+    [self ballPostProcessing];
+}
+
+-(void)scroll {
     [[Field instance] scrollGameLayer:.5];
 }
 
+-(void)ballPostProcessing {
+    Ball *ball = (Ball *)[[Field instance] findNodeInGameLayerWithName:[Ball name]];
+    
+    CGPoint absoluteBallPosition = [[Field instance] convertPointFromGameLayerCoordinates:ball.position];
+    
+    if(absoluteBallPosition.y < -10) {
+        float newX = [Field middleWidth];
+        float newY = absoluteBallPosition.y;
+        CGPoint newBallPosition = [[Field instance] convertPointToGameLayerCoordinates:CGPointMake(newX, newY)];
+        [ball stopPhysics];
+        ball.position = newBallPosition;
+    }
+    else if(absoluteBallPosition.y > [Field middleHeight]) {
+        [ball startPhysics];
+    }
+}
 
 @end

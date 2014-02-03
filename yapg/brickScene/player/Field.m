@@ -85,6 +85,14 @@ static BOOL __edgesFlag = YES;
     return fieldSize;
 }
 
++(float)middleWidth {
+    return [Field mainAreaRect].origin.x + [Field mainAreaRect].size.width/2;
+}
+
++(float)middleHeight {
+    return [Field mainAreaRect].origin.y + [Field mainAreaRect].size.height/2;
+}
+
 #pragma mark node names
 
 +(NSString *)bottomName {
@@ -162,6 +170,10 @@ static BOOL __edgesFlag = YES;
 
 -(CGPoint)convertPointToGameLayerCoordinates:(CGPoint)point {
     return [self.gameLayer convertPoint:point fromNode:self.parent];
+}
+
+-(CGPoint)convertPointFromGameLayerCoordinates:(CGPoint)point {
+    return [self.gameLayer convertPoint:point toNode:self.parent];
 }
 
 -(void)createBallStartArea {

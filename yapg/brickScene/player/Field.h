@@ -16,6 +16,9 @@
 +(CGRect)mainAreaRect;
 +(CGRect)ballStartAreaRect;
 
++(float)middleWidth;
++(float)middleHeight;
+
 -(id)init;
 
 #pragma mark debug layer
@@ -27,6 +30,7 @@
 -(void)scrollGameLayer:(float)offset;
 -(CGPoint)positionOfTouchInGameLayer:(UITouch *)touch;
 -(CGPoint)convertPointToGameLayerCoordinates:(CGPoint)point;
+-(CGPoint)convertPointFromGameLayerCoordinates:(CGPoint)point;
 
 #pragma mark points layer
 -(void)addPoints:(int)points;
